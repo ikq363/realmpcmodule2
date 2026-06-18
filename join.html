@@ -114,6 +114,18 @@
             cursor: not-allowed;
         }
 
+        /* UPPERCASE INPUT STYLING */
+        .form-group input.uppercase {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        .form-group input.uppercase::placeholder {
+            text-transform: none;
+            font-weight: 400;
+            letter-spacing: 0;
+        }
+
         .btn {
             padding: 0.8rem 2rem;
             border-radius: 60px;
@@ -165,6 +177,14 @@
             padding: 0.4rem 1.2rem;
             font-size: 0.8rem;
             width: auto;
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #d4527c, #e8839e);
+            color: white;
+            box-shadow: 0 4px 15px rgba(212, 82, 124, 0.25);
+        }
+        .btn-danger:hover {
+            box-shadow: 0 10px 30px rgba(212, 82, 124, 0.35);
         }
 
         .page {
@@ -498,6 +518,30 @@
             display: block;
         }
 
+        /* CODE VALIDATION STYLES */
+        .input-valid {
+            border-color: #38a87a !important;
+            background: #f0fff8 !important;
+        }
+        .input-invalid {
+            border-color: #d4527c !important;
+            background: #fff5f7 !important;
+        }
+
+        /* SUGGESTIONS */
+        .suggestion-box {
+            background: #f0ebf8;
+            padding: 0.6rem 1rem;
+            border-radius: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: #4f3a68;
+        }
+        .suggestion-box i {
+            color: #6d3b9e;
+            margin-right: 6px;
+        }
+
         @media (max-width: 600px) {
             body {
                 padding: 0.8rem;
@@ -537,10 +581,20 @@
 
             <div class="card">
                 <div class="card-title"><i class="fas fa-key"></i> Masukkan Code Kelas</div>
-                <p class="text-muted mb-1">Masukkan code yang diberikan oleh guru anda.</p>
+                <p class="text-muted mb-1">Masukkan code yang diberikan oleh guru anda. <strong>Huruf besar/kecil tak penting</strong> — kami akan tukar ke huruf besar automatik.</p>
                 <div class="form-group">
                     <label><i class="fas fa-qrcode"></i> Code Kelas</label>
-                    <input type="text" id="classCodeInput" placeholder="Cth: MPC-A7B3F2" value="" />
+                    <input type="text" 
+                           id="classCodeInput" 
+                           class="uppercase"
+                           placeholder="Cth: MPC-A7B3F2" 
+                           value=""
+                           maxlength="20"
+                           autocomplete="off"
+                           spellcheck="false" />
+                    <div id="codeSuggestion" class="suggestion-box hidden">
+                        <i class="fas fa-lightbulb"></i> <span id="suggestionText"></span>
+                    </div>
                 </div>
                 <button class="btn btn-primary" onclick="semakCode()" id="btnSemakCode">
                     <i class="fas fa-search"></i> Semak & Seterusnya
@@ -555,7 +609,8 @@
             </div>
 
             <div class="text-center text-muted" style="font-size:0.8rem;">
-                <i class="fas fa-info-circle"></i> Dapatkan code daripada guru anda.
+                <i class="fas fa-info-circle"></i> Dapatkan code daripada guru anda. <br>
+                <span style="font-size:0.75rem;">Contoh: MPC-A7B3F2</span>
             </div>
         </div>
 
@@ -575,10 +630,13 @@
                         Kelas: <strong id="infoKelas">-</strong> · 
                         Pengajar: <strong id="infoGuru">-</strong>
                     </p>
+                    <p style="font-size:0.8rem;color:#6d3b9e;margin-top:0.3rem;">
+                        <i class="fas fa-tag"></i> Code: <strong id="infoCodeDisplay">-</strong>
+                    </p>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-user"></i> Nama Penuh</label>
-                    <input type="text" id="studentName" placeholder="Cth: Ahmad bin Abdullah" />
+                    <input type="text" id="studentName" placeholder="Cth: Ahmad bin Abdullah" autocomplete="name" />
                 </div>
                 <button class="btn btn-primary" onclick="daftarMurid()" id="btnDaftar">
                     <i class="fas fa-sign-in-alt"></i> Daftar & Masuk
@@ -746,7 +804,7 @@
 
                 <div class="markah-box">
                     <div class="markah-label"><i class="fas fa-star"></i> Markah anda</div>
-                    <input type="number" id="markahMurid" placeholder="Masukkan markah yang anda dapat..." />
+                    <input type="number" id="markahMurid" placeholder="Masukkan markah yang anda dapat..." min="0" />
                     <div class="mt-1">
                         <button class="btn btn-primary btn-sm" onclick="hantarMarkah()">
                             <i class="fas fa-paper-plane"></i> Hantar Markah
@@ -818,12 +876,54 @@
         let unsubscribeStudents = null;
         let unsubscribeSession = null;
 
-        // ===== SEMAK CODE =====
+        // ===== UPPERCASE INPUT WITH SUGGESTION =====
+        const codeInput = document.getElementById('classCodeInput');
+        const suggestionBox = document.getElementById('codeSuggestion');
+        const suggestionText = document.getElementById('suggestionText');
+
+        // Auto uppercase & validate
+        codeInput.addEventListener('input', function(e) {
+            const val = this.value.toUpperCase();
+            this.value = val;
+
+            // Show suggestion if input starts with 'MPC-'
+            if (val.startsWith('MPC-') && val.length > 4) {
+                suggestionBox.classList.remove('hidden');
+                suggestionText.textContent = `Mencari kelas dengan code "${val}"...`;
+            } else if (val.length > 0) {
+                suggestionBox.classList.remove('hidden');
+                suggestionText.textContent = `Format code: MPC-XXXXXX (contoh: MPC-A7B3F2)`;
+            } else {
+                suggestionBox.classList.add('hidden');
+            }
+
+            // Clear validation states
+            this.classList.remove('input-valid', 'input-invalid');
+            document.getElementById('codeError').textContent = '';
+            document.getElementById('codeSuccess').style.display = 'none';
+        });
+
+        // ===== SEMAK CODE (IMPROVED) =====
         window.semakCode = function() {
-            const code = document.getElementById('classCodeInput').value.trim().toUpperCase();
-            if (!code) {
+            const rawCode = document.getElementById('classCodeInput').value.trim().toUpperCase();
+            const codeInput = document.getElementById('classCodeInput');
+
+            // Remove any invalid characters (only letters, numbers, hyphens)
+            const cleanCode = rawCode.replace(/[^A-Z0-9-]/g, '');
+            codeInput.value = cleanCode;
+
+            if (!cleanCode) {
                 document.getElementById('codeError').textContent = '⚠️ Sila masukkan code kelas.';
                 document.getElementById('codeSuccess').style.display = 'none';
+                codeInput.classList.add('input-invalid');
+                return;
+            }
+
+            // Validate format: should start with MPC- and have at least 6 chars after
+            if (!cleanCode.startsWith('MPC-') || cleanCode.length < 8) {
+                document.getElementById('codeError').textContent = '⚠️ Format code tidak sah. Gunakan format: MPC-XXXXXX';
+                document.getElementById('codeSuccess').style.display = 'none';
+                codeInput.classList.add('input-invalid');
                 return;
             }
 
@@ -831,31 +931,34 @@
             document.getElementById('codeSuccess').style.display = 'none';
             document.getElementById('loadingCode').classList.add('show');
             document.getElementById('btnSemakCode').disabled = true;
+            codeInput.classList.remove('input-valid', 'input-invalid');
 
-            const sessionRef = ref(db, `sessions/${code}`);
+            const sessionRef = ref(db, `sessions/${cleanCode}`);
             get(sessionRef).then((snapshot) => {
                 document.getElementById('loadingCode').classList.remove('show');
                 document.getElementById('btnSemakCode').disabled = false;
 
                 if (!snapshot.exists()) {
-                    document.getElementById('codeError').textContent = '❌ Code kelas tidak dijumpai. Sila semak semula.';
+                    document.getElementById('codeError').textContent = '❌ Code kelas tidak dijumpai. Sila semak semula code anda.';
+                    codeInput.classList.add('input-invalid');
                     return;
                 }
 
                 const data = snapshot.val();
-                sessionId = code;
 
                 if (data.completed) {
                     document.getElementById('codeError').textContent = '⚠️ Kelas ini sudah tamat.';
+                    codeInput.classList.add('input-invalid');
                     return;
                 }
 
-                document.getElementById('codeSuccess').style.display = 'block';
-                document.getElementById('codeSuccess').innerHTML = 
-                    `<i class="fas fa-check-circle"></i> Kelas "${data.kelas || '-'}" ditemui!`;
-
-                // STORE ALL DATA FROM FIREBASE
+                sessionId = cleanCode;
                 guruData = data;
+
+                codeInput.classList.add('input-valid');
+                document.getElementById('codeSuccess').style.display = 'block';
+                document.getElementById('codeSuccess').innerHTML =
+                    `<i class="fas fa-check-circle"></i> Kelas "${data.kelas || '-'}" ditemui!`;
 
                 // Go to daftar page
                 document.getElementById('pageCode').classList.remove('active');
@@ -864,13 +967,16 @@
                 // Set class info from Firebase
                 document.getElementById('infoKelas').textContent = data.kelas || '-';
                 document.getElementById('infoGuru').textContent = data.guru || '-';
+                document.getElementById('infoCodeDisplay').textContent = cleanCode;
 
+                // Auto-focus name
                 document.getElementById('studentName').focus();
 
             }).catch((err) => {
                 document.getElementById('loadingCode').classList.remove('show');
                 document.getElementById('btnSemakCode').disabled = false;
                 document.getElementById('codeError').textContent = '⚠️ Ralat: ' + err.message;
+                codeInput.classList.add('input-invalid');
             });
         };
 
@@ -891,8 +997,9 @@
             document.getElementById('pageCode').classList.add('active');
             document.getElementById('codeSuccess').style.display = 'none';
             document.getElementById('codeError').textContent = '';
-            document.getElementById('classCodeInput').value = '';
+            document.getElementById('classCodeInput').classList.remove('input-valid', 'input-invalid');
             document.getElementById('classCodeInput').focus();
+            document.getElementById('classCodeInput').select();
         };
 
         // ===== DAFTAR MURID =====
@@ -900,6 +1007,11 @@
             const name = document.getElementById('studentName').value.trim();
             if (!name) {
                 document.getElementById('daftarError').textContent = '⚠️ Sila masukkan nama penuh anda.';
+                return;
+            }
+
+            if (name.length < 3) {
+                document.getElementById('daftarError').textContent = '⚠️ Nama terlalu pendek (minimum 3 huruf).';
                 return;
             }
 
@@ -912,6 +1024,7 @@
 
             document.getElementById('btnDaftar').disabled = true;
             document.getElementById('btnDaftar').innerHTML = '<span class="spinner"></span> Mendaftar...';
+            document.getElementById('daftarError').textContent = '';
 
             const studentRef = ref(db, `sessions/${sessionId}/students/${name}`);
             set(studentRef, {
@@ -921,7 +1034,7 @@
             }).then(() => {
                 document.getElementById('btnDaftar').disabled = false;
                 document.getElementById('btnDaftar').innerHTML = '<i class="fas fa-sign-in-alt"></i> Daftar & Masuk';
-                
+
                 document.getElementById('pageDaftar').classList.remove('active');
                 document.getElementById('pageWaiting').classList.add('active');
                 document.getElementById('daftarError').textContent = '';
@@ -938,12 +1051,24 @@
                 listenSoalanUpdates(sessionId);
                 listenIndicatorUpdates(sessionId);
 
+                // Update student count
+                updateStudentCount(sessionId);
+
             }).catch((err) => {
                 document.getElementById('btnDaftar').disabled = false;
                 document.getElementById('btnDaftar').innerHTML = '<i class="fas fa-sign-in-alt"></i> Daftar & Masuk';
                 document.getElementById('daftarError').textContent = '⚠️ Ralat: ' + err.message;
             });
         };
+
+        function updateStudentCount(code) {
+            const studentsRef = ref(db, `sessions/${code}/students`);
+            onValue(studentsRef, (snapshot) => {
+                const data = snapshot.val();
+                const count = data ? Object.keys(data).length : 0;
+                document.getElementById('wCount').textContent = count;
+            }, { onlyOnce: true });
+        }
 
         // ===== LISTEN STUDENTS (Waiting Room) =====
         function listenStudents(code) {
@@ -1171,6 +1296,9 @@
                 document.getElementById('jawapanStatus').textContent = '✅ Jawapan dihantar!';
                 document.getElementById('jawapanStatus').style.color = '#38a87a';
                 document.getElementById('jawapanMurid').value = '';
+                setTimeout(() => {
+                    document.getElementById('jawapanStatus').textContent = '';
+                }, 3000);
             }).catch((err) => {
                 document.getElementById('jawapanStatus').textContent = '⚠️ Ralat: ' + err.message;
                 document.getElementById('jawapanStatus').style.color = '#d4527c';
@@ -1266,7 +1394,8 @@
             const params = new URLSearchParams(window.location.search);
             const code = params.get('code');
             if (code) {
-                document.getElementById('classCodeInput').value = code.toUpperCase();
+                const clean = code.trim().toUpperCase().replace(/[^A-Z0-9-]/g, '');
+                document.getElementById('classCodeInput').value = clean;
                 setTimeout(() => {
                     semakCode();
                 }, 500);
