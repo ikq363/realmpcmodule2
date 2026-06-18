@@ -414,21 +414,6 @@
             color: #6d3b9e;
         }
 
-        .hidden {
-            display: none !important;
-        }
-
-        /* Loading */
-        .loading-state {
-            text-align: center;
-            padding: 2rem 0;
-        }
-
-        .loading-state .spinner {
-            width: 30px;
-            height: 30px;
-        }
-
         @media (max-width: 600px) {
             body {
                 padding: 0.8rem;
@@ -481,94 +466,83 @@
 
         <div class="card">
 
-            <!-- LOADING -->
-            <div id="loadingState" class="loading-state">
-                <div class="spinner"></div>
-                <p style="margin-top:1rem;color:#6b5a7a;">Memuatkan maklumat...</p>
+            <!-- CODE BADGE -->
+            <div style="text-align:center;">
+                <span class="code-badge" id="codeBadge"><i class="fas fa-key"></i> Code: -</span>
             </div>
 
-            <!-- CONTENT (hidden initially) -->
-            <div id="contentState" class="hidden">
-
-                <!-- CODE BADGE -->
-                <div style="text-align:center;">
-                    <span class="code-badge" id="codeBadge"><i class="fas fa-key"></i> Code: -</span>
-                </div>
-
-                <!-- GURU INFO (HANYA NAMA GURU - BUANG KELAS) -->
-                <div class="guru-info">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    <span>Pengajar: <span class="guru-nama" id="guruNama">-</span></span>
-                </div>
-
-                <div class="card-title">
-                    <i class="fas fa-pen-fancy"></i> Refleksi Karakter (Daya Tahan)
-                </div>
-
-                <p class="text-muted" style="margin-bottom:1.5rem;">
-                    <i class="fas fa-info-circle"></i> Jawab soalan berikut dengan jujur. Tiada jawapan betul atau salah.
-                </p>
-
-                <form id="refleksiForm" onsubmit="return false;">
-
-                    <!-- Nama & Kelas - MURID ISI -->
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                        <div class="form-group">
-                            <label><i class="fas fa-user"></i> Nama Penuh <span class="required">*</span></label>
-                            <input type="text" id="namaMurid" placeholder="Cth: Ahmad bin Abdullah" required />
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-school"></i> Kelas <span class="required">*</span></label>
-                            <input type="text" id="kelasMurid" placeholder="Cth: 5 Cerdas" required />
-                        </div>
-                    </div>
-
-                    <!-- SOALAN 1 -->
-                    <div class="soalan-item">
-                        <div class="soalan-num">Soalan 1</div>
-                        <div class="soalan-text">Apa yang anda lakukan pertama kali apabila anda tidak faham soalan persamaan kuadratik?</div>
-                        <div class="options">
-                            <label><input type="radio" name="q1" value="Berhenti dan biarkan kosong" /> Berhenti dan biarkan kosong</label>
-                            <label><input type="radio" name="q1" value="Cuba baca soalan sekali lagi" /> Cuba baca soalan sekali lagi</label>
-                            <label><input type="radio" name="q1" value="Rujuk nota / contoh" /> Rujuk nota / contoh</label>
-                            <label><input type="radio" name="q1" value="Tanya rakan / guru" /> Tanya rakan / guru</label>
-                        </div>
-                    </div>
-
-                    <!-- SOALAN 2 -->
-                    <div class="soalan-item">
-                        <div class="soalan-num">Soalan 2</div>
-                        <div class="soalan-text">Semasa "Cabaran Tekad Kuadratik", adakah anda…</div>
-                        <div class="options">
-                            <label><input type="radio" name="q2" value="Cepat rasa putus asa" /> Cepat rasa putus asa</label>
-                            <label><input type="radio" name="q2" value="Rasa susah, tetapi masih mencuba" /> Rasa susah, tetapi masih mencuba</label>
-                            <label><input type="radio" name="q2" value="Terus mencuba sehingga selesai" /> Terus mencuba sehingga selesai</label>
-                        </div>
-                    </div>
-
-                    <!-- SOALAN 3 -->
-                    <div class="soalan-item">
-                        <div class="soalan-num">Soalan 3</div>
-                        <div class="soalan-text">Tulis satu strategi yang anda akan gunakan selepas ini apabila berhadapan soalan Matematik Tambahan yang sukar:</div>
-                        <textarea id="q3" placeholder="Tulis strategi anda di sini..."></textarea>
-                    </div>
-
-                    <!-- SOALAN 4 -->
-                    <div class="soalan-item">
-                        <div class="soalan-num">Soalan 4</div>
-                        <div class="soalan-text">Satu ayat untuk menggambarkan perasaan anda selepas berjaya menyelesaikan soalan sukar hari ini:</div>
-                        <textarea id="q4" placeholder="Tulis perasaan anda di sini..."></textarea>
-                    </div>
-
-                    <button type="button" class="btn btn-primary btn-lg" onclick="hantarJawapan()" id="btnHantar">
-                        <i class="fas fa-paper-plane"></i> Hantar Jawapan
-                    </button>
-
-                    <div id="responseMessage" class="message"></div>
-
-                </form>
-
+            <!-- GURU INFO (HANYA NAMA GURU) -->
+            <div class="guru-info">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <span>Pengajar: <span class="guru-nama" id="guruNama">Memuatkan...</span></span>
             </div>
+
+            <div class="card-title">
+                <i class="fas fa-pen-fancy"></i> Refleksi Karakter (Daya Tahan)
+            </div>
+
+            <p class="text-muted" style="margin-bottom:1.5rem;">
+                <i class="fas fa-info-circle"></i> Jawab soalan berikut dengan jujur. Tiada jawapan betul atau salah.
+            </p>
+
+            <form id="refleksiForm" onsubmit="return false;">
+
+                <!-- Nama & Kelas - MURID ISI -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Nama Penuh <span class="required">*</span></label>
+                        <input type="text" id="namaMurid" placeholder="Cth: Ahmad bin Abdullah" required />
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-school"></i> Kelas <span class="required">*</span></label>
+                        <input type="text" id="kelasMurid" placeholder="Cth: 5 Cerdas" required />
+                    </div>
+                </div>
+
+                <!-- SOALAN 1 -->
+                <div class="soalan-item">
+                    <div class="soalan-num">Soalan 1</div>
+                    <div class="soalan-text">Apa yang anda lakukan pertama kali apabila anda tidak faham soalan persamaan kuadratik?</div>
+                    <div class="options">
+                        <label><input type="radio" name="q1" value="Berhenti dan biarkan kosong" /> Berhenti dan biarkan kosong</label>
+                        <label><input type="radio" name="q1" value="Cuba baca soalan sekali lagi" /> Cuba baca soalan sekali lagi</label>
+                        <label><input type="radio" name="q1" value="Rujuk nota / contoh" /> Rujuk nota / contoh</label>
+                        <label><input type="radio" name="q1" value="Tanya rakan / guru" /> Tanya rakan / guru</label>
+                    </div>
+                </div>
+
+                <!-- SOALAN 2 -->
+                <div class="soalan-item">
+                    <div class="soalan-num">Soalan 2</div>
+                    <div class="soalan-text">Semasa "Cabaran Tekad Kuadratik", adakah anda…</div>
+                    <div class="options">
+                        <label><input type="radio" name="q2" value="Cepat rasa putus asa" /> Cepat rasa putus asa</label>
+                        <label><input type="radio" name="q2" value="Rasa susah, tetapi masih mencuba" /> Rasa susah, tetapi masih mencuba</label>
+                        <label><input type="radio" name="q2" value="Terus mencuba sehingga selesai" /> Terus mencuba sehingga selesai</label>
+                    </div>
+                </div>
+
+                <!-- SOALAN 3 -->
+                <div class="soalan-item">
+                    <div class="soalan-num">Soalan 3</div>
+                    <div class="soalan-text">Tulis satu strategi yang anda akan gunakan selepas ini apabila berhadapan soalan Matematik Tambahan yang sukar:</div>
+                    <textarea id="q3" placeholder="Tulis strategi anda di sini..."></textarea>
+                </div>
+
+                <!-- SOALAN 4 -->
+                <div class="soalan-item">
+                    <div class="soalan-num">Soalan 4</div>
+                    <div class="soalan-text">Satu ayat untuk menggambarkan perasaan anda selepas berjaya menyelesaikan soalan sukar hari ini:</div>
+                    <textarea id="q4" placeholder="Tulis perasaan anda di sini..."></textarea>
+                </div>
+
+                <button type="button" class="btn btn-primary btn-lg" onclick="hantarJawapan()" id="btnHantar">
+                    <i class="fas fa-paper-plane"></i> Hantar Jawapan
+                </button>
+
+                <div id="responseMessage" class="message"></div>
+
+            </form>
 
         </div>
 
@@ -583,7 +557,7 @@
     <script type="module">
         import { initializeApp } from "firebase/app";
         import { getAnalytics } from "firebase/analytics";
-        import { getDatabase, ref, get, set, push } from "firebase/database";
+        import { getDatabase, ref, get, set } from "firebase/database";
         import { getFirestore, collection, addDoc } from "firebase/firestore";
 
         const firebaseConfig = {
@@ -605,7 +579,6 @@
         window.ref = ref;
         window.get = get;
         window.set = set;
-        window.push = push;
         window.db = db;
         window.collection = collection;
         window.addDoc = addDoc;
@@ -618,57 +591,54 @@
 
         const classCode = getCodeFromURL();
 
-        // ===== LOAD GURU DATA FROM FIREBASE =====
-        async function loadGuruData() {
-            const loading = document.getElementById('loadingState');
-            const content = document.getElementById('contentState');
+        // ===== DISPLAY CODE =====
+        if (classCode) {
+            document.getElementById('codeBadge').innerHTML = `<i class="fas fa-key"></i> Code: ${classCode}`;
+        } else {
+            document.getElementById('codeBadge').innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#d4527c;"></i> Tiada Code`;
+        }
+
+        // ===== LOAD GURU NAME FROM FIREBASE - CEPAT =====
+        async function loadGuruName() {
+            const guruEl = document.getElementById('guruNama');
 
             if (!classCode) {
-                loading.classList.add('hidden');
-                content.classList.remove('hidden');
-                document.getElementById('codeBadge').innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#d4527c;"></i> Tiada Code`;
-                document.getElementById('guruNama').textContent = 'Guru';
+                guruEl.textContent = 'Guru';
                 return;
             }
 
             try {
-                // Try to get from Realtime Database
-                const rtdbRef = ref(rtdb, `sessions/${classCode}`);
+                // Cuba dari Realtime Database
+                const rtdbRef = ref(rtdb, `sessions/${classCode}/guru`);
                 const rtdbSnap = await get(rtdbRef);
 
-                let guruName = 'Guru';
-
                 if (rtdbSnap.exists()) {
-                    const data = rtdbSnap.val();
-                    guruName = data.guru || 'Guru';
-                    console.log('✅ Guru data from RTDB:', guruName);
-                } else {
-                    // Try Firestore
-                    // Since we can't use getDoc with module import easily, fallback to localStorage
-                    const report = localStorage.getItem('aktiviti1Report');
-                    if (report) {
-                        try {
-                            const data = JSON.parse(report);
-                            if (data.guru) {
-                                guruName = data.guru;
-                                console.log('✅ Guru data from localStorage:', guruName);
-                            }
-                        } catch (e) {}
-                    }
+                    guruEl.textContent = rtdbSnap.val();
+                    console.log('✅ Guru dari RTDB:', rtdbSnap.val());
+                    return;
                 }
 
-                // Update UI
-                loading.classList.add('hidden');
-                content.classList.remove('hidden');
-                document.getElementById('codeBadge').innerHTML = `<i class="fas fa-key"></i> Code: ${classCode}`;
-                document.getElementById('guruNama').textContent = guruName;
+                // Cuba dari Firestore
+                // Gunakan fetch secara terus (tapi kita guna getDoc)
+                // Kita skip dulu, guna localStorage fallback
+                const report = localStorage.getItem('aktiviti1Report');
+                if (report) {
+                    try {
+                        const data = JSON.parse(report);
+                        if (data.guru) {
+                            guruEl.textContent = data.guru;
+                            console.log('✅ Guru dari localStorage:', data.guru);
+                            return;
+                        }
+                    } catch (e) {}
+                }
+
+                // Default
+                guruEl.textContent = 'Guru';
 
             } catch (error) {
-                console.error('❌ Error loading guru data:', error);
-                loading.classList.add('hidden');
-                content.classList.remove('hidden');
-                document.getElementById('codeBadge').innerHTML = `<i class="fas fa-key"></i> Code: ${classCode || '-'}`;
-                document.getElementById('guruNama').textContent = 'Guru';
+                console.error('❌ Error loading guru:', error);
+                guruEl.textContent = 'Guru';
             }
         }
 
@@ -684,7 +654,6 @@
             const msg = document.getElementById('responseMessage');
             const btn = document.getElementById('btnHantar');
 
-            // Validation
             if (!nama) { msg.className = 'message error';
                 msg.textContent = '⚠️ Sila masukkan nama penuh anda.';
                 return; }
@@ -704,7 +673,6 @@
                 msg.textContent = '⚠️ Sila jawab Soalan 4.';
                 return; }
 
-            // Prepare data
             const jawapanData = {
                 nama: nama,
                 kelas: kelas,
@@ -723,19 +691,17 @@
                 btn.innerHTML = '<span class="spinner"></span> Menghantar...';
                 msg.className = 'message';
 
-                // SAVE TO FIREBASE (REALTIME DATABASE)
+                // SAVE TO REALTIME DATABASE
                 if (classCode) {
-                    // Save under session/jawapan
-                    const jawapanRef = ref(rtdb, `sessions/${classCode}/jawapan/${nama}`);
-                    await set(jawapanRef, jawapanData);
-                    console.log('✅ Saved to RTDB: sessions/' + classCode + '/jawapan/' + nama);
+                    await set(ref(rtdb, `sessions/${classCode}/jawapan/${nama}`), jawapanData);
+                    console.log('✅ Saved to RTDB');
                 }
 
-                // SAVE TO FIRESTORE (collection "jawapan")
+                // SAVE TO FIRESTORE
                 await addDoc(collection(db, 'jawapan'), jawapanData);
-                console.log('✅ Saved to Firestore: jawapan collection');
+                console.log('✅ Saved to Firestore');
 
-                // Backup to localStorage
+                // Backup localStorage
                 const allJawapan = JSON.parse(localStorage.getItem('jawapanMurid') || '[]');
                 allJawapan.push(jawapanData);
                 localStorage.setItem('jawapanMurid', JSON.stringify(allJawapan));
@@ -744,24 +710,13 @@
                 msg.textContent = '✅ Jawapan berjaya dihantar! Terima kasih.';
 
                 // Disable form
-                document.querySelectorAll('#refleksiForm input, #refleksiForm textarea').forEach(el => {
-                    el.disabled = true;
-                });
-                document.querySelectorAll('#refleksiForm .options input').forEach(el => {
-                    el.disabled = true;
-                });
+                document.querySelectorAll('#refleksiForm input, #refleksiForm textarea').forEach(el => el.disabled = true);
+                document.querySelectorAll('#refleksiForm .options input').forEach(el => el.disabled = true);
                 btn.innerHTML = '<i class="fas fa-check-circle"></i> Selesai';
                 btn.disabled = true;
 
-                // Show success
-                setTimeout(() => {
-                    if (confirm('✅ Jawapan anda telah dihantar! Anda boleh tutup halaman ini.')) {
-                        window.close();
-                    }
-                }, 1500);
-
             } catch (error) {
-                console.error('❌ Error saving:', error);
+                console.error('❌ Error:', error);
                 msg.className = 'message error';
                 msg.textContent = '⚠️ Ralat: ' + error.message;
                 btn.disabled = false;
@@ -779,8 +734,8 @@
             }
         });
 
-        // ===== INIT =====
-        loadGuruData();
+        // ===== INIT - LOAD GURU NAME =====
+        loadGuruName();
 
         console.log('✅ Soalan 1 page ready!');
         console.log('📡 Connected to Firebase');
