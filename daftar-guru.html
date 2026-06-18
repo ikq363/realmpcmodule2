@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real MPC · Daftar / Log Masuk Guru</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- Google Font (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+    <!-- Firebase SDK -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js",
+                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js"
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f0ff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        /* ===== GRAFIK LATAR BELAKANG ===== */
+        .bg-graphic {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bg-graphic .circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.12;
+            filter: blur(80px);
+            animation: floatGraphic 20s ease-in-out infinite alternate;
+        }
+
+        .bg-graphic .c1 {
+            width: 500px;
+            height: 500px;
+            background: #b45ef7;
+            top: -150px;
+            left: -100px;
+        }
+        .bg-graphic .c2 {
+            width: 400px;
+            height: 400px;
+            background: #f9a8d4;
+            bottom: -100px;
+            right: -50px;
+            animation-delay: 3s;
+        }
+        .bg-graphic .c3 {
+            width: 300px;
+            height: 300px;
+            background: #fbc85a;
+            top: 40%;
+            left: 60%;
+            animation-delay: 6s;
+            opacity: 0.08;
+        }
+        .bg-graphic .c4 {
+            width: 250px;
+            height: 250px;
+            background: #38c0c0;
+            top: 70%;
+            left: 10%;
+            animation-delay: 9s;
+            opacity: 0.1;
+        }
+
+        @keyframes floatGraphic {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(40px, -30px) scale(1.2);
+            }
+        }
+
+        /* ===== KANDUNGAN UTAMA ===== */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* ===== LOGO ===== */
+        .logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #3b1f6e, #b45ef7, #f9a8d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo i {
+            font-size: 3rem;
+            color: #6d3b9e;
+            margin-bottom: 0.3rem;
+        }
+
+        .logo p {
+            color: #6b5a7a;
+            font-weight: 500;
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem 1rem 2rem 1rem;
+            padding: 2rem 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 40px rgba(80, 40, 120, 0.1);
+            margin-bottom: 1.2rem;
+        }
+
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 60px;
+            padding: 0.3rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            border: none;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            color: #6b5a7a;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #1d0f2e;
+            box-shadow: 0 4px 15px rgba(80, 40, 120, 0.1);
+        }
+
+        .tab-btn i {
+            margin-right: 8px;
+        }
+
+        /* ===== FORM ===== */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #1d0f2e;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group label i {
+            color: #6d3b9e;
+            margin-right: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 60px;
+            border: 1.5px solid #d6c0f0;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            background: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #6d3b9e;
+            box-shadow: 0 0 0 3px rgba(109, 59, 158, 0.15);
+        }
+
+        .form-group input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* ===== BUTTON ===== */
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6d3b9e, #b45ef7);
+            color: white;
+            box-shadow: 0 4px 15px rgba(80, 30, 150, 0.25);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 10px 30px rgba(80, 30, 150, 0.35);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #38a87a, #6bc0a8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(56, 168, 122, 0.3);
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 10px 30px rgba(56, 168, 122, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(45, 25, 75, 0.08);
+            color: #2f1b4e;
+            border: 1.5px solid #b78aff;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(45, 25, 75, 0.15);
+        }
+
+        /* ===== PAGE ===== */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* ===== STATUS / MESSAGE ===== */
+        .message {
+            padding: 0.8rem 1.2rem;
+            border-radius: 1rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .message.error {
+            display: block;
+            background: #fce4ec;
+            color: #d4527c;
+            border: 1px solid #fbc4d6;
+        }
+
+        .message.success {
+            display: block;
+            background: #def5ea;
+            color: #38a87a;
+            border: 1px solid #a8e0c9;
+        }
+
+        .message.info {
+            display: block;
+            background: #e3f0fa;
+            color: #3083b0;
+            border: 1px solid #b5d6f0;
+        }
+
+        /* ===== LOADING ===== */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e6d5ff;
+            border-top: 3px solid #6d3b9e;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== BACK BUTTON ===== */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #6b5a7a;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .back-link:hover {
+            color: #6d3b9e;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            body {
+                padding: 0.8rem;
+            }
+
+            .card {
+                padding: 1.2rem 1.2rem;
+            }
+
+            .logo h1 {
+                font-size: 1.8rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+                border-radius: 1.5rem;
+                background: transparent;
+                padding: 0;
+                gap: 0.3rem;
+            }
+
+            .tab-btn {
+                border-radius: 60px;
+                padding: 0.6rem 1rem;
+                background: rgba(255, 255, 255, 0.3);
+            }
+
+            .tab-btn.active {
+                background: white;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== GRAFIK LATAR BELAKANG ===== -->
+    <div class="bg-graphic">
+        <div class="circle c1"></div>
+        <div class="circle c2"></div>
+        <div class="circle c3"></div>
+        <div class="circle c4"></div>
+    </div>
+
+    <!-- ===== KANDUNGAN UTAMA ===== -->
+    <div class="container">
+
+        <!-- LOGO -->
+        <div class="logo">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <h1>Real MPC</h1>
+            <p>Daftar / Log Masuk Guru</p>
+        </div>
+
+        <!-- CARD -->
+        <div class="card">
+
+            <!-- TABS -->
+            <div class="tabs">
+                <button class="tab-btn active" id="tabDaftar" onclick="switchTab('daftar')">
+                    <i class="fas fa-user-plus"></i> Daftar
+                </button>
+                <button class="tab-btn" id="tabLogin" onclick="switchTab('login')">
+                    <i class="fas fa-sign-in-alt"></i> Log Masuk
+                </button>
+            </div>
+
+            <!-- ===== TAB DAFTAR ===== -->
+            <div class="page active" id="pageDaftar">
+                <form id="formDaftar" onsubmit="return false;">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Nama Penuh</label>
+                        <input type="text" id="daftarNama" placeholder="Cth: Cikgu Shuhaimi" required />
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-id-card"></i> No. Kad Pengenalan (IC)</label>
+                        <input type="text" id="daftarIC" placeholder="Cth: 830101-10-1234" required />
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="daftarGuru()" id="btnDaftar">
+                        <i class="fas fa-user-plus"></i> Daftar
+                    </button>
+                    <div id="daftarMessage" class="message"></div>
+                </form>
+            </div>
+
+            <!-- ===== TAB LOG MASUK ===== -->
+            <div class="page" id="pageLogin">
+                <form id="formLogin" onsubmit="return false;">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Nama Penuh</label>
+                        <input type="text" id="loginNama" placeholder="Cth: Cikgu Shuhaimi" required />
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-id-card"></i> No. Kad Pengenalan (IC)</label>
+                        <input type="text" id="loginIC" placeholder="Cth: 830101-10-1234" required />
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="loginGuru()" id="btnLogin">
+                        <i class="fas fa-sign-in-alt"></i> Log Masuk
+                    </button>
+                    <div id="loginMessage" class="message"></div>
+                </form>
+            </div>
+
+            <!-- BACK BUTTON -->
+            <div style="text-align:center;margin-top:0.5rem;">
+                <a href="index.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Kembali ke Utama
+                </a>
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <footer style="text-align:center;padding:1rem 0 0.3rem;font-size:0.8rem;color:#6b5a7a;">
+            <i class="fas fa-user-graduate"></i> Shuhaimi bin Abu Seman · Universiti Putra Malaysia
+            <span style="margin:0 8px;">|</span> <i class="far fa-copyright"></i> 2026 Real MPC
+        </footer>
+
+    </div>
+
+    <!-- ===== FIREBASE + MAIN JS ===== -->
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getAnalytics } from "firebase/analytics";
+        import { getFirestore, collection, query, where, getDocs, addDoc, doc, getDoc, setDoc } from "firebase/firestore";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzWmeMvmMwNsEEiFmnr9PRtw6nNjIUGRg",
+            authDomain: "real-mpc-module-6be02.firebaseapp.com",
+            projectId: "real-mpc-module-6be02",
+            storageBucket: "real-mpc-module-6be02.firebasestorage.app",
+            messagingSenderId: "1045888004132",
+            appId: "1:1045888004132:web:869de28a286506f15ea8b1",
+            measurementId: "G-XD3VQ7JKKB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+
+        // ===== EXPOSE TO WINDOW =====
+        window.db = db;
+        window.collection = collection;
+        window.query = query;
+        window.where = where;
+        window.getDocs = getDocs;
+        window.addDoc = addDoc;
+        window.doc = doc;
+        window.getDoc = getDoc;
+        window.setDoc = setDoc;
+
+        // ===== TAB SWITCH =====
+        window.switchTab = function(tab) {
+            // Hide all pages
+            document.getElementById('pageDaftar').classList.remove('active');
+            document.getElementById('pageLogin').classList.remove('active');
+
+            // Remove active from all tabs
+            document.getElementById('tabDaftar').classList.remove('active');
+            document.getElementById('tabLogin').classList.remove('active');
+
+            if (tab === 'daftar') {
+                document.getElementById('pageDaftar').classList.add('active');
+                document.getElementById('tabDaftar').classList.add('active');
+                // Clear messages
+                document.getElementById('daftarMessage').className = 'message';
+                document.getElementById('daftarMessage').textContent = '';
+            } else {
+                document.getElementById('pageLogin').classList.add('active');
+                document.getElementById('tabLogin').classList.add('active');
+                document.getElementById('loginMessage').className = 'message';
+                document.getElementById('loginMessage').textContent = '';
+            }
+        };
+
+        // ===== DAFTAR GURU =====
+        window.daftarGuru = async function() {
+            const nama = document.getElementById('daftarNama').value.trim();
+            const ic = document.getElementById('daftarIC').value.trim();
+            const msg = document.getElementById('daftarMessage');
+            const btn = document.getElementById('btnDaftar');
+
+            // Validation
+            if (!nama || !ic) {
+                msg.className = 'message error';
+                msg.textContent = '⚠️ Sila masukkan nama penuh dan IC.';
+                return;
+            }
+
+            // IC format validation (simple)
+            if (!/^\d{6}-\d{2}-\d{4}$/.test(ic) && !/^\d{12}$/.test(ic)) {
+                msg.className = 'message error';
+                msg.textContent = '⚠️ Format IC tidak sah. Gunakan format: 830101-10-1234 atau 12 digit tanpa tanda sempang.';
+                return;
+            }
+
+            // Clean IC (remove dash if any)
+            const cleanIC = ic.replace(/-/g, '');
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span> Mendaftar...';
+                msg.className = 'message';
+
+                // Check if guru already exists
+                const guruRef = collection(db, 'guru');
+                const q = query(guruRef, where('ic', '==', cleanIC));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    msg.className = 'message error';
+                    msg.textContent = '❌ Guru dengan IC ini sudah berdaftar. Sila log masuk.';
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar';
+                    return;
+                }
+
+                // Register new guru
+                const docRef = await addDoc(collection(db, 'guru'), {
+                    nama: nama,
+                    ic: cleanIC,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                });
+
+                msg.className = 'message success';
+                msg.textContent = '✅ Pendaftaran berjaya! Anda boleh log masuk sekarang.';
+
+                // Clear form
+                document.getElementById('daftarNama').value = '';
+                document.getElementById('daftarIC').value = '';
+
+                // Auto switch to login after 1.5s
+                setTimeout(() => {
+                    switchTab('login');
+                    // Pre-fill login fields
+                    document.getElementById('loginNama').value = nama;
+                    document.getElementById('loginIC').value = ic;
+                    document.getElementById('loginMessage').className = 'message success';
+                    document.getElementById('loginMessage').textContent = '✅ Pendaftaran berjaya! Sila log masuk.';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Error registering guru:', error);
+                msg.className = 'message error';
+                msg.textContent = '⚠️ Ralat: ' + error.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar';
+            }
+        };
+
+        // ===== LOG MASUK GURU =====
+        window.loginGuru = async function() {
+            const nama = document.getElementById('loginNama').value.trim();
+            const ic = document.getElementById('loginIC').value.trim();
+            const msg = document.getElementById('loginMessage');
+            const btn = document.getElementById('btnLogin');
+
+            // Validation
+            if (!nama || !ic) {
+                msg.className = 'message error';
+                msg.textContent = '⚠️ Sila masukkan nama penuh dan IC.';
+                return;
+            }
+
+            // Clean IC
+            const cleanIC = ic.replace(/-/g, '');
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span> Log Masuk...';
+                msg.className = 'message';
+
+                // Check if guru exists
+                const guruRef = collection(db, 'guru');
+                const q = query(guruRef, where('ic', '==', cleanIC));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    msg.className = 'message error';
+                    msg.textContent = '❌ Guru tidak dijumpai. Sila daftar terlebih dahulu.';
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Log Masuk';
+                    return;
+                }
+
+                // Check nama matches
+                let found = false;
+                let guruData = null;
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (data.nama.toLowerCase() === nama.toLowerCase()) {
+                        found = true;
+                        guruData = { id: doc.id, ...data };
+                    }
+                });
+
+                if (!found) {
+                    msg.className = 'message error';
+                    msg.textContent = '❌ Nama tidak sepadan dengan IC yang didaftarkan.';
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Log Masuk';
+                    return;
+                }
+
+                // Login successful - save session
+                localStorage.setItem('guruSession', JSON.stringify({
+                    id: guruData.id,
+                    nama: guruData.nama,
+                    ic: guruData.ic,
+                    loginTime: new Date().toISOString()
+                }));
+
+                msg.className = 'message success';
+                msg.textContent = '✅ Log masuk berjaya! Mengalihkan ke dashboard...';
+
+                // Redirect to dashboard
+                setTimeout(() => {
+                    window.location.href = 'dashboard-guru.html';
+                }, 1000);
+
+            } catch (error) {
+                console.error('Error logging in:', error);
+                msg.className = 'message error';
+                msg.textContent = '⚠️ Ralat: ' + error.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Log Masuk';
+            }
+        };
+
+        // ===== KEYBOARD SHORTCUTS =====
+        document.getElementById('daftarNama').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('daftarIC').focus();
+            }
+        });
+        document.getElementById('daftarIC').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                daftarGuru();
+            }
+        });
+        document.getElementById('loginNama').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('loginIC').focus();
+            }
+        });
+        document.getElementById('loginIC').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loginGuru();
+            }
+        });
+
+        // ===== CHECK URL PARAMETERS =====
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('tab') === 'login') {
+            switchTab('login');
+        }
+
+        console.log('✅ Daftar Guru page ready!');
+        console.log('📡 Connected to Firebase Firestore');
+    </script>
+
+</body>
+</html>
