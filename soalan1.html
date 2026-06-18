@@ -358,6 +358,13 @@
             border: 1px solid #a8e0c9;
         }
 
+        .message.info {
+            display: block;
+            background: #e3f0fa;
+            color: #3083b0;
+            border: 1px solid #b5d6f0;
+        }
+
         .spinner {
             display: inline-block;
             width: 20px;
@@ -390,6 +397,38 @@
             margin-bottom: 0.5rem;
         }
 
+        .debug-box {
+            background: #1d0f2e;
+            color: #a8e0c9;
+            padding: 0.8rem 1rem;
+            border-radius: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.7rem;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .debug-box.show {
+            display: block;
+        }
+
+        .debug-box .log-line {
+            padding: 0.1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .debug-box .log-line.error {
+            color: #d4527c;
+        }
+        .debug-box .log-line.success {
+            color: #38a87a;
+        }
+        .debug-box .log-line.info {
+            color: #fbc85a;
+        }
+
         @media (max-width: 600px) {
             body {
                 padding: 0.8rem;
@@ -417,6 +456,10 @@
                 padding: 0.8rem 1.5rem;
                 font-size: 1rem;
             }
+            .debug-box {
+                font-size: 0.6rem;
+                max-height: 100px;
+            }
         }
     </style>
 </head>
@@ -439,7 +482,7 @@
 
         <div class="card">
 
-            <!-- CODE BADGE - TERUS PAPAR CODE DARI URL -->
+            <!-- CODE BADGE -->
             <div style="text-align:center;">
                 <span class="code-badge" id="codeBadge"><i class="fas fa-key"></i> Code: -</span>
             </div>
@@ -454,7 +497,6 @@
 
             <form id="refleksiForm" onsubmit="return false;">
 
-                <!-- Nama & Kelas - MURID ISI -->
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
                     <div class="form-group">
                         <label><i class="fas fa-user"></i> Nama Penuh <span class="required">*</span></label>
@@ -509,6 +551,11 @@
 
                 <div id="responseMessage" class="message"></div>
 
+                <!-- DEBUG BOX -->
+                <div class="debug-box" id="debugBox">
+                    <div class="log-line info">🔍 Debug log:</div>
+                </div>
+
             </form>
 
         </div>
@@ -524,7 +571,7 @@
     <script type="module">
         import { initializeApp } from "firebase/app";
         import { getAnalytics } from "firebase/analytics";
-        import { getDatabase, ref, set } from "firebase/database";
+        import { getDatabase, ref, set, push } from "firebase/database";
         import { getFirestore, collection, addDoc } from "firebase/firestore";
 
         const firebaseConfig = {
@@ -545,9 +592,22 @@
         window.rtdb = rtdb;
         window.ref = ref;
         window.set = set;
+        window.push = push;
         window.db = db;
         window.collection = collection;
         window.addDoc = addDoc;
+
+        // ===== DEBUG LOG =====
+        function addDebugLog(message, type = 'info') {
+            const box = document.getElementById('debugBox');
+            box.classList.add('show');
+            const line = document.createElement('div');
+            line.className = `log-line ${type}`;
+            line.textContent = `> ${new Date().toLocaleTimeString()} - ${message}`;
+            box.appendChild(line);
+            box.scrollTop = box.scrollHeight;
+            console.log(message);
+        }
 
         // ===== GET CODE FROM URL =====
         function getCodeFromURL() {
@@ -560,8 +620,10 @@
         // ===== DISPLAY CODE =====
         if (classCode) {
             document.getElementById('codeBadge').innerHTML = `<i class="fas fa-key"></i> Code: ${classCode}`;
+            addDebugLog(`✅ Code dijumpai: ${classCode}`, 'success');
         } else {
             document.getElementById('codeBadge').innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#d4527c;"></i> Tiada Code`;
+            addDebugLog('⚠️ Tiada code dalam URL', 'error');
         }
 
         // ===== HANTAR JAWAPAN =====
@@ -576,25 +638,47 @@
             const msg = document.getElementById('responseMessage');
             const btn = document.getElementById('btnHantar');
 
+            addDebugLog('📤 Mula menghantar jawapan...', 'info');
+
             // Validation
-            if (!nama) { msg.className = 'message error';
+            if (!nama) {
+                msg.className = 'message error';
                 msg.textContent = '⚠️ Sila masukkan nama penuh anda.';
-                return; }
-            if (!kelas) { msg.className = 'message error';
+                addDebugLog('❌ Nama kosong', 'error');
+                return;
+            }
+            if (!kelas) {
+                msg.className = 'message error';
                 msg.textContent = '⚠️ Sila masukkan nama kelas anda.';
-                return; }
-            if (!q1) { msg.className = 'message error';
+                addDebugLog('❌ Kelas kosong', 'error');
+                return;
+            }
+            if (!q1) {
+                msg.className = 'message error';
                 msg.textContent = '⚠️ Sila jawab Soalan 1.';
-                return; }
-            if (!q2) { msg.className = 'message error';
+                addDebugLog('❌ Soalan 1 belum dijawab', 'error');
+                return;
+            }
+            if (!q2) {
+                msg.className = 'message error';
                 msg.textContent = '⚠️ Sila jawab Soalan 2.';
-                return; }
-            if (!q3) { msg.className = 'message error';
+                addDebugLog('❌ Soalan 2 belum dijawab', 'error');
+                return;
+            }
+            if (!q3) {
+                msg.className = 'message error';
                 msg.textContent = '⚠️ Sila jawab Soalan 3.';
-                return; }
-            if (!q4) { msg.className = 'message error';
+                addDebugLog('❌ Soalan 3 kosong', 'error');
+                return;
+            }
+            if (!q4) {
+                msg.className = 'message error';
                 msg.textContent = '⚠️ Sila jawab Soalan 4.';
-                return; }
+                addDebugLog('❌ Soalan 4 kosong', 'error');
+                return;
+            }
+
+            addDebugLog(`✅ Nama: ${nama}, Kelas: ${kelas}`, 'success');
 
             const jawapanData = {
                 nama: nama,
@@ -613,40 +697,73 @@
                 btn.disabled = true;
                 btn.innerHTML = '<span class="spinner"></span> Menghantar...';
                 msg.className = 'message';
+                msg.textContent = '';
 
-                // SAVE TO REALTIME DATABASE (untuk guru lihat secara live)
+                addDebugLog('📡 Menyimpan ke Firebase...', 'info');
+
+                // ===== SAVE TO REALTIME DATABASE =====
+                let rtdbSuccess = false;
                 if (classCode) {
-                    await set(ref(rtdb, `sessions/${classCode}/jawapan/${nama}`), jawapanData);
-                    console.log('✅ Saved to RTDB: sessions/' + classCode + '/jawapan/' + nama);
+                    try {
+                        const jawapanRef = ref(rtdb, `sessions/${classCode}/jawapan/${nama}`);
+                        await set(jawapanRef, jawapanData);
+                        rtdbSuccess = true;
+                        addDebugLog(`✅ Saved to RTDB: sessions/${classCode}/jawapan/${nama}`, 'success');
+                    } catch (rtdbError) {
+                        addDebugLog(`❌ RTDB Error: ${rtdbError.message}`, 'error');
+                    }
                 }
 
-                // SAVE TO FIRESTORE (collection "jawapan" - backup)
-                await addDoc(collection(db, 'jawapan'), jawapanData);
-                console.log('✅ Saved to Firestore');
+                // ===== SAVE TO FIRESTORE =====
+                let firestoreSuccess = false;
+                try {
+                    await addDoc(collection(db, 'jawapan'), jawapanData);
+                    firestoreSuccess = true;
+                    addDebugLog('✅ Saved to Firestore', 'success');
+                } catch (fsError) {
+                    addDebugLog(`❌ Firestore Error: ${fsError.message}`, 'error');
+                }
 
-                // Backup to localStorage
-                const allJawapan = JSON.parse(localStorage.getItem('jawapanMurid') || '[]');
-                allJawapan.push(jawapanData);
-                localStorage.setItem('jawapanMurid', JSON.stringify(allJawapan));
+                // ===== BACKUP TO LOCALSTORAGE =====
+                try {
+                    const allJawapan = JSON.parse(localStorage.getItem('jawapanMurid') || '[]');
+                    allJawapan.push(jawapanData);
+                    localStorage.setItem('jawapanMurid', JSON.stringify(allJawapan));
+                    addDebugLog('✅ Saved to localStorage (backup)', 'success');
+                } catch (lsError) {
+                    addDebugLog(`❌ localStorage Error: ${lsError.message}`, 'error');
+                }
 
-                msg.className = 'message success';
-                msg.textContent = '✅ Jawapan berjaya dihantar! Terima kasih.';
+                // ===== CHECK IF ANY SUCCESS =====
+                if (rtdbSuccess || firestoreSuccess) {
+                    msg.className = 'message success';
+                    msg.textContent = '✅ Jawapan berjaya dihantar! Terima kasih.';
+                    addDebugLog('🎉 Jawapan berjaya dihantar!', 'success');
 
-                // Disable form
-                document.querySelectorAll('#refleksiForm input, #refleksiForm textarea').forEach(el => el.disabled = true);
-                document.querySelectorAll('#refleksiForm .options input').forEach(el => el.disabled = true);
-                btn.innerHTML = '<i class="fas fa-check-circle"></i> Selesai';
-                btn.disabled = true;
+                    // Disable form
+                    document.querySelectorAll('#refleksiForm input, #refleksiForm textarea').forEach(el => el.disabled = true);
+                    document.querySelectorAll('#refleksiForm .options input').forEach(el => el.disabled = true);
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Selesai';
+                    btn.disabled = true;
 
-                // Show success popup
-                setTimeout(() => {
-                    if (confirm('✅ Jawapan anda telah dihantar! Anda boleh tutup halaman ini.')) {
-                        window.close();
-                    }
-                }, 1500);
+                    // Show success popup
+                    setTimeout(() => {
+                        if (confirm('✅ Jawapan anda telah dihantar! Anda boleh tutup halaman ini.')) {
+                            window.close();
+                        }
+                    }, 1500);
+                } else {
+                    // Both failed - but we have localStorage backup
+                    msg.className = 'message info';
+                    msg.textContent = '⚠️ Jawapan disimpan secara tempatan. Sila cuba lagi nanti.';
+                    addDebugLog('⚠️ Disimpan ke localStorage sahaja', 'info');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Hantar Jawapan';
+                }
 
             } catch (error) {
-                console.error('❌ Error saving:', error);
+                console.error('❌ Error:', error);
+                addDebugLog(`❌ Ralat umum: ${error.message}`, 'error');
                 msg.className = 'message error';
                 msg.textContent = '⚠️ Ralat: ' + error.message;
                 btn.disabled = false;
@@ -664,9 +781,16 @@
             }
         });
 
+        // ===== TOGGLE DEBUG =====
+        document.addEventListener('dblclick', () => {
+            const box = document.getElementById('debugBox');
+            box.classList.toggle('show');
+        });
+
         console.log('✅ Soalan 1 page ready!');
         console.log('📡 Connected to Firebase');
         console.log('🔗 Code:', classCode || 'Tiada code');
+        console.log('💡 Double-click untuk toggle debug');
         console.log('📝 Terus buka soalan - tanpa pengesahan');
     </script>
 
