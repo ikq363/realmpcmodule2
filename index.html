@@ -287,6 +287,81 @@
             }
         }
 
+        /* ===== JOIN CLASS BUTTON ===== */
+        .join-section {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0 2.5rem;
+        }
+
+        .btn-join {
+            padding: 1.2rem 4rem;
+            border-radius: 80px;
+            border: none;
+            font-weight: 800;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(135deg, #6d3b9e, #b45ef7, #f9a8d4);
+            box-shadow: 0 8px 35px rgba(109, 59, 158, 0.4);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        .btn-join::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translate(-30%, -30%) scale(0.8); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(30%, 30%) scale(1.2); opacity: 0; }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 8px 35px rgba(109, 59, 158, 0.4); }
+            50% { box-shadow: 0 8px 60px rgba(109, 59, 158, 0.6); }
+        }
+
+        .btn-join:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 15px 50px rgba(109, 59, 158, 0.5);
+        }
+
+        .btn-join i {
+            font-size: 1.8rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+
+        .btn-join .badge-join {
+            background: rgba(255, 255, 255, 0.25);
+            padding: 0.2rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
         /* ===== SECTION: IKON UTAMA (5 elemen) ===== */
         .section-title {
             font-size: 2.2rem;
@@ -597,6 +672,13 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+            .btn-join {
+                padding: 1rem 2.5rem;
+                font-size: 1.1rem;
+            }
+            .btn-join i {
+                font-size: 1.4rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -614,6 +696,15 @@
             }
             .navbar {
                 padding: 1rem;
+            }
+            .btn-join {
+                padding: 0.8rem 1.8rem;
+                font-size: 1rem;
+                width: 100%;
+                justify-content: center;
+            }
+            .btn-join i {
+                font-size: 1.2rem;
             }
         }
     </style>
@@ -639,9 +730,7 @@
             </div>
             <div class="nav-buttons">
                 <a href="index.html" class="nav-btn ghost"><i class="fas fa-home"></i> Utama</a>
-                <!-- BUTANG MODUL DIRECT KE HALAMAN KOSONG -->
                 <a href="modul.html" class="nav-btn primary"><i class="fas fa-book-open"></i> Modul</a>
-                <!-- BUTANG KE HALAMAN KOSONG -->
                 <a href="pencapaian.html" class="nav-btn secondary"><i class="fas fa-trophy"></i> Pencapaian</a>
                 <a href="pengiktirafan.html" class="nav-btn"><i class="fas fa-certificate"></i> Pengiktirafan</a>
             </div>
@@ -669,6 +758,15 @@
                 </div>
             </div>
         </section>
+
+        <!-- ===== BUTTON IKUTI KELAS ===== -->
+        <div class="join-section">
+            <a href="join.html" class="btn-join">
+                <i class="fas fa-sign-in-alt"></i>
+                Ikuti Kelas
+                <span class="badge-join"><i class="fas fa-arrow-right"></i> JOIN</span>
+            </a>
+        </div>
 
         <!-- 5 IKON UTAMA -->
         <div class="section-title">
@@ -704,7 +802,7 @@
             </div>
         </div>
 
-        <!-- BUTANG NAVIGASI KE HALAMAN KOSONG (SEMUA DAH DIRECT) -->
+        <!-- BUTANG NAVIGASI KE HALAMAN KOSONG -->
         <div class="cta-section">
             <a href="pencapaian.html" class="cta-btn achievement">
                 <i class="fas fa-trophy"></i> Modul Pencapaian
