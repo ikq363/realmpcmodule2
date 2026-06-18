@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Real MPC · Modul Aktiviti</title>
+    <title>Real MPC · Modul Pembelajaran</title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <!-- Google Font (Poppins) -->
@@ -37,7 +37,7 @@
         .bg-graphic .circle {
             position: absolute;
             border-radius: 50%;
-            opacity: 0.12;
+            opacity: 0.1;
             filter: blur(80px);
             animation: floatGraphic 20s ease-in-out infinite alternate;
         }
@@ -108,7 +108,7 @@
             border-radius: 80px;
             border: 1px solid rgba(255, 255, 255, 0.6);
             box-shadow: 0 10px 30px rgba(80, 40, 120, 0.08);
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .logo {
@@ -118,50 +118,44 @@
         }
 
         .logo h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 900;
             background: linear-gradient(135deg, #3b1f6e, #b45ef7, #f9a8d4);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            letter-spacing: -0.5px;
         }
 
         .logo i {
-            font-size: 2.2rem;
+            font-size: 2rem;
             color: #6d3b9e;
-            filter: drop-shadow(0 2px 10px rgba(140, 80, 200, 0.3));
         }
 
         .nav-buttons {
             display: flex;
             gap: 0.8rem;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .nav-btn {
-            padding: 0.6rem 1.8rem;
+            padding: 0.5rem 1.5rem;
             border-radius: 60px;
             border: none;
             font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 0.9rem;
             text-decoration: none;
             color: white;
             background: #2f1b4e;
-            box-shadow: 0 4px 15px rgba(80, 30, 150, 0.25);
-        }
-
-        .nav-btn i {
-            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .nav-btn:hover {
-            transform: translateY(-3px) scale(1.02);
+            transform: translateY(-3px);
             box-shadow: 0 10px 30px rgba(80, 30, 150, 0.35);
         }
 
@@ -169,14 +163,9 @@
             background: linear-gradient(135deg, #6d3b9e, #b45ef7);
         }
 
-        .nav-btn.secondary {
-            background: linear-gradient(135deg, #d4527c, #f9a8d4);
-        }
-
         .nav-btn.ghost {
             background: rgba(45, 25, 75, 0.08);
             color: #2f1b4e;
-            box-shadow: none;
             border: 1.5px solid #b78aff;
         }
 
@@ -184,10 +173,34 @@
             background: rgba(45, 25, 75, 0.15);
         }
 
+        .nav-btn.danger {
+            background: linear-gradient(135deg, #d4527c, #f9a8d4);
+        }
+
+        .nav-btn.success {
+            background: linear-gradient(135deg, #38a87a, #6bc0a8);
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(45, 25, 75, 0.06);
+            padding: 0.3rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            color: #1d0f2e;
+            font-weight: 500;
+        }
+
+        .user-badge i {
+            color: #6d3b9e;
+        }
+
         /* ===== HEADER MODUL ===== */
         .modul-header {
             text-align: center;
-            margin: 1.5rem 0 3rem;
+            margin: 1rem 0 2.5rem;
             padding: 2rem 1rem;
             background: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(6px);
@@ -195,8 +208,22 @@
             border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
+        .modul-header .badge {
+            display: inline-block;
+            background: #291b40;
+            color: #f0e7ff;
+            padding: 0.3rem 2rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+            border: 1px solid #b78aff;
+        }
+
         .modul-header h2 {
-            font-size: 3rem;
+            font-size: 2.8rem;
             font-weight: 900;
             color: #1d0f2e;
             margin-bottom: 0.5rem;
@@ -210,42 +237,28 @@
         }
 
         .modul-header p {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #3a2a4e;
             font-weight: 400;
         }
 
-        .modul-header .badge {
-            display: inline-block;
-            background: #291b40;
-            color: #f0e7ff;
-            padding: 0.3rem 2rem;
-            border-radius: 60px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 0.8rem;
-            border: 1px solid #b78aff;
-        }
-
-        /* ===== GRID AKTIVITI (12 BUTTON) ===== */
-        .aktiviti-grid {
+        /* ===== GALLERY GRID ===== */
+        .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.8rem;
-            margin: 2.5rem 0 3.5rem;
+            margin: 2rem 0 3rem;
         }
 
-        .aktiviti-card {
+        .gallery-card {
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(8px);
-            padding: 1.8rem 1.2rem;
-            border-radius: 2.5rem 1rem 2.5rem 1rem;
+            border-radius: 2rem 1rem 2rem 1rem;
+            padding: 1.8rem 1.5rem;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.6);
             box-shadow: 0 8px 25px rgba(80, 40, 120, 0.06);
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
             text-decoration: none;
             color: #1d0f2e;
             display: flex;
@@ -253,107 +266,167 @@
             align-items: center;
             gap: 0.6rem;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
 
-        .aktiviti-card:hover {
-            transform: translateY(-12px) scale(1.03);
-            box-shadow: 0 25px 50px rgba(80, 40, 120, 0.2);
+        .gallery-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 100%);
+            pointer-events: none;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(80, 40, 120, 0.18);
             border-color: #c9b1ff;
         }
 
-        .aktiviti-card .icon-wrapper {
-            width: 70px;
-            height: 70px;
+        .gallery-card .icon-wrapper {
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             margin-bottom: 0.3rem;
             transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
         }
 
-        .aktiviti-card:hover .icon-wrapper {
+        .gallery-card:hover .icon-wrapper {
             transform: scale(1.1) rotate(5deg);
         }
 
-        .aktiviti-card h3 {
-            font-size: 1.3rem;
+        .gallery-card .number-badge {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: rgba(45, 25, 75, 0.08);
+            padding: 0.2rem 0.8rem;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #6b5a7a;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .gallery-card h3 {
+            font-size: 1.2rem;
             font-weight: 700;
             color: #1d0f2e;
+            position: relative;
+            z-index: 1;
         }
 
-        .aktiviti-card p {
+        .gallery-card p {
             font-size: 0.85rem;
-            color: #4f3a68;
+            color: #6b5a7a;
             font-weight: 400;
             margin: 0;
+            position: relative;
+            z-index: 1;
         }
 
-        .aktiviti-card .arrow-icon {
+        .gallery-card .arrow-icon {
             font-size: 0.9rem;
             opacity: 0;
             transition: all 0.3s ease;
             color: #6d3b9e;
             margin-top: 0.2rem;
+            position: relative;
+            z-index: 1;
         }
 
-        .aktiviti-card:hover .arrow-icon {
+        .gallery-card:hover .arrow-icon {
             opacity: 1;
             transform: translateX(5px);
         }
 
-        /* Warna unik untuk setiap aktiviti */
-        .aktiviti-card:nth-child(1) .icon-wrapper {
-            background: #fce9ef;
-            color: #d4527c;
+        .gallery-card .status-tag {
+            font-size: 0.65rem;
+            padding: 0.15rem 1rem;
+            border-radius: 60px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
         }
-        .aktiviti-card:nth-child(2) .icon-wrapper {
-            background: #e3f0fa;
-            color: #3083b0;
-        }
-        .aktiviti-card:nth-child(3) .icon-wrapper {
-            background: #fbf0db;
-            color: #d99b3c;
-        }
-        .aktiviti-card:nth-child(4) .icon-wrapper {
+
+        .status-tag.available {
             background: #def5ea;
             color: #38a87a;
         }
-        .aktiviti-card:nth-child(5) .icon-wrapper {
+
+        .status-tag.coming {
+            background: #fbf0db;
+            color: #d99b3c;
+        }
+
+        .status-tag.locked {
+            background: #fce4ec;
+            color: #d4527c;
+        }
+
+        /* Warna unik untuk setiap aktiviti */
+        .gallery-card:nth-child(1) .icon-wrapper {
+            background: #fce9ef;
+            color: #d4527c;
+        }
+        .gallery-card:nth-child(2) .icon-wrapper {
+            background: #e3f0fa;
+            color: #3083b0;
+        }
+        .gallery-card:nth-child(3) .icon-wrapper {
+            background: #fbf0db;
+            color: #d99b3c;
+        }
+        .gallery-card:nth-child(4) .icon-wrapper {
+            background: #def5ea;
+            color: #38a87a;
+        }
+        .gallery-card:nth-child(5) .icon-wrapper {
             background: #f0e3f7;
             color: #a05f9e;
         }
-        .aktiviti-card:nth-child(6) .icon-wrapper {
+        .gallery-card:nth-child(6) .icon-wrapper {
             background: #fce4ec;
             color: #e84a6a;
         }
-        .aktiviti-card:nth-child(7) .icon-wrapper {
+        .gallery-card:nth-child(7) .icon-wrapper {
             background: #e8f0fe;
             color: #4a8bc2;
         }
-        .aktiviti-card:nth-child(8) .icon-wrapper {
+        .gallery-card:nth-child(8) .icon-wrapper {
             background: #fef3e0;
             color: #e8a838;
         }
-        .aktiviti-card:nth-child(9) .icon-wrapper {
+        .gallery-card:nth-child(9) .icon-wrapper {
             background: #e0f5ec;
             color: #2d9b6e;
         }
-        .aktiviti-card:nth-child(10) .icon-wrapper {
+        .gallery-card:nth-child(10) .icon-wrapper {
             background: #f3e8f9;
             color: #8b5aa6;
         }
-        .aktiviti-card:nth-child(11) .icon-wrapper {
+        .gallery-card:nth-child(11) .icon-wrapper {
             background: #fce8f0;
             color: #d45a7a;
         }
-        .aktiviti-card:nth-child(12) .icon-wrapper {
+        .gallery-card:nth-child(12) .icon-wrapper {
             background: #e8f4f8;
             color: #3a9bc7;
         }
 
-        /* ===== STATISTIK / INFO TAMBAHAN ===== */
+        /* ===== STATISTIK ===== */
         .info-section {
             display: flex;
             flex-wrap: wrap;
@@ -461,18 +534,22 @@
             .navbar {
                 flex-direction: column;
                 align-items: stretch;
-                border-radius: 40px;
-                padding: 1.2rem 1.5rem;
+                padding: 1rem 1.2rem;
             }
             .nav-buttons {
                 justify-content: center;
             }
             .modul-header h2 {
-                font-size: 2.4rem;
+                font-size: 2.2rem;
             }
-            .aktiviti-grid {
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
                 gap: 1.2rem;
+            }
+            .gallery-card .icon-wrapper {
+                width: 65px;
+                height: 65px;
+                font-size: 2rem;
             }
             .footer-main {
                 flex-direction: column;
@@ -486,25 +563,128 @@
 
         @media (max-width: 480px) {
             .logo h1 {
-                font-size: 1.6rem;
+                font-size: 1.4rem;
             }
             .modul-header h2 {
                 font-size: 1.8rem;
             }
-            .aktiviti-grid {
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-                gap: 1rem;
+            .gallery-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.8rem;
             }
-            .aktiviti-card {
+            .gallery-card {
                 padding: 1.2rem 0.8rem;
+                border-radius: 1.5rem 0.8rem 1.5rem 0.8rem;
             }
-            .aktiviti-card .icon-wrapper {
+            .gallery-card .icon-wrapper {
                 width: 55px;
                 height: 55px;
                 font-size: 1.6rem;
             }
+            .gallery-card h3 {
+                font-size: 1rem;
+            }
+            .gallery-card p {
+                font-size: 0.75rem;
+            }
+            .gallery-card .number-badge {
+                font-size: 0.6rem;
+                top: 6px;
+                right: 10px;
+                padding: 0.1rem 0.6rem;
+            }
             .navbar {
+                padding: 0.8rem;
+            }
+            .container {
                 padding: 1rem;
+            }
+            .card {
+                padding: 1rem;
+            }
+            .modul-header {
+                padding: 1.2rem 0.8rem;
+            }
+            .modul-header h2 {
+                font-size: 1.5rem;
+            }
+            .modul-header p {
+                font-size: 0.9rem;
+            }
+            .info-section {
+                padding: 1rem 0.8rem;
+                border-radius: 2rem 1rem 2rem 1rem;
+            }
+            .info-item {
+                padding: 0.3rem 1rem;
+                font-size: 0.8rem;
+                width: 100%;
+                justify-content: center;
+            }
+            .info-item i {
+                font-size: 1.5rem;
+            }
+            .pengarang-box {
+                flex-wrap: wrap;
+                padding: 0.3rem 1rem;
+            }
+            .pengarang-box .name {
+                font-size: 1rem;
+            }
+            .pengarang-box .univ {
+                font-size: 0.75rem;
+                padding: 0.1rem 0.8rem;
+            }
+            .footer-tags span {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.8rem;
+            }
+            .user-badge {
+                font-size: 0.75rem;
+                padding: 0.2rem 0.8rem;
+            }
+            .nav-btn {
+                font-size: 0.75rem;
+                padding: 0.3rem 1rem;
+            }
+            .gallery-card .status-tag {
+                font-size: 0.55rem;
+                padding: 0.1rem 0.6rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            .gallery-card {
+                flex-direction: row;
+                padding: 1rem;
+                gap: 1rem;
+                text-align: left;
+            }
+            .gallery-card .icon-wrapper {
+                width: 50px;
+                height: 50px;
+                font-size: 1.4rem;
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+            .gallery-card .number-badge {
+                position: static;
+                align-self: flex-start;
+            }
+            .gallery-card .arrow-icon {
+                margin-left: auto;
+            }
+            .gallery-card .card-content {
+                flex: 1;
+            }
+            .gallery-card .card-content h3 {
+                font-size: 0.95rem;
+            }
+            .gallery-card .card-content p {
+                font-size: 0.7rem;
             }
         }
     </style>
@@ -529,10 +709,13 @@
                 <h1>Real MPC</h1>
             </div>
             <div class="nav-buttons">
+                <span class="user-badge">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="navNama">Guru</span>
+                </span>
+                <a href="dashboard-guru.html" class="nav-btn ghost"><i class="fas fa-th-large"></i> Dashboard</a>
                 <a href="index.html" class="nav-btn ghost"><i class="fas fa-home"></i> Utama</a>
-                <a href="modul.html" class="nav-btn primary"><i class="fas fa-book-open"></i> Modul</a>
-                <a href="pencapaian.html" class="nav-btn secondary"><i class="fas fa-trophy"></i> Pencapaian</a>
-                <a href="pengiktirafan.html" class="nav-btn"><i class="fas fa-certificate"></i> Pengiktirafan</a>
+                <a href="daftar-guru.html" class="nav-btn danger" onclick="logoutGuru()"><i class="fas fa-sign-out-alt"></i> Log Keluar</a>
             </div>
         </nav>
 
@@ -546,78 +729,125 @@
             </p>
         </div>
 
-        <!-- 12 BUTTON AKTIVITI -->
-        <div class="aktiviti-grid">
-            <a href="aktiviti1.html" class="aktiviti-card">
-                <div class="icon-wrapper"><i class="fas fa-1"></i></div>
+        <!-- GALLERY 12 AKTIVITI -->
+        <div class="gallery-grid">
+            <!-- Aktiviti 1 -->
+            <a href="aktiviti1.html" class="gallery-card">
+                <span class="number-badge">01</span>
+                <div class="icon-wrapper"><i class="fas fa-rocket"></i></div>
                 <h3>Aktiviti 1</h3>
                 <p>Pengenalan Real MPC</p>
+                <span class="status-tag available">Sedia</span>
                 <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
             </a>
-            <a href="aktiviti2.html" class="aktiviti-card">
-                <div class="icon-wrapper"><i class="fas fa-2"></i></div>
+
+            <!-- Aktiviti 2 -->
+            <a href="aktiviti2.html" class="gallery-card">
+                <span class="number-badge">02</span>
+                <div class="icon-wrapper"><i class="fas fa-calculator"></i></div>
                 <h3>Aktiviti 2</h3>
                 <p>Konsep Asas AddMath</p>
+                <span class="status-tag available">Sedia</span>
                 <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
             </a>
-            <a href="aktiviti3.html" class="aktiviti-card">
-                <div class="icon-wrapper"><i class="fas fa-3"></i></div>
+
+            <!-- Aktiviti 3 -->
+            <a href="aktiviti3.html" class="gallery-card">
+                <span class="number-badge">03</span>
+                <div class="icon-wrapper"><i class="fas fa-heart"></i></div>
                 <h3>Aktiviti 3</h3>
                 <p>Resilience & Ketahanan</p>
+                <span class="status-tag available">Sedia</span>
                 <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
             </a>
-            <a href="aktiviti4.html" class="aktiviti-card">
-                <div class="icon-wrapper"><i class="fas fa-4"></i></div>
+
+            <!-- Aktiviti 4 -->
+            <a href="aktiviti4.html" class="gallery-card">
+                <span class="number-badge">04</span>
+                <div class="icon-wrapper"><i class="fas fa-arrow-trend-up"></i></div>
                 <h3>Aktiviti 4</h3>
                 <p>Efficacy & Keyakinan</p>
+                <span class="status-tag coming">Akan Datang</span>
                 <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
             </a>
-            <a href="aktiviti5.html" class="aktiviti-card">
-                <div class="icon-wrapper"><i class="fas fa-5"></i></div>
+
+            <!-- Aktiviti 5 -->
+            <a href="aktiviti5.html" class="gallery-card">
+                <span class="number-badge">05</span>
+                <div class="icon-wrapper"><i class="fas fa-eye"></i></div>
                 <h3>Aktiviti 5</h3>
                 <p>Awareness & Kesedaran</p>
+                <span class="status-tag coming">Akan Datang</span>
                 <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
             </a>
-            <a href="aktiviti6.html" class="aktiviti-card">
-                <div class="icon-wrapper"><i class="fas fa-6"></i></div>
+
+            <!-- Aktiviti 6 -->
+            <a href="aktiviti6.html" class="gallery-card">
+                <span class="number-badge">06</span>
+                <div class="icon-wrapper"><i class="fas fa-book-open"></i></div>
                 <h3>Aktiviti 6</h3>
                 <p>Learning & Strategi</p>
+                <span class="status-tag coming">Akan Datang</span>
                 <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
             </a>
-            <a href="aktiviti7.html" class="aktiviti-card">
-                <div class="icon-wrapper"><i class="fas fa-7"></i></div>
+
+            <!-- Aktiviti 7 -->
+            <a href="aktiviti7.html" class="gallery-card">
+                <span class="number-badge">07</span>
+                <div class="icon-wrapper"><i class="fas fa-cubes"></i></div>
                 <h3>Aktiviti 7</h3>
                 <p>MPC & Integrasi</p>
+                <span class="status-tag coming">Akan Datang</span>
                 <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
             </a>
-            <a href="aktiviti8.html" class="aktiviti-card">
-                <div class="icon-wrapper"><i class="fas fa-8"></i></div>
+
+            <!-- Aktiviti 8 -->
+            <a href="aktiviti8.html" class="gallery-card">
+                <span class="number-badge">08</span>
+                <div class="icon-wrapper"><i class="fas fa-puzzle-piece"></i></div>
                 <h3>Aktiviti 8</h3>
                 <p>Penyelesaian Masalah</p>
+                <span class="status-tag coming">Akan Datang</span>
                 <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
             </a>
-            <a href="aktiviti9.html" class="aktiviti-card">
-                <div class="icon-wrapper"><i class="fas fa-9"></i></div>
+
+            <!-- Aktiviti 9 -->
+            <a href="aktiviti9.html" class="gallery-card">
+                <span class="number-badge">09</span>
+                <div class="icon-wrapper"><i class="fas fa-brain"></i></div>
                 <h3>Aktiviti 9</h3>
                 <p>Pemikiran Kritis</p>
+                <span class="status-tag coming">Akan Datang</span>
                 <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
             </a>
-            <a href="aktiviti10.html" class="aktiviti-card">
-                <div class="icon-wrapper"><i class="fas fa-10"></i></div>
+
+            <!-- Aktiviti 10 -->
+            <a href="aktiviti10.html" class="gallery-card">
+                <span class="number-badge">10</span>
+                <div class="icon-wrapper"><i class="fas fa-lightbulb"></i></div>
                 <h3>Aktiviti 10</h3>
                 <p>Kreativiti & Inovasi</p>
+                <span class="status-tag coming">Akan Datang</span>
                 <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
             </a>
-            <a href="aktiviti11.html" class="aktiviti-card">
-                <div class="icon-wrapper"><i class="fas fa-11"></i></div>
+
+            <!-- Aktiviti 11 -->
+            <a href="aktiviti11.html" class="gallery-card">
+                <span class="number-badge">11</span>
+                <div class="icon-wrapper"><i class="fas fa-users"></i></div>
                 <h3>Aktiviti 11</h3>
                 <p>Kolaborasi & Pasukan</p>
+                <span class="status-tag coming">Akan Datang</span>
                 <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
             </a>
-            <a href="aktiviti12.html" class="aktiviti-card">
-                <div class="icon-wrapper"><i class="fas fa-12"></i></div>
+
+            <!-- Aktiviti 12 -->
+            <a href="aktiviti12.html" class="gallery-card">
+                <span class="number-badge">12</span>
+                <div class="icon-wrapper"><i class="fas fa-clipboard-check"></i></div>
                 <h3>Aktiviti 12</h3>
                 <p>Refleksi & Penilaian</p>
+                <span class="status-tag coming">Akan Datang</span>
                 <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
             </a>
         </div>
@@ -672,10 +902,71 @@
         <div style="margin-top: 1.5rem; font-size: 0.85rem; color: #4f3a68; opacity: 0.6; text-align: center; border-top: 1px dashed #c9b1ff; padding-top: 1rem;">
             <i class="fas fa-egg" style="color: #d99b3c;"></i> Modul inovasi psikopendidikan bersepadu · 12 aktiviti interaktif
             <span style="margin: 0 10px;">•</span>
-            <i class="fas fa-arrow-right" style="color: #6d3b9e;"></i> Klik mana-mana aktiviti untuk ke halaman kosong
+            <i class="fas fa-arrow-right" style="color: #6d3b9e;"></i> Klik mana-mana aktiviti untuk ke halaman aktiviti
         </div>
 
     </div>
+
+    <!-- ===== MAIN JS ===== -->
+    <script>
+        // ===== CHECK SESSION =====
+        function checkSession() {
+            const session = localStorage.getItem('guruSession');
+            if (!session) {
+                window.location.href = 'daftar-guru.html';
+                return null;
+            }
+
+            try {
+                const data = JSON.parse(session);
+                const loginTime = new Date(data.loginTime);
+                const now = new Date();
+                const hoursDiff = (now - loginTime) / (1000 * 60 * 60);
+                if (hoursDiff > 24) {
+                    localStorage.removeItem('guruSession');
+                    window.location.href = 'daftar-guru.html';
+                    return null;
+                }
+                return data;
+            } catch (e) {
+                localStorage.removeItem('guruSession');
+                window.location.href = 'daftar-guru.html';
+                return null;
+            }
+        }
+
+        // ===== LOGOUT =====
+        window.logoutGuru = function() {
+            if (confirm('Anda pasti mahu log keluar?')) {
+                localStorage.removeItem('guruSession');
+                window.location.href = 'daftar-guru.html';
+            }
+        };
+
+        // ===== SET NAV NAME =====
+        const session = checkSession();
+        if (session) {
+            document.getElementById('navNama').textContent = session.nama || 'Guru';
+        }
+
+        // ===== HANDLE ACTIVITY CLICKS (untuk yang coming soon) =====
+        document.querySelectorAll('.gallery-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                const statusTag = this.querySelector('.status-tag');
+                if (statusTag && statusTag.classList.contains('coming')) {
+                    e.preventDefault();
+                    alert('🚧 Aktiviti ini akan datang tidak lama lagi!');
+                }
+                if (statusTag && statusTag.classList.contains('locked')) {
+                    e.preventDefault();
+                    alert('🔒 Aktiviti ini terkunci. Selesaikan aktiviti sebelumnya dahulu.');
+                }
+            });
+        });
+
+        console.log('✅ Modul page ready!');
+        console.log('📚 12 aktiviti dalam gallery view');
+    </script>
 
 </body>
 </html>
