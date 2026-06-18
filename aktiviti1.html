@@ -8,6 +8,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
     </script>
+    <!-- Firebase SDK -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
+                "firebase/database": "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js",
+                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js"
+            }
+        }
+    </script>
     <style>
         * {
             margin: 0;
@@ -26,7 +37,6 @@
             overflow-x: hidden;
         }
 
-        /* ===== GRAFIK LATAR BELAKANG ===== */
         .bg-graphic {
             position: fixed;
             top: 0;
@@ -89,7 +99,6 @@
             }
         }
 
-        /* ===== KANDUNGAN UTAMA ===== */
         .container {
             position: relative;
             z-index: 1;
@@ -98,7 +107,6 @@
             margin: 0 auto;
         }
 
-        /* ===== NAVBAR ===== */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -188,7 +196,6 @@
             color: #6d3b9e;
         }
 
-        /* ===== CARD ===== */
         .card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
@@ -210,7 +217,6 @@
             font-size: 0.9rem;
         }
 
-        /* ===== PAGE ===== */
         .page {
             display: none;
             animation: fadeIn 0.5s ease;
@@ -238,7 +244,6 @@
             }
         }
 
-        /* ===== PAGE MULA MODUL ===== */
         .start-icon {
             font-size: 5rem;
             color: #6d3b9e;
@@ -303,7 +308,6 @@
             color: #6b5a7a;
         }
 
-        /* ===== PAGE AKTIVITI ===== */
         .aktiviti-badge {
             display: inline-block;
             background: #291b40;
@@ -429,11 +433,11 @@
             font-size: 1.1rem;
         }
 
-        /* ===== PAGE QR ===== */
         .qr-container {
             display: flex;
             justify-content: center;
             margin: 1rem 0;
+            min-height: 220px;
         }
 
         #qrcode {
@@ -441,22 +445,25 @@
             background: white;
             border-radius: 16px;
             box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+            display: inline-block;
         }
 
         #qrcode img {
             display: block !important;
+            width: 200px !important;
+            height: 200px !important;
         }
 
         .qr-info {
             background: #f5f0ff;
             padding: 0.8rem 1.5rem;
             border-radius: 12px;
-            margin: 0.8rem 0;
+            margin: 0.6rem 0;
             font-weight: 600;
             color: #1d0f2e;
             word-break: break-all;
             font-size: 0.9rem;
-            max-width: 450px;
+            max-width: 500px;
             width: 100%;
             display: flex;
             align-items: center;
@@ -467,6 +474,7 @@
         .qr-info .qr-text {
             flex: 1;
             text-align: left;
+            font-size: 0.85rem;
         }
 
         .qr-info .qr-text span {
@@ -478,11 +486,13 @@
             border: none;
             color: #6d3b9e;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.9rem;
             padding: 0.3rem 0.8rem;
             border-radius: 40px;
             transition: all 0.3s ease;
             flex-shrink: 0;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
         }
 
         .qr-info .copy-btn:hover {
@@ -506,7 +516,8 @@
 
         .qr-sub {
             color: #6b5a7a;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
         }
 
         .complete-icon {
@@ -515,7 +526,6 @@
             margin-bottom: 0.5rem;
         }
 
-        /* ===== NAV DOTS ===== */
         .nav-dots {
             display: flex;
             justify-content: center;
@@ -550,7 +560,6 @@
             transform: scale(1.2);
         }
 
-        /* ===== FOOTER ===== */
         footer {
             text-align: center;
             padding: 1rem 0 0.3rem;
@@ -560,74 +569,68 @@
             color: #6b5a7a;
         }
 
-        /* ===== RESPONSIVE ===== */
+        .hidden {
+            display: none !important;
+        }
+
         @media (max-width: 600px) {
             body {
                 padding: 0.8rem;
             }
-
             .card {
                 padding: 1.5rem 1.2rem;
                 min-height: 350px;
             }
-
             .start-title {
                 font-size: 1.8rem;
             }
-
             .start-info {
                 grid-template-columns: 1fr;
                 gap: 0.5rem;
             }
-
             .aktiviti-nama {
                 font-size: 1.4rem;
             }
-
             .countdown-display {
                 font-size: 3.5rem;
             }
-
             .qr-title {
                 font-size: 1.4rem;
             }
-
             .navbar {
                 flex-direction: column;
                 align-items: stretch;
                 padding: 0.8rem 1rem;
             }
-
             .nav-buttons {
                 justify-content: center;
             }
-
             .btn-lg {
                 padding: 0.8rem 1.5rem;
                 font-size: 1rem;
                 width: 100%;
                 justify-content: center;
             }
-
             .qr-info {
                 font-size: 0.75rem;
                 padding: 0.6rem 1rem;
                 flex-wrap: wrap;
             }
-
             .qr-info .qr-text {
                 width: 100%;
                 text-align: center;
             }
-
             .qr-info .copy-btn {
                 width: 100%;
                 justify-content: center;
             }
-
             .nav-dot {
                 width: 10px;
                 height: 10px;
+            }
+            #qrcode img {
+                width: 150px !important;
+                height: 150px !important;
             }
         }
 
@@ -636,24 +639,24 @@
                 padding: 1rem 0.8rem;
                 min-height: 300px;
             }
-
             .start-title {
                 font-size: 1.4rem;
             }
-
             .aktiviti-nama {
                 font-size: 1.1rem;
             }
-
             .countdown-display {
                 font-size: 2.8rem;
+            }
+            #qrcode img {
+                width: 120px !important;
+                height: 120px !important;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== GRAFIK LATAR BELAKANG ===== -->
     <div class="bg-graphic">
         <div class="circle c1"></div>
         <div class="circle c2"></div>
@@ -661,10 +664,8 @@
         <div class="circle c4"></div>
     </div>
 
-    <!-- ===== KANDUNGAN UTAMA ===== -->
     <div class="container">
 
-        <!-- NAVBAR -->
         <nav class="navbar">
             <div class="logo">
                 <i class="fas fa-brain"></i>
@@ -681,30 +682,18 @@
             </div>
         </nav>
 
-        <!-- CARD UTAMA -->
         <div class="card">
 
-            <!-- ===== PAGE 0: MULA MODUL ===== -->
+            <!-- PAGE 0: MULA MODUL -->
             <div class="page active" id="pageStart">
                 <div class="start-icon"><i class="fas fa-rocket"></i></div>
                 <h1 class="start-title">Aktiviti <span>1</span></h1>
                 <p class="start-sub">Pengenalan Real MPC · Persamaan Kuadratik</p>
-
                 <div class="start-info">
-                    <div class="info-box">
-                        <div class="num">7</div>
-                        <div class="label">Aktiviti</div>
-                    </div>
-                    <div class="info-box">
-                        <div class="num">60</div>
-                        <div class="label">Minit</div>
-                    </div>
-                    <div class="info-box">
-                        <div class="num">5</div>
-                        <div class="label">Elemen MPC</div>
-                    </div>
+                    <div class="info-box"><div class="num">7</div><div class="label">Aktiviti</div></div>
+                    <div class="info-box"><div class="num">60</div><div class="label">Minit</div></div>
+                    <div class="info-box"><div class="num">5</div><div class="label">Elemen MPC</div></div>
                 </div>
-
                 <button class="btn btn-primary btn-lg" onclick="startModul()">
                     <i class="fas fa-play"></i> Mula Modul
                 </button>
@@ -713,25 +702,20 @@
                 </p>
             </div>
 
-            <!-- ===== PAGE 1-7: AKTIVITI ===== -->
+            <!-- PAGE 1-7: AKTIVITI -->
             <div class="page" id="pageAktiviti">
                 <div class="aktiviti-badge" id="aktivitiBadge">Aktiviti 1 / 7</div>
                 <div class="aktiviti-nama" id="aktivitiNama">Motivasi & Kesedaran</div>
                 <div class="aktiviti-masa" id="aktivitiMasa">0 – 5 minit</div>
                 <div class="countdown-display" id="countdownDisplay">05:00</div>
-                <div class="progress-bar">
-                    <div class="fill" id="progressFill"></div>
-                </div>
-                <div class="aktiviti-desc" id="aktivitiDesc">
-                    Mengemukakan kata-kata motivasi tentang usaha dan kesabaran.
-                    Menyoal murid: "Apa perasaan kamu bila jumpa soalan panjang & susah?"
-                </div>
+                <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+                <div class="aktiviti-desc" id="aktivitiDesc"></div>
                 <button class="btn btn-warning" onclick="skipAktiviti()" id="btnSkip">
                     <i class="fas fa-forward"></i> Seterusnya (Skip)
                 </button>
             </div>
 
-            <!-- ===== PAGE QR: SELESAI ===== -->
+            <!-- PAGE QR: SELESAI -->
             <div class="page" id="pageQR">
                 <div class="complete-icon"><i class="fas fa-check-circle"></i></div>
                 <h2 class="qr-title">🎉 <span>Modul Selesai!</span></h2>
@@ -743,12 +727,16 @@
 
                 <div class="qr-info">
                     <span class="qr-text"><i class="fas fa-link"></i> Link: <span id="qrLink">-</span></span>
-                    <button class="copy-btn" onclick="copyLink()" title="Salin link"><i class="fas fa-copy"></i> Salin</button>
+                    <button class="copy-btn" onclick="copyLink()"><i class="fas fa-copy"></i> Salin</button>
                 </div>
 
                 <div class="qr-info">
                     <span class="qr-text"><i class="fas fa-key"></i> Code: <span id="qrCodeText">-</span></span>
-                    <button class="copy-btn" onclick="copyCode()" title="Salin code"><i class="fas fa-copy"></i> Salin</button>
+                    <button class="copy-btn" onclick="copyCode()"><i class="fas fa-copy"></i> Salin</button>
+                </div>
+
+                <div class="qr-info" style="background:#def5ea;border:1px solid #a8e0c9;">
+                    <span class="qr-text"><i class="fas fa-chalkboard-teacher"></i> Guru: <span id="qrGuru">-</span></span>
                 </div>
 
                 <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem;width:100%;">
@@ -763,7 +751,6 @@
 
         </div>
 
-        <!-- NAVIGATION DOTS -->
         <div class="nav-dots" id="navDots">
             <button class="nav-dot active" onclick="goToPage(0)" data-page="0" title="Mula"></button>
             <button class="nav-dot" onclick="goToPage(1)" data-page="1" title="Aktiviti 1"></button>
@@ -776,7 +763,6 @@
             <button class="nav-dot" onclick="goToPage(8)" data-page="8" title="Selesai"></button>
         </div>
 
-        <!-- FOOTER -->
         <footer>
             <i class="fas fa-user-graduate"></i> Shuhaimi bin Abu Seman · Universiti Putra Malaysia
             <span style="margin:0 8px;">|</span> <i class="far fa-copyright"></i> 2026 Real MPC
@@ -784,8 +770,39 @@
 
     </div>
 
-    <!-- ===== MAIN JS ===== -->
-    <script>
+    <!-- ===== FIREBASE + MAIN JS ===== -->
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getDatabase, ref, set, get } from "firebase/database";
+        import { getFirestore, collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore";
+        import { getAnalytics } from "firebase/analytics";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzWmeMvmMwNsEEiFmnr9PRtw6nNjIUGRg",
+            authDomain: "real-mpc-module-6be02.firebaseapp.com",
+            projectId: "real-mpc-module-6be02",
+            storageBucket: "real-mpc-module-6be02.firebasestorage.app",
+            messagingSenderId: "1045888004132",
+            appId: "1:1045888004132:web:869de28a286506f15ea8b1",
+            measurementId: "G-XD3VQ7JKKB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+
+        window.rtdb = rtdb;
+        window.ref = ref;
+        window.set = set;
+        window.get = get;
+        window.db = db;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.getDoc = getDoc;
+
         // ===== DATA AKTIVITI =====
         const aktivitiData = [{
             id: 1,
@@ -837,6 +854,8 @@
         let timerInterval = null;
         let isModulStarted = false;
         let qrGenerated = false;
+        let sessionData = null;
+        let generatedCode = '';
 
         // ===== CHECK SESSION =====
         function checkSession() {
@@ -855,6 +874,7 @@
                     window.location.href = 'daftar-guru.html';
                     return null;
                 }
+                sessionData = data;
                 return data;
             } catch (e) {
                 localStorage.removeItem('guruSession');
@@ -866,6 +886,7 @@
         const session = checkSession();
         if (session) {
             document.getElementById('navNama').textContent = session.nama || 'Guru';
+            document.getElementById('qrGuru').textContent = session.nama || 'Guru';
         }
 
         // ===== START MODUL =====
@@ -880,7 +901,6 @@
         // ===== SHOW AKTIVITI =====
         function showAktiviti(index) {
             if (index >= aktivitiData.length) {
-                // All activities done - show QR page
                 showPage(8);
                 generateQR();
                 updateDots();
@@ -893,18 +913,12 @@
             document.getElementById('aktivitiMasa').textContent = a.masa;
             document.getElementById('aktivitiDesc').textContent = a.desc;
 
-            // Update progress
             const progress = (index / aktivitiData.length) * 100;
             document.getElementById('progressFill').style.width = progress + '%';
 
-            // Start countdown
             startCountdown(a.durasi);
-
-            // Enable skip button
             document.getElementById('btnSkip').disabled = false;
             document.getElementById('btnSkip').innerHTML = '<i class="fas fa-forward"></i> Seterusnya (Skip)';
-
-            // Update dots
             updateDots();
         }
 
@@ -923,7 +937,6 @@
 
                 if (timeLeft < 0) {
                     clearInterval(timerInterval);
-                    // Auto next
                     nextAktiviti();
                 }
             }, 1000);
@@ -937,15 +950,12 @@
 
         function nextAktiviti() {
             currentAktiviti++;
-
             if (currentAktiviti >= aktivitiData.length) {
-                // All done - show QR
                 showPage(8);
                 generateQR();
                 updateDots();
                 return;
             }
-
             showAktiviti(currentAktiviti);
             showPage(1);
             updateDots();
@@ -955,46 +965,61 @@
         function generateQR() {
             if (qrGenerated) return;
 
-            const code = 'MPC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-            // Gunakan link ke soalan.html (belum buat lagi)
-            const link = `${window.location.origin}${window.location.pathname.replace('aktiviti1.html', 'soalan.html')}?code=${code}`;
+            // Generate code
+            generatedCode = 'MPC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
 
+            // Build link to soalan1.html
+            const baseUrl = window.location.origin + window.location.pathname.replace('aktiviti1.html', 'soalan1.html');
+            const link = `${baseUrl}?code=${generatedCode}`;
+
+            console.log('🔗 Generating QR for:', link);
+            console.log('🔑 Code:', generatedCode);
+
+            // Update UI
             document.getElementById('qrLink').textContent = link;
-            document.getElementById('qrCodeText').textContent = code;
+            document.getElementById('qrCodeText').textContent = generatedCode;
 
-            // Clear previous QR
+            // Clear and generate QR
             const qrContainer = document.getElementById('qrcode');
             qrContainer.innerHTML = '';
 
-            // Generate QR Code
             try {
-                new QRCode(qrContainer, {
-                    text: link,
-                    width: 200,
-                    height: 200,
-                    colorDark: '#1d0f2e',
-                    colorLight: '#ffffff',
-                    correctLevel: QRCode.CorrectLevel.H
-                });
-                qrGenerated = true;
-                console.log('✅ QR Code generated successfully!');
-                console.log('🔗 Link:', link);
-                console.log('🔑 Code:', code);
+                // Make sure QRCode is available
+                if (typeof QRCode !== 'undefined') {
+                    new QRCode(qrContainer, {
+                        text: link,
+                        width: 200,
+                        height: 200,
+                        colorDark: '#1d0f2e',
+                        colorLight: '#ffffff',
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                    qrGenerated = true;
+                    console.log('✅ QR Code generated successfully!');
+
+                    // Save to Firebase
+                    saveToFirebase(generatedCode, link);
+
+                } else {
+                    throw new Error('QRCode library not loaded');
+                }
             } catch (e) {
                 console.error('❌ Error generating QR:', e);
                 qrContainer.innerHTML = `
-                    <div style="padding:1rem;background:#fce4ec;border-radius:12px;color:#d4527c;">
-                        <i class="fas fa-exclamation-triangle"></i> 
-                        Ralat menjana QR Code. Sila refresh dan cuba semula.
-                        <br><br>
-                        <strong>Link:</strong> ${link}
+                    <div style="padding:1.5rem;background:#fce4ec;border-radius:12px;color:#d4527c;max-width:400px;">
+                        <i class="fas fa-exclamation-triangle" style="font-size:2rem;"></i>
+                        <p style="margin-top:0.5rem;">Ralat menjana QR Code.</p>
+                        <p style="font-size:0.8rem;margin-top:0.3rem;">Sila refresh dan cuba semula.</p>
+                        <p style="font-size:0.8rem;margin-top:0.5rem;word-break:break-all;">
+                            <strong>Link:</strong> ${link}
+                        </p>
                     </div>
                 `;
             }
 
-            // Save report
+            // Save report to localStorage
             const report = {
-                code: code,
+                code: generatedCode,
                 link: link,
                 aktiviti: aktivitiData,
                 completedAt: new Date().toISOString(),
@@ -1003,26 +1028,58 @@
             localStorage.setItem('aktiviti1Report', JSON.stringify(report));
         }
 
+        // ===== SAVE TO FIREBASE =====
+        async function saveToFirebase(code, link) {
+            try {
+                const guruNama = session ? session.nama : 'Guru';
+
+                // Save to Realtime Database
+                const rtdbRef = ref(rtdb, `sessions/${code}`);
+                await set(rtdbRef, {
+                    code: code,
+                    link: link,
+                    guru: guruNama,
+                    aktiviti: 'Aktiviti 1',
+                    createdAt: new Date().toISOString(),
+                    status: 'active'
+                });
+
+                // Save to Firestore
+                await setDoc(doc(db, 'sessions', code), {
+                    code: code,
+                    link: link,
+                    guru: guruNama,
+                    aktiviti: 'Aktiviti 1',
+                    createdAt: new Date().toISOString(),
+                    status: 'active'
+                });
+
+                console.log('✅ Data saved to Firebase!');
+            } catch (error) {
+                console.error('❌ Error saving to Firebase:', error);
+            }
+        }
+
         // ===== COPY FUNCTIONS =====
         window.copyLink = function() {
             const link = document.getElementById('qrLink').textContent;
-            if (navigator.clipboard) {
+            if (link && link !== '-') {
                 navigator.clipboard.writeText(link).then(() => {
-                    alert('✅ Link disalin!');
+                    showToast('✅ Link disalin!');
                 }).catch(() => fallbackCopy(link));
             } else {
-                fallbackCopy(link);
+                showToast('⚠️ Tiada link untuk disalin.');
             }
         };
 
         window.copyCode = function() {
             const code = document.getElementById('qrCodeText').textContent;
-            if (navigator.clipboard) {
+            if (code && code !== '-') {
                 navigator.clipboard.writeText(code).then(() => {
-                    alert('✅ Code disalin!');
+                    showToast('✅ Code disalin!');
                 }).catch(() => fallbackCopy(code));
             } else {
-                fallbackCopy(code);
+                showToast('⚠️ Tiada code untuk disalin.');
             }
         };
 
@@ -1036,11 +1093,35 @@
             textArea.select();
             try {
                 document.execCommand('copy');
-                alert('✅ Disalin!');
+                showToast('✅ Disalin!');
             } catch (e) {
-                alert('❌ Gagal menyalin. Sila salin secara manual.');
+                showToast('❌ Gagal menyalin. Sila salin secara manual.');
             }
             document.body.removeChild(textArea);
+        }
+
+        function showToast(message) {
+            const existing = document.querySelector('.toast-message');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.style.cssText = `
+                position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+                background: #1d0f2e; color: white; padding: 0.8rem 2rem;
+                border-radius: 60px; font-weight: 600; font-size: 0.9rem;
+                z-index: 9999; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+                animation: fadeIn 0.3s ease;
+                font-family: 'Poppins', sans-serif;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
         }
 
         // ===== PAGE NAVIGATION =====
@@ -1054,7 +1135,6 @@
         }
 
         window.goToPage = function(index) {
-            // Start page - always accessible
             if (index === 0) {
                 if (!isModulStarted || currentAktiviti === 0) {
                     showPage(0);
@@ -1062,8 +1142,6 @@
                 }
                 return;
             }
-
-            // QR page - only if all activities done
             if (index === 8) {
                 if (currentAktiviti >= aktivitiData.length) {
                     showPage(8);
@@ -1071,8 +1149,6 @@
                 }
                 return;
             }
-
-            // Aktiviti pages - only up to current aktiviti
             if (index <= currentAktiviti + 1 && index > 0 && isModulStarted) {
                 if (index === currentAktiviti + 1 && currentAktiviti < aktivitiData.length) {
                     if (timerInterval) {
@@ -1085,7 +1161,6 @@
                 }
                 if (index <= currentAktiviti + 1) {
                     if (index === currentAktiviti + 1 && currentAktiviti < aktivitiData.length) {
-                        // Show current aktiviti
                         showPage(1);
                         showAktiviti(currentAktiviti);
                     } else if (index <= currentAktiviti) {
@@ -1097,30 +1172,22 @@
             }
         };
 
-        // ===== UPDATE DOTS =====
         function updateDots() {
             const dots = document.querySelectorAll('.nav-dot');
             dots.forEach((dot, i) => {
                 dot.classList.remove('active', 'completed');
-
                 if (i === 0) {
                     if (currentPage === 0) dot.classList.add('active');
                     return;
                 }
-
                 if (i === 8) {
                     if (currentPage === 8) dot.classList.add('active');
                     if (currentAktiviti >= aktivitiData.length) dot.classList.add('completed');
                     return;
                 }
-
                 const aktivitiIndex = i - 1;
-                if (aktivitiIndex < currentAktiviti) {
-                    dot.classList.add('completed');
-                }
-                if (currentPage === i) {
-                    dot.classList.add('active');
-                }
+                if (aktivitiIndex < currentAktiviti) dot.classList.add('completed');
+                if (currentPage === i) dot.classList.add('active');
             });
         }
 
@@ -1137,6 +1204,10 @@
                 document.getElementById('countdownDisplay').textContent = '05:00';
                 document.getElementById('btnSkip').disabled = false;
                 document.getElementById('btnSkip').innerHTML = '<i class="fas fa-forward"></i> Seterusnya (Skip)';
+                // Reset QR display
+                document.getElementById('qrLink').textContent = '-';
+                document.getElementById('qrCodeText').textContent = '-';
+                document.getElementById('qrcode').innerHTML = '';
             }
         };
 
@@ -1159,6 +1230,7 @@
         console.log('📚 7 aktiviti interaktif');
         console.log('⏰ Press SPACE to skip current aktiviti');
         console.log('🔗 QR Code akan muncul selepas semua aktiviti selesai');
+        console.log('📡 Connected to Firebase');
     </script>
 
 </body>
