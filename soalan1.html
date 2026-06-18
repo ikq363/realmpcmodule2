@@ -10,8 +10,8 @@
         {
             "imports": {
                 "firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
-                "firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js",
                 "firebase/database": "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js",
                 "firebase/analytics": "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js"
             }
         }
@@ -401,6 +401,7 @@
             gap: 12px;
             font-size: 0.9rem;
             color: #1d0f2e;
+            flex-wrap: wrap;
         }
 
         .guru-info i {
@@ -413,7 +414,6 @@
             color: #6d3b9e;
         }
 
-        /* ERROR PAGE */
         .error-page {
             text-align: center;
             padding: 2rem 1rem;
@@ -469,7 +469,6 @@
             }
             .guru-info {
                 font-size: 0.8rem;
-                flex-wrap: wrap;
             }
         }
     </style>
@@ -491,16 +490,15 @@
             <p>Soalan Refleksi · Aktiviti 1</p>
         </div>
 
-        <!-- ===== CARD UTAMA ===== -->
         <div class="card" id="mainCard">
 
-            <!-- ===== LOADING ===== -->
+            <!-- LOADING -->
             <div id="loadingState" style="text-align:center;padding:2rem 0;">
                 <div class="spinner"></div>
                 <p style="margin-top:1rem;color:#6b5a7a;">Mengesahkan code...</p>
             </div>
 
-            <!-- ===== ERROR STATE ===== -->
+            <!-- ERROR -->
             <div id="errorState" class="hidden error-page">
                 <div class="error-icon"><i class="fas fa-lock"></i></div>
                 <h2>Akses Ditolak</h2>
@@ -511,15 +509,13 @@
                 </a>
             </div>
 
-            <!-- ===== FORM STATE ===== -->
+            <!-- FORM -->
             <div id="formState" class="hidden">
 
-                <!-- Code Badge -->
                 <div style="text-align:center;">
                     <span class="code-badge" id="codeBadge"><i class="fas fa-key"></i> Code: -</span>
                 </div>
 
-                <!-- Guru Info -->
                 <div class="guru-info">
                     <i class="fas fa-chalkboard-teacher"></i>
                     <span>Pengajar: <span class="guru-nama" id="guruNama">-</span></span>
@@ -536,7 +532,6 @@
 
                 <form id="refleksiForm" onsubmit="return false;">
 
-                    <!-- Nama & Kelas -->
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
                         <div class="form-group">
                             <label><i class="fas fa-user"></i> Nama Penuh <span class="required">*</span></label>
@@ -566,7 +561,7 @@
                         <div class="soalan-text">Semasa "Cabaran Tekad Kuadratik", adakah anda…</div>
                         <div class="options">
                             <label><input type="radio" name="q2" value="Cepat rasa putus asa" /> Cepat rasa putus asa</label>
-                            <label><input type="radio"name="q2" value="Rasa susah, tetapi masih mencuba" /> Rasa susah, tetapi masih mencuba</label>
+                            <label><input type="radio" name="q2" value="Rasa susah, tetapi masih mencuba" /> Rasa susah, tetapi masih mencuba</label>
                             <label><input type="radio" name="q2" value="Terus mencuba sehingga selesai" /> Terus mencuba sehingga selesai</label>
                         </div>
                     </div>
@@ -603,12 +598,11 @@
 
     </div>
 
-    <!-- ===== FIREBASE + MAIN JS ===== -->
     <script type="module">
         import { initializeApp } from "firebase/app";
         import { getAnalytics } from "firebase/analytics";
-        import { getFirestore, collection, addDoc, doc, getDoc, query, where, getDocs } from "firebase/firestore";
-        import { getDatabase, ref, get } from "firebase/database";
+        import { getDatabase, ref, get, set } from "firebase/database";
+        import { getFirestore, collection, addDoc } from "firebase/firestore";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDzWmeMvmMwNsEEiFmnr9PRtw6nNjIUGRg",
@@ -625,20 +619,14 @@
         const db = getFirestore(app);
         const rtdb = getDatabase(app);
 
-        // ===== EXPOSE =====
-        window.db = db;
         window.rtdb = rtdb;
+        window.ref = ref;
+        window.get = get;
+        window.set = set;
+        window.db = db;
         window.collection = collection;
         window.addDoc = addDoc;
-        window.doc = doc;
-        window.getDoc = getDoc;
-        window.get = get;
-        window.ref = ref;
-        window.query = query;
-        window.where = where;
-        window.getDocs = getDocs;
 
-        // ===== GET CODE FROM URL =====
         function getCodeFromURL() {
             const params = new URLSearchParams(window.location.search);
             return params.get('code');
@@ -646,7 +634,6 @@
 
         const classCode = getCodeFromURL();
 
-        // ===== VALIDATE CODE & LOAD GURU INFO =====
         async function validateCode() {
             const loading = document.getElementById('loadingState');
             const errorState = document.getElementById('errorState');
@@ -660,29 +647,27 @@
             }
 
             try {
-                // Check in Firestore - sessions collection
-                const sessionRef = doc(db, 'sessions', classCode);
-                const sessionSnap = await getDoc(sessionRef);
+                // Check Realtime Database
+                const rtdbRef = ref(rtdb, `sessions/${classCode}`);
+                const rtdbSnap = await get(rtdbRef);
 
-                if (!sessionSnap.exists()) {
-                    // Try Realtime Database
-                    const rtdbRef = ref(rtdb, `sessions/${classCode}`);
-                    const rtdbSnap = await get(rtdbRef);
-
-                    if (!rtdbSnap.exists()) {
-                        loading.classList.add('hidden');
-                        errorState.classList.remove('hidden');
-                        document.getElementById('errorMessage').textContent = `Code "${classCode}" tidak sah. Sila scan QR Code yang betul.`;
-                        return;
-                    }
-
-                    const data = rtdbSnap.val();
-                    displayForm(data);
+                if (!rtdbSnap.exists()) {
+                    loading.classList.add('hidden');
+                    errorState.classList.remove('hidden');
+                    document.getElementById('errorMessage').textContent = `Code "${classCode}" tidak sah. Sila scan QR Code yang betul.`;
                     return;
                 }
 
-                const data = sessionSnap.data();
-                displayForm(data);
+                const data = rtdbSnap.val();
+
+                loading.classList.add('hidden');
+                formState.classList.remove('hidden');
+
+                document.getElementById('codeBadge').innerHTML = `<i class="fas fa-key"></i> Code: ${classCode}`;
+                document.getElementById('guruNama').textContent = data.guru || 'Guru';
+                document.getElementById('kelasInfo').textContent = `Kelas: ${data.kelas || '-'}`;
+
+                console.log('✅ Code sah! Guru:', data.guru);
 
             } catch (error) {
                 console.error('Error validating code:', error);
@@ -692,26 +677,6 @@
             }
         }
 
-        function displayForm(data) {
-            const loading = document.getElementById('loadingState');
-            const errorState = document.getElementById('errorState');
-            const formState = document.getElementById('formState');
-
-            loading.classList.add('hidden');
-            formState.classList.remove('hidden');
-
-            // Display code
-            document.getElementById('codeBadge').innerHTML = `<i class="fas fa-key"></i> Code: ${classCode}`;
-
-            // Display guru info
-            document.getElementById('guruNama').textContent = data.guru || 'Guru';
-            document.getElementById('kelasInfo').textContent = `Kelas: ${data.kelas || '-'}`;
-
-            console.log('✅ Code sah! Guru:', data.guru);
-            console.log('📚 Kelas:', data.kelas);
-        }
-
-        // ===== HANTAR JAWAPAN =====
         window.hantarJawapan = async function() {
             const nama = document.getElementById('namaMurid').value.trim();
             const kelas = document.getElementById('kelasMurid').value.trim();
@@ -765,49 +730,4 @@
 
                 // Save to Realtime Database under session
                 if (classCode) {
-                    const rtdbRef = ref(rtdb, `sessions/${classCode}/jawapan/${nama}`);
-                    await set(rtdbRef, jawapanData);
-                }
-
-                // Backup to localStorage
-                const allJawapan = JSON.parse(localStorage.getItem('jawapanMurid') || '[]');
-                allJawapan.push(jawapanData);
-                localStorage.setItem('jawapanMurid', JSON.stringify(allJawapan));
-
-                msg.className = 'message success';
-                msg.textContent = '✅ Jawapan berjaya dihantar! Terima kasih.';
-
-                // Disable form
-                document.querySelectorAll('#refleksiForm input, #refleksiForm textarea').forEach(el => el.disabled = true);
-                document.querySelectorAll('#refleksiForm .options input').forEach(el => el.disabled = true);
-                btn.innerHTML = '<i class="fas fa-check-circle"></i> Selesai';
-                btn.disabled = true;
-
-            } catch (error) {
-                console.error('Error saving:', error);
-                msg.className = 'message error';
-                msg.textContent = '⚠️ Ralat: ' + error.message;
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Hantar Jawapan';
-            }
-        };
-
-        // ===== KEYBOARD SHORTCUT =====
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
-                const btn = document.getElementById('btnHantar');
-                if (btn && !btn.disabled) {
-                    hantarJawapan();
-                }
-            }
-        });
-
-        // ===== INIT =====
-        validateCode();
-
-        console.log('✅ Soalan 1 page ready!');
-        console.log('📡 Connected to Firebase');
-        console.log('🔗 Code:', classCode || 'Tiada code');
-    </script>
-</body>
-</html>
+                    await set(ref(rtdb, `sessions/${classCode}/jawapan/${nama
