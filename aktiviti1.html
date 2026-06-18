@@ -6,7 +6,8 @@
     <title>Real MPC · Aktiviti 1</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
+    </script>
     <style>
         * {
             margin: 0;
@@ -171,14 +172,6 @@
             background: rgba(45, 25, 75, 0.15);
         }
 
-        .nav-btn.danger {
-            background: linear-gradient(135deg, #d4527c, #f9a8d4);
-        }
-
-        .nav-btn.success {
-            background: linear-gradient(135deg, #38a87a, #6bc0a8);
-        }
-
         .user-badge {
             display: flex;
             align-items: center;
@@ -212,20 +205,6 @@
             text-align: center;
         }
 
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1d0f2e;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .card-title i {
-            color: #6d3b9e;
-        }
-
         .text-muted {
             color: #6b5a7a;
             font-size: 0.9rem;
@@ -235,6 +214,7 @@
         .page {
             display: none;
             animation: fadeIn 0.5s ease;
+            width: 100%;
         }
 
         .page.active {
@@ -424,16 +404,6 @@
             box-shadow: 0 10px 30px rgba(56, 168, 122, 0.4);
         }
 
-        .btn-secondary {
-            background: rgba(45, 25, 75, 0.08);
-            color: #2f1b4e;
-            border: 1.5px solid #b78aff;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(45, 25, 75, 0.15);
-        }
-
         .btn-warning {
             background: linear-gradient(135deg, #d99b3c, #f5dcb0);
             color: #1d0f2e;
@@ -444,19 +414,14 @@
             box-shadow: 0 10px 30px rgba(217, 155, 60, 0.4);
         }
 
-        .btn-danger {
-            background: linear-gradient(135deg, #d4527c, #f9a8d4);
-            color: white;
-            box-shadow: 0 4px 15px rgba(212, 82, 124, 0.3);
+        .btn-secondary {
+            background: rgba(45, 25, 75, 0.08);
+            color: #2f1b4e;
+            border: 1.5px solid #b78aff;
         }
 
-        .btn-danger:hover {
-            box-shadow: 0 10px 30px rgba(212, 82, 124, 0.4);
-        }
-
-        .btn-sm {
-            padding: 0.4rem 1.2rem;
-            font-size: 0.8rem;
+        .btn-secondary:hover {
+            background: rgba(45, 25, 75, 0.15);
         }
 
         .btn-lg {
@@ -478,6 +443,10 @@
             box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
         }
 
+        #qrcode img {
+            display: block !important;
+        }
+
         .qr-info {
             background: #f5f0ff;
             padding: 0.8rem 1.5rem;
@@ -489,9 +458,18 @@
             font-size: 0.9rem;
             max-width: 450px;
             width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
         }
 
-        .qr-info span {
+        .qr-info .qr-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .qr-info .qr-text span {
             color: #6d3b9e;
         }
 
@@ -501,10 +479,14 @@
             color: #6d3b9e;
             cursor: pointer;
             font-size: 1rem;
-            padding: 0 0.5rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 40px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
         }
 
         .qr-info .copy-btn:hover {
+            background: rgba(109, 59, 158, 0.1);
             color: #b45ef7;
         }
 
@@ -539,14 +521,15 @@
             justify-content: center;
             gap: 0.6rem;
             margin: 1rem 0 0.5rem;
+            flex-wrap: wrap;
         }
 
         .nav-dot {
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             background: #d6c0f0;
-            border: none;
+            border: 2px solid transparent;
             cursor: pointer;
             transition: all 0.3s ease;
             padding: 0;
@@ -554,15 +537,17 @@
 
         .nav-dot.active {
             background: #6d3b9e;
-            transform: scale(1.3);
-        }
-
-        .nav-dot:hover {
-            background: #b45ef7;
+            border-color: #6d3b9e;
+            transform: scale(1.2);
         }
 
         .nav-dot.completed {
             background: #38a87a;
+            border-color: #38a87a;
+        }
+
+        .nav-dot:hover {
+            transform: scale(1.2);
         }
 
         /* ===== FOOTER ===== */
@@ -624,26 +609,25 @@
                 justify-content: center;
             }
 
-            .nav-dots {
-                gap: 0.4rem;
-            }
-
-            .nav-dot {
-                width: 8px;
-                height: 8px;
-            }
-
             .qr-info {
                 font-size: 0.75rem;
                 padding: 0.6rem 1rem;
+                flex-wrap: wrap;
             }
 
-            .aktiviti-desc {
-                font-size: 0.85rem;
+            .qr-info .qr-text {
+                width: 100%;
+                text-align: center;
             }
 
-            .start-info .info-box .num {
-                font-size: 1.4rem;
+            .qr-info .copy-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-dot {
+                width: 10px;
+                height: 10px;
             }
         }
 
@@ -663,11 +647,6 @@
 
             .countdown-display {
                 font-size: 2.8rem;
-            }
-
-            .btn {
-                font-size: 0.8rem;
-                padding: 0.5rem 1.2rem;
             }
         }
     </style>
@@ -758,21 +737,21 @@
                 <h2 class="qr-title">🎉 <span>Modul Selesai!</span></h2>
                 <p class="qr-sub">Imbas QR Code atau gunakan link di bawah untuk menjawab soalan</p>
 
-                <div class="qr-container">
+                <div class="qr-container" id="qrContainer">
                     <div id="qrcode"></div>
                 </div>
 
                 <div class="qr-info">
-                    <i class="fas fa-link"></i> Link: <span id="qrLink">-</span>
-                    <button class="copy-btn" onclick="copyLink()" title="Salin link"><i class="fas fa-copy"></i></button>
+                    <span class="qr-text"><i class="fas fa-link"></i> Link: <span id="qrLink">-</span></span>
+                    <button class="copy-btn" onclick="copyLink()" title="Salin link"><i class="fas fa-copy"></i> Salin</button>
                 </div>
 
                 <div class="qr-info">
-                    <i class="fas fa-key"></i> Code: <span id="qrCode">-</span>
-                    <button class="copy-btn" onclick="copyCode()" title="Salin code"><i class="fas fa-copy"></i></button>
+                    <span class="qr-text"><i class="fas fa-key"></i> Code: <span id="qrCodeText">-</span></span>
+                    <button class="copy-btn" onclick="copyCode()" title="Salin code"><i class="fas fa-copy"></i> Salin</button>
                 </div>
 
-                <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:1rem;width:100%;">
+                <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem;width:100%;">
                     <a href="dashboard-guru.html" class="btn btn-success btn-lg" style="flex:1;min-width:200px;justify-content:center;">
                         <i class="fas fa-flag-checkered"></i> Selesai & Kembali
                     </a>
@@ -786,15 +765,15 @@
 
         <!-- NAVIGATION DOTS -->
         <div class="nav-dots" id="navDots">
-            <button class="nav-dot active" onclick="goToPage(0)" data-page="0"></button>
-            <button class="nav-dot" onclick="goToPage(1)" data-page="1"></button>
-            <button class="nav-dot" onclick="goToPage(2)" data-page="2"></button>
-            <button class="nav-dot" onclick="goToPage(3)" data-page="3"></button>
-            <button class="nav-dot" onclick="goToPage(4)" data-page="4"></button>
-            <button class="nav-dot" onclick="goToPage(5)" data-page="5"></button>
-            <button class="nav-dot" onclick="goToPage(6)" data-page="6"></button>
-            <button class="nav-dot" onclick="goToPage(7)" data-page="7"></button>
-            <button class="nav-dot" onclick="goToPage(8)" data-page="8"></button>
+            <button class="nav-dot active" onclick="goToPage(0)" data-page="0" title="Mula"></button>
+            <button class="nav-dot" onclick="goToPage(1)" data-page="1" title="Aktiviti 1"></button>
+            <button class="nav-dot" onclick="goToPage(2)" data-page="2" title="Aktiviti 2"></button>
+            <button class="nav-dot" onclick="goToPage(3)" data-page="3" title="Aktiviti 3"></button>
+            <button class="nav-dot" onclick="goToPage(4)" data-page="4" title="Aktiviti 4"></button>
+            <button class="nav-dot" onclick="goToPage(5)" data-page="5" title="Aktiviti 5"></button>
+            <button class="nav-dot" onclick="goToPage(6)" data-page="6" title="Aktiviti 6"></button>
+            <button class="nav-dot" onclick="goToPage(7)" data-page="7" title="Aktiviti 7"></button>
+            <button class="nav-dot" onclick="goToPage(8)" data-page="8" title="Selesai"></button>
         </div>
 
         <!-- FOOTER -->
@@ -813,50 +792,43 @@
             nama: 'Motivasi & Kesedaran',
             masa: '0 – 5 minit',
             durasi: 5,
-            desc: 'Mengemukakan kata-kata motivasi tentang usaha dan kesabaran. Menyoal murid: "Apa perasaan kamu bila jumpa soalan panjang & susah?"',
-            elemen: 'Mencetus kesedaran bahawa rasa susah itu normal; mula mengenal emosi bila berhadapan cabaran.'
+            desc: 'Mengemukakan kata-kata motivasi tentang usaha dan kesabaran. Menyoal murid: "Apa perasaan kamu bila jumpa soalan panjang & susah?"'
         }, {
             id: 2,
             nama: 'Imbas Konsep & Catatan',
             masa: '5 – 15 minit',
             durasi: 10,
-            desc: 'Mengimbas semula konsep persamaan kuadratik dan tiga kaedah penyelesaian (pemfaktoran, penyempurnaan kuasa dua dan rumus).',
-            elemen: 'Mengukuhkan rasa mampu (efikasi asas) dengan contoh mudah dan jelas.'
+            desc: 'Mengimbas semula konsep persamaan kuadratik dan tiga kaedah penyelesaian (pemfaktoran, penyempurnaan kuasa dua dan rumus).'
         }, {
             id: 3,
             nama: 'Lembaran Kerja Set A',
             masa: '15 – 25 minit',
             durasi: 10,
-            desc: 'Menyelesaikan item 1–3 (tahap mudah → sederhana) secara individu. Rujuk nota & bertanya rakan apabila buntu.',
-            elemen: 'Melatih tidak berhenti pada cubaan pertama, belajar meminta bantuan secara matang.'
+            desc: 'Menyelesaikan item 1–3 (tahap mudah → sederhana) secara individu. Rujuk nota & bertanya rakan apabila buntu.'
         }, {
             id: 4,
             nama: 'Semakan & Pujian',
             masa: '25 – 35 minit',
             durasi: 10,
-            desc: 'Menyemak pantas beberapa jawapan murid di papan putih. Menunjukkan kesilapan lazim dan cara membetulkannya.',
-            elemen: 'Menonjolkan usaha sebagai nilai, bukan hanya jawapan betul; mengurangkan takut salah.'
+            desc: 'Menyemak pantas beberapa jawapan murid di papan putih. Menunjukkan kesilapan lazim dan cara membetulkannya.'
         }, {
             id: 5,
             nama: 'Cabaran Menakluk Puncak',
             masa: '35 – 50 minit',
             durasi: 15,
-            desc: 'Menayangkan satu soalan kuadratik tahap sukar. 5 minit individu, 10 minit kumpulan kecil.',
-            elemen: 'Mengasah resilience berkumpulan: belajar bahawa usaha berulang & sokongan rakan menjadikan masalah sukar lebih boleh diurus.'
+            desc: 'Menayangkan satu soalan kuadratik tahap sukar. 5 minit individu, 10 minit kumpulan kecil.'
         }, {
             id: 6,
             nama: 'Perbincangan Kelas',
             masa: '50 – 55 minit',
             durasi: 5,
-            desc: 'Membincangkan penyelesaian cabaran secara kelas. Menjelaskan mengapa langkah tertentu dipilih.',
-            elemen: 'Meningkatkan keyakinan diri melalui pemahaman proses, bukan hafalan langkah.'
+            desc: 'Membincangkan penyelesaian cabaran secara kelas. Menjelaskan mengapa langkah tertentu dipilih.'
         }, {
             id: 7,
             nama: 'Refleksi Karakter',
             masa: '55 – 60 minit',
             durasi: 5,
-            desc: 'Mengedarkan soalan refleksi karakter. Murid menulis refleksi peribadi.',
-            elemen: 'Mengukuhkan kesedaran kendiri tentang cara menghadapi kesukaran dan menstruktur strategi peribadi.'
+            desc: 'Mengedarkan soalan refleksi karakter. Murid menulis refleksi peribadi.'
         }];
 
         // ===== STATE =====
@@ -864,7 +836,7 @@
         let currentAktiviti = 0;
         let timerInterval = null;
         let isModulStarted = false;
-        let totalPages = aktivitiData.length + 2; // start + 7 aktiviti + qr
+        let qrGenerated = false;
 
         // ===== CHECK SESSION =====
         function checkSession() {
@@ -957,7 +929,7 @@
             }, 1000);
         }
 
-        // ===== NEXT AKTIVITI (AUTO / SKIP) =====
+        // ===== NEXT AKTIVITI =====
         window.skipAktiviti = function() {
             if (timerInterval) clearInterval(timerInterval);
             nextAktiviti();
@@ -975,32 +947,52 @@
             }
 
             showAktiviti(currentAktiviti);
-            // Update page to show aktiviti page
             showPage(1);
             updateDots();
         }
 
         // ===== GENERATE QR =====
         function generateQR() {
+            if (qrGenerated) return;
+
             const code = 'MPC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            // Gunakan link ke soalan.html (belum buat lagi)
             const link = `${window.location.origin}${window.location.pathname.replace('aktiviti1.html', 'soalan.html')}?code=${code}`;
 
             document.getElementById('qrLink').textContent = link;
-            document.getElementById('qrCode').textContent = code;
+            document.getElementById('qrCodeText').textContent = code;
 
-            // Generate QR
+            // Clear previous QR
             const qrContainer = document.getElementById('qrcode');
             qrContainer.innerHTML = '';
-            new QRCode(qrContainer, {
-                text: link,
-                width: 200,
-                height: 200,
-                colorDark: '#1d0f2e',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.H
-            });
 
-            // Save to localStorage for later use (laporan guru)
+            // Generate QR Code
+            try {
+                new QRCode(qrContainer, {
+                    text: link,
+                    width: 200,
+                    height: 200,
+                    colorDark: '#1d0f2e',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+                qrGenerated = true;
+                console.log('✅ QR Code generated successfully!');
+                console.log('🔗 Link:', link);
+                console.log('🔑 Code:', code);
+            } catch (e) {
+                console.error('❌ Error generating QR:', e);
+                qrContainer.innerHTML = `
+                    <div style="padding:1rem;background:#fce4ec;border-radius:12px;color:#d4527c;">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        Ralat menjana QR Code. Sila refresh dan cuba semula.
+                        <br><br>
+                        <strong>Link:</strong> ${link}
+                    </div>
+                `;
+            }
+
+            // Save report
             const report = {
                 code: code,
                 link: link,
@@ -1014,34 +1006,42 @@
         // ===== COPY FUNCTIONS =====
         window.copyLink = function() {
             const link = document.getElementById('qrLink').textContent;
-            navigator.clipboard.writeText(link).then(() => {
-                alert('✅ Link disalin!');
-            }).catch(() => {
-                // Fallback
-                const textArea = document.createElement('textarea');
-                textArea.value = link;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                alert('✅ Link disalin!');
-            });
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(link).then(() => {
+                    alert('✅ Link disalin!');
+                }).catch(() => fallbackCopy(link));
+            } else {
+                fallbackCopy(link);
+            }
         };
 
         window.copyCode = function() {
-            const code = document.getElementById('qrCode').textContent;
-            navigator.clipboard.writeText(code).then(() => {
-                alert('✅ Code disalin!');
-            }).catch(() => {
-                const textArea = document.createElement('textarea');
-                textArea.value = code;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                alert('✅ Code disalin!');
-            });
+            const code = document.getElementById('qrCodeText').textContent;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(code).then(() => {
+                    alert('✅ Code disalin!');
+                }).catch(() => fallbackCopy(code));
+            } else {
+                fallbackCopy(code);
+            }
         };
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.top = '-9999px';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert('✅ Disalin!');
+            } catch (e) {
+                alert('❌ Gagal menyalin. Sila salin secara manual.');
+            }
+            document.body.removeChild(textArea);
+        }
 
         // ===== PAGE NAVIGATION =====
         function showPage(index) {
@@ -1054,16 +1054,17 @@
         }
 
         window.goToPage = function(index) {
-            // Only allow navigation to completed pages
+            // Start page - always accessible
             if (index === 0) {
-                // Start page - always accessible
-                showPage(0);
-                updateDots();
+                if (!isModulStarted || currentAktiviti === 0) {
+                    showPage(0);
+                    updateDots();
+                }
                 return;
             }
 
+            // QR page - only if all activities done
             if (index === 8) {
-                // QR page - only if all activities done
                 if (currentAktiviti >= aktivitiData.length) {
                     showPage(8);
                     updateDots();
@@ -1072,12 +1073,9 @@
             }
 
             // Aktiviti pages - only up to current aktiviti
-            if (index <= currentAktiviti + 1 && index > 0) {
+            if (index <= currentAktiviti + 1 && index > 0 && isModulStarted) {
                 if (index === currentAktiviti + 1 && currentAktiviti < aktivitiData.length) {
-                    // Can go to next page if current aktiviti is done
-                    // But we only allow if user has completed it or skipped
                     if (timerInterval) {
-                        // Countdown still running - ask confirmation
                         if (confirm('Aktiviti masih berjalan. Anda pasti mahu skip ke aktiviti seterusnya?')) {
                             if (timerInterval) clearInterval(timerInterval);
                             nextAktiviti();
@@ -1085,9 +1083,15 @@
                         return;
                     }
                 }
-                // Only allow if page is within current progress
                 if (index <= currentAktiviti + 1) {
-                    showPage(index);
+                    if (index === currentAktiviti + 1 && currentAktiviti < aktivitiData.length) {
+                        // Show current aktiviti
+                        showPage(1);
+                        showAktiviti(currentAktiviti);
+                    } else if (index <= currentAktiviti) {
+                        showPage(1);
+                        showAktiviti(index - 1);
+                    }
                     updateDots();
                 }
             }
@@ -1100,19 +1104,16 @@
                 dot.classList.remove('active', 'completed');
 
                 if (i === 0) {
-                    // Start page
                     if (currentPage === 0) dot.classList.add('active');
                     return;
                 }
 
                 if (i === 8) {
-                    // QR page
                     if (currentPage === 8) dot.classList.add('active');
                     if (currentAktiviti >= aktivitiData.length) dot.classList.add('completed');
                     return;
                 }
 
-                // Aktiviti pages (1-7)
                 const aktivitiIndex = i - 1;
                 if (aktivitiIndex < currentAktiviti) {
                     dot.classList.add('completed');
@@ -1129,6 +1130,7 @@
                 if (timerInterval) clearInterval(timerInterval);
                 currentAktiviti = 0;
                 isModulStarted = false;
+                qrGenerated = false;
                 showPage(0);
                 updateDots();
                 document.getElementById('progressFill').style.width = '0%';
@@ -1143,7 +1145,7 @@
             if (e.key === 'Enter' && currentPage === 0) {
                 startModul();
             }
-            if (e.key === ' ' && currentPage > 0 && currentPage < 8) {
+            if (e.key === ' ' && currentPage > 0 && currentPage < 8 && isModulStarted) {
                 e.preventDefault();
                 skipAktiviti();
             }
@@ -1156,6 +1158,7 @@
         console.log('✅ Aktiviti 1 page ready!');
         console.log('📚 7 aktiviti interaktif');
         console.log('⏰ Press SPACE to skip current aktiviti');
+        console.log('🔗 QR Code akan muncul selepas semua aktiviti selesai');
     </script>
 
 </body>
