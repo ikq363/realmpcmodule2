@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real MPC · Modul Aktiviti</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- Google Font (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f0ff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== GRAFIK LATAR BELAKANG ===== */
+        .bg-graphic {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bg-graphic .circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.12;
+            filter: blur(80px);
+            animation: floatGraphic 20s ease-in-out infinite alternate;
+        }
+
+        .bg-graphic .c1 {
+            width: 500px;
+            height: 500px;
+            background: #b45ef7;
+            top: -150px;
+            left: -100px;
+        }
+        .bg-graphic .c2 {
+            width: 400px;
+            height: 400px;
+            background: #f9a8d4;
+            bottom: -100px;
+            right: -50px;
+            animation-delay: 3s;
+        }
+        .bg-graphic .c3 {
+            width: 300px;
+            height: 300px;
+            background: #fbc85a;
+            top: 40%;
+            left: 60%;
+            animation-delay: 6s;
+            opacity: 0.08;
+        }
+        .bg-graphic .c4 {
+            width: 250px;
+            height: 250px;
+            background: #38c0c0;
+            top: 70%;
+            left: 10%;
+            animation-delay: 9s;
+            opacity: 0.1;
+        }
+
+        @keyframes floatGraphic {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(40px, -30px) scale(1.2);
+            }
+        }
+
+        /* ===== KANDUNGAN UTAMA ===== */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 2rem 1rem;
+        }
+
+        /* ===== HEADER / NAV ===== */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 0.8rem 2.2rem;
+            border-radius: 80px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(80, 40, 120, 0.08);
+            margin-bottom: 2.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #3b1f6e, #b45ef7, #f9a8d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+            color: #6d3b9e;
+            filter: drop-shadow(0 2px 10px rgba(140, 80, 200, 0.3));
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.6rem 1.8rem;
+            border-radius: 60px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: white;
+            background: #2f1b4e;
+            box-shadow: 0 4px 15px rgba(80, 30, 150, 0.25);
+        }
+
+        .nav-btn i {
+            font-size: 1rem;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(80, 30, 150, 0.35);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #6d3b9e, #b45ef7);
+        }
+
+        .nav-btn.secondary {
+            background: linear-gradient(135deg, #d4527c, #f9a8d4);
+        }
+
+        .nav-btn.ghost {
+            background: rgba(45, 25, 75, 0.08);
+            color: #2f1b4e;
+            box-shadow: none;
+            border: 1.5px solid #b78aff;
+        }
+
+        .nav-btn.ghost:hover {
+            background: rgba(45, 25, 75, 0.15);
+        }
+
+        /* ===== HEADER MODUL ===== */
+        .modul-header {
+            text-align: center;
+            margin: 1.5rem 0 3rem;
+            padding: 2rem 1rem;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(6px);
+            border-radius: 3rem 1.5rem 3rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .modul-header h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #1d0f2e;
+            margin-bottom: 0.5rem;
+        }
+
+        .modul-header h2 span {
+            background: linear-gradient(135deg, #6d3b9e, #f9a8d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .modul-header p {
+            font-size: 1.2rem;
+            color: #3a2a4e;
+            font-weight: 400;
+        }
+
+        .modul-header .badge {
+            display: inline-block;
+            background: #291b40;
+            color: #f0e7ff;
+            padding: 0.3rem 2rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+            border: 1px solid #b78aff;
+        }
+
+        /* ===== GRID AKTIVITI (12 BUTTON) ===== */
+        .aktiviti-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.8rem;
+            margin: 2.5rem 0 3.5rem;
+        }
+
+        .aktiviti-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            padding: 1.8rem 1.2rem;
+            border-radius: 2.5rem 1rem 2.5rem 1rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 25px rgba(80, 40, 120, 0.06);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #1d0f2e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: pointer;
+        }
+
+        .aktiviti-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 25px 50px rgba(80, 40, 120, 0.2);
+            border-color: #c9b1ff;
+        }
+
+        .aktiviti-card .icon-wrapper {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin-bottom: 0.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .aktiviti-card:hover .icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .aktiviti-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1d0f2e;
+        }
+
+        .aktiviti-card p {
+            font-size: 0.85rem;
+            color: #4f3a68;
+            font-weight: 400;
+            margin: 0;
+        }
+
+        .aktiviti-card .arrow-icon {
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            color: #6d3b9e;
+            margin-top: 0.2rem;
+        }
+
+        .aktiviti-card:hover .arrow-icon {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        /* Warna unik untuk setiap aktiviti */
+        .aktiviti-card:nth-child(1) .icon-wrapper {
+            background: #fce9ef;
+            color: #d4527c;
+        }
+        .aktiviti-card:nth-child(2) .icon-wrapper {
+            background: #e3f0fa;
+            color: #3083b0;
+        }
+        .aktiviti-card:nth-child(3) .icon-wrapper {
+            background: #fbf0db;
+            color: #d99b3c;
+        }
+        .aktiviti-card:nth-child(4) .icon-wrapper {
+            background: #def5ea;
+            color: #38a87a;
+        }
+        .aktiviti-card:nth-child(5) .icon-wrapper {
+            background: #f0e3f7;
+            color: #a05f9e;
+        }
+        .aktiviti-card:nth-child(6) .icon-wrapper {
+            background: #fce4ec;
+            color: #e84a6a;
+        }
+        .aktiviti-card:nth-child(7) .icon-wrapper {
+            background: #e8f0fe;
+            color: #4a8bc2;
+        }
+        .aktiviti-card:nth-child(8) .icon-wrapper {
+            background: #fef3e0;
+            color: #e8a838;
+        }
+        .aktiviti-card:nth-child(9) .icon-wrapper {
+            background: #e0f5ec;
+            color: #2d9b6e;
+        }
+        .aktiviti-card:nth-child(10) .icon-wrapper {
+            background: #f3e8f9;
+            color: #8b5aa6;
+        }
+        .aktiviti-card:nth-child(11) .icon-wrapper {
+            background: #fce8f0;
+            color: #d45a7a;
+        }
+        .aktiviti-card:nth-child(12) .icon-wrapper {
+            background: #e8f4f8;
+            color: #3a9bc7;
+        }
+
+        /* ===== STATISTIK / INFO TAMBAHAN ===== */
+        .info-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            margin: 2rem 0 2.5rem;
+            padding: 2rem 1.5rem;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(6px);
+            border-radius: 4rem 1.5rem 4rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 1.8rem;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .info-item i {
+            font-size: 2rem;
+            color: #6d3b9e;
+        }
+
+        .info-item .info-text {
+            font-weight: 600;
+            color: #1d0f2e;
+        }
+
+        .info-item .info-text small {
+            font-weight: 400;
+            color: #4f3a68;
+            display: block;
+            font-size: 0.8rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer-main {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 2.5rem;
+            padding-top: 1.8rem;
+            border-top: 2px solid rgba(190, 150, 230, 0.25);
+            gap: 1rem;
+        }
+
+        .pengarang-box {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(45, 25, 75, 0.06);
+            padding: 0.4rem 1.8rem 0.4rem 1.2rem;
+            border-radius: 80px;
+            backdrop-filter: blur(2px);
+            border: 1px solid #d6c0f0;
+        }
+
+        .pengarang-box i {
+            font-size: 2rem;
+            color: #5a2d82;
+            background: #f0e5ff;
+            padding: 0.4rem;
+            border-radius: 60px;
+        }
+
+        .pengarang-box .name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1f0b38;
+        }
+
+        .pengarang-box .univ {
+            font-weight: 500;
+            color: #3f2a5a;
+            background: #e1d1f5;
+            padding: 0.2rem 1.4rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+        }
+
+        .footer-tags {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-tags span {
+            background: #291b40;
+            color: #f2e5ff;
+            padding: 0.3rem 1.6rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid #b78aff;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 820px) {
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                border-radius: 40px;
+                padding: 1.2rem 1.5rem;
+            }
+            .nav-buttons {
+                justify-content: center;
+            }
+            .modul-header h2 {
+                font-size: 2.4rem;
+            }
+            .aktiviti-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 1.2rem;
+            }
+            .footer-main {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .info-section {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            .modul-header h2 {
+                font-size: 1.8rem;
+            }
+            .aktiviti-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 1rem;
+            }
+            .aktiviti-card {
+                padding: 1.2rem 0.8rem;
+            }
+            .aktiviti-card .icon-wrapper {
+                width: 55px;
+                height: 55px;
+                font-size: 1.6rem;
+            }
+            .navbar {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== GRAFIK LATAR BELAKANG ===== -->
+    <div class="bg-graphic">
+        <div class="circle c1"></div>
+        <div class="circle c2"></div>
+        <div class="circle c3"></div>
+        <div class="circle c4"></div>
+    </div>
+
+    <!-- ===== KANDUNGAN UTAMA ===== -->
+    <div class="container">
+
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>Real MPC</h1>
+            </div>
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-btn ghost"><i class="fas fa-home"></i> Utama</a>
+                <a href="modul.html" class="nav-btn primary"><i class="fas fa-book-open"></i> Modul</a>
+                <a href="pencapaian.html" class="nav-btn secondary"><i class="fas fa-trophy"></i> Pencapaian</a>
+                <a href="pengiktirafan.html" class="nav-btn"><i class="fas fa-certificate"></i> Pengiktirafan</a>
+            </div>
+        </nav>
+
+        <!-- HEADER MODUL -->
+        <div class="modul-header">
+            <div class="badge"><i class="fas fa-gem" style="margin-right: 8px;"></i> 12 Aktiviti Interaktif</div>
+            <h2>Modul <span>Pembelajaran</span> AddMath</h2>
+            <p>
+                <i class="fas fa-quote-left" style="color: #b45ef7; margin-right: 6px;"></i>
+                Klik pada mana-mana aktiviti untuk memulakan sesi pembelajaran
+            </p>
+        </div>
+
+        <!-- 12 BUTTON AKTIVITI -->
+        <div class="aktiviti-grid">
+            <a href="aktiviti1.html" class="aktiviti-card">
+                <div class="icon-wrapper"><i class="fas fa-1"></i></div>
+                <h3>Aktiviti 1</h3>
+                <p>Pengenalan Real MPC</p>
+                <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="aktiviti2.html" class="aktiviti-card">
+                <div class="icon-wrapper"><i class="fas fa-2"></i></div>
+                <h3>Aktiviti 2</h3>
+                <p>Konsep Asas AddMath</p>
+                <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="aktiviti3.html" class="aktiviti-card">
+                <div class="icon-wrapper"><i class="fas fa-3"></i></div>
+                <h3>Aktiviti 3</h3>
+                <p>Resilience & Ketahanan</p>
+                <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="aktiviti4.html" class="aktiviti-card">
+                <div class="icon-wrapper"><i class="fas fa-4"></i></div>
+                <h3>Aktiviti 4</h3>
+                <p>Efficacy & Keyakinan</p>
+                <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="aktiviti5.html" class="aktiviti-card">
+                <div class="icon-wrapper"><i class="fas fa-5"></i></div>
+                <h3>Aktiviti 5</h3>
+                <p>Awareness & Kesedaran</p>
+                <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="aktiviti6.html" class="aktiviti-card">
+                <div class="icon-wrapper"><i class="fas fa-6"></i></div>
+                <h3>Aktiviti 6</h3>
+                <p>Learning & Strategi</p>
+                <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="aktiviti7.html" class="aktiviti-card">
+                <div class="icon-wrapper"><i class="fas fa-7"></i></div>
+                <h3>Aktiviti 7</h3>
+                <p>MPC & Integrasi</p>
+                <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="aktiviti8.html" class="aktiviti-card">
+                <div class="icon-wrapper"><i class="fas fa-8"></i></div>
+                <h3>Aktiviti 8</h3>
+                <p>Penyelesaian Masalah</p>
+                <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="aktiviti9.html" class="aktiviti-card">
+                <div class="icon-wrapper"><i class="fas fa-9"></i></div>
+                <h3>Aktiviti 9</h3>
+                <p>Pemikiran Kritis</p>
+                <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="aktiviti10.html" class="aktiviti-card">
+                <div class="icon-wrapper"><i class="fas fa-10"></i></div>
+                <h3>Aktiviti 10</h3>
+                <p>Kreativiti & Inovasi</p>
+                <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="aktiviti11.html" class="aktiviti-card">
+                <div class="icon-wrapper"><i class="fas fa-11"></i></div>
+                <h3>Aktiviti 11</h3>
+                <p>Kolaborasi & Pasukan</p>
+                <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="aktiviti12.html" class="aktiviti-card">
+                <div class="icon-wrapper"><i class="fas fa-12"></i></div>
+                <h3>Aktiviti 12</h3>
+                <p>Refleksi & Penilaian</p>
+                <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
+            </a>
+        </div>
+
+        <!-- INFO SECTION -->
+        <div class="info-section">
+            <div class="info-item">
+                <i class="fas fa-tasks"></i>
+                <div class="info-text">
+                    12 Aktiviti
+                    <small>Modul lengkap</small>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-clock"></i>
+                <div class="info-text">
+                    30-45 Minit
+                    <small>Setiap aktiviti</small>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-star"></i>
+                <div class="info-text">
+                    5 Elemen
+                    <small>Resilience · Efficacy · Awareness · Learning · MPC</small>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-users"></i>
+                <div class="info-text">
+                    Pintar Cerdas
+                    <small>Untuk murid cemerlang</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer-main">
+            <div class="pengarang-box">
+                <i class="fas fa-user-graduate"></i>
+                <span class="name">Shuhaimi bin Abu Seman</span>
+                <span class="univ"><i class="fas fa-university" style="margin-right: 6px;"></i> Universiti Putra Malaysia</span>
+            </div>
+            <div class="footer-tags">
+                <span><i class="far fa-copyright"></i> 2026 · Real MPC</span>
+                <span><i class="fas fa-palette"></i> AddMath</span>
+                <span><i class="fas fa-chart-line"></i> Pintar Cerdas</span>
+            </div>
+        </footer>
+
+        <!-- hiasan bawah -->
+        <div style="margin-top: 1.5rem; font-size: 0.85rem; color: #4f3a68; opacity: 0.6; text-align: center; border-top: 1px dashed #c9b1ff; padding-top: 1rem;">
+            <i class="fas fa-egg" style="color: #d99b3c;"></i> Modul inovasi psikopendidikan bersepadu · 12 aktiviti interaktif
+            <span style="margin: 0 10px;">•</span>
+            <i class="fas fa-arrow-right" style="color: #6d3b9e;"></i> Klik mana-mana aktiviti untuk ke halaman kosong
+        </div>
+
+    </div>
+
+</body>
+</html>
