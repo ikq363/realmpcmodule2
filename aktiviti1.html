@@ -627,6 +627,223 @@
             color: #6b5a7a;
         }
 
+        /* ===== STUDENT LIST SECTION (BAWAH) ===== */
+        .student-list-section {
+            margin-top: 1.2rem;
+        }
+
+        .student-list-section .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .student-list-section .student-item {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 0.8rem 1.2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .student-list-section .student-item:hover {
+            background: rgba(109, 59, 158, 0.08);
+            border-color: #6d3b9e;
+            transform: translateY(-2px);
+        }
+
+        .student-list-section .student-item .student-name {
+            font-weight: 600;
+            color: #1d0f2e;
+            font-size: 0.9rem;
+        }
+
+        .student-list-section .student-item .student-status {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.15rem 0.8rem;
+            border-radius: 60px;
+            background: #def5ea;
+            color: #38a87a;
+        }
+
+        .student-list-section .student-item .student-status.pending {
+            background: #fbf0db;
+            color: #d99b3c;
+        }
+
+        .student-list-section .empty-state {
+            text-align: center;
+            padding: 1.5rem;
+            color: #6b5a7a;
+            font-size: 0.9rem;
+        }
+
+        .student-list-section .empty-state i {
+            font-size: 2rem;
+            color: #d6c0f0;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ===== MODAL JAWAPAN ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 2rem 1rem 2rem 1rem;
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            animation: modalIn 0.3s ease;
+            position: relative;
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: scale(0.9) translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6b5a7a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-content .modal-close:hover {
+            color: #d4527c;
+            transform: rotate(90deg);
+        }
+
+        .modal-content .modal-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1d0f2e;
+            margin-bottom: 0.3rem;
+        }
+
+        .modal-content .modal-title span {
+            color: #6d3b9e;
+        }
+
+        .modal-content .modal-sub {
+            color: #6b5a7a;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #e6d5ff;
+            padding-bottom: 1rem;
+        }
+
+        .modal-content .jawapan-item {
+            background: #f9f5ff;
+            padding: 0.8rem 1.2rem;
+            border-radius: 0.8rem;
+            margin-bottom: 0.8rem;
+            border-left: 4px solid #6d3b9e;
+        }
+
+        .modal-content .jawapan-item .soalan-label {
+            font-weight: 600;
+            color: #6d3b9e;
+            font-size: 0.8rem;
+        }
+
+        .modal-content .jawapan-item .jawapan-text {
+            color: #1d0f2e;
+            font-weight: 500;
+            margin-top: 0.2rem;
+            font-size: 0.95rem;
+        }
+
+        .modal-content .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .modal-content .modal-actions .btn {
+            width: auto;
+        }
+
+        @media print {
+            .modal-overlay {
+                position: static !important;
+                background: white !important;
+                backdrop-filter: none !important;
+                padding: 0 !important;
+            }
+            .modal-content {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                max-height: none !important;
+                overflow-y: visible !important;
+            }
+            .modal-close {
+                display: none !important;
+            }
+            .modal-actions .btn-secondary {
+                display: none !important;
+            }
+            body * {
+                visibility: hidden;
+            }
+            .modal-overlay,
+            .modal-overlay * {
+                visibility: visible;
+            }
+            .modal-overlay {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background: white !important;
+            }
+            .modal-content {
+                border: none !important;
+                padding: 0.5in !important;
+            }
+        }
+
         @media (max-width: 820px) {
             .main-grid {
                 grid-template-columns: 1fr;
@@ -662,6 +879,12 @@
                 gap: 1rem;
                 flex-wrap: wrap;
                 justify-content: center;
+            }
+            .student-list-section .student-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .modal-content {
+                padding: 1.5rem;
             }
         }
 
@@ -710,6 +933,15 @@
             .nav-dot {
                 width: 8px;
                 height: 8px;
+            }
+            .student-list-section .student-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-content {
+                padding: 1rem;
+            }
+            .modal-content .modal-title {
+                font-size: 1.2rem;
             }
         }
     </style>
@@ -824,6 +1056,23 @@
 
         </div>
 
+        <!-- ===== STUDENT LIST SECTION (BAWAH) ===== -->
+        <div class="card student-list-section">
+            <div class="card-title">
+                <i class="fas fa-users"></i> Senarai Pelajar Yang Telah Menjawab
+                <span class="text-muted" id="studentCountBadge" style="font-size:0.8rem;font-weight:400;margin-left:auto;">(0)</span>
+            </div>
+
+            <div id="studentListContainer">
+                <div class="empty-state" id="emptyState">
+                    <i class="fas fa-user-clock"></i>
+                    Tiada pelajar yang telah menjawab soalan lagi.
+                    <br><small>Kongsi QR Code untuk pelajar menjawab.</small>
+                </div>
+                <div class="student-grid" id="studentGrid"></div>
+            </div>
+        </div>
+
         <div class="nav-dots" id="navDots">
             <button class="nav-dot active" onclick="goToPage(0)" data-page="0" title="Mula"></button>
             <button class="nav-dot" onclick="goToPage(1)" data-page="1" title="Aktiviti 1"></button>
@@ -843,9 +1092,29 @@
 
     </div>
 
+    <!-- ===== MODAL JAWAPAN ===== -->
+    <div class="modal-overlay" id="jawapanModal">
+        <div class="modal-content" id="modalContent">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-title">📋 Jawapan <span id="modalStudentName">-</span></div>
+            <div class="modal-sub" id="modalStudentInfo">Kelas: - · Dihantar: -</div>
+
+            <div id="modalJawapanList"></div>
+
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="printModal()">
+                    <i class="fas fa-print"></i> Cetak
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal()">
+                    <i class="fas fa-times"></i> Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "firebase/app";
-        import { getDatabase, ref, set, get } from "firebase/database";
+        import { getDatabase, ref, set, get, onValue } from "firebase/database";
         import { getFirestore, doc, setDoc } from "firebase/firestore";
         import { getAnalytics } from "firebase/analytics";
 
@@ -868,6 +1137,7 @@
         window.ref = ref;
         window.set = set;
         window.get = get;
+        window.onValue = onValue;
         window.db = db;
         window.doc = doc;
         window.setDoc = setDoc;
@@ -922,6 +1192,7 @@
         let sessionData = null;
         let generatedCode = '';
         let currentPage = 0;
+        let jawapanData = {};
 
         function checkSession() {
             const session = localStorage.getItem('guruSession');
@@ -954,11 +1225,11 @@
             document.getElementById('qrGuruDisplay').textContent = `👨‍🏫 Pengajar: ${session.nama || 'Guru'}`;
         }
 
+        // ===== GENERATE QR =====
         function generateQR(code) {
             const codeToUse = code || 'MPC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
             generatedCode = codeToUse;
 
-            // DIRECT KE soalan1.html
             const baseUrl = window.location.origin + window.location.pathname.replace('aktiviti1.html', 'soalan1.html');
             const link = `${baseUrl}?code=${generatedCode}`;
 
@@ -979,7 +1250,6 @@
                         correctLevel: QRCode.CorrectLevel.H
                     });
 
-                    // Save to Firebase
                     const guruNama = session ? session.nama : 'Guru';
                     set(ref(rtdb, `sessions/${generatedCode}`), {
                         code: generatedCode,
@@ -999,7 +1269,10 @@
                     });
 
                     console.log('✅ QR Code generated:', generatedCode);
-                    console.log('🔗 Link:', link);
+
+                    // START LISTENING FOR STUDENT ANSWERS
+                    listenStudentAnswers(generatedCode);
+
                 } else {
                     throw new Error('QRCode library not loaded');
                 }
@@ -1014,13 +1287,118 @@
             }
         }
 
+        // ===== LISTEN STUDENT ANSWERS =====
+        function listenStudentAnswers(code) {
+            const jawapanRef = ref(rtdb, `sessions/${code}/jawapan`);
+
+            onValue(jawapanRef, (snapshot) => {
+                const data = snapshot.val();
+
+                if (data) {
+                    jawapanData = data;
+                    renderStudentList(data);
+                } else {
+                    jawapanData = {};
+                    renderStudentList({});
+                }
+            });
+        }
+
+        // ===== RENDER STUDENT LIST =====
+        function renderStudentList(data) {
+            const grid = document.getElementById('studentGrid');
+            const empty = document.getElementById('emptyState');
+            const badge = document.getElementById('studentCountBadge');
+
+            const names = data ? Object.keys(data) : [];
+            badge.textContent = `(${names.length})`;
+
+            if (names.length === 0) {
+                grid.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+
+            empty.style.display = 'none';
+            grid.innerHTML = '';
+
+            names.forEach(name => {
+                const jawapan = data[name];
+                const item = document.createElement('div');
+                item.className = 'student-item';
+                item.innerHTML = `
+                    <span class="student-name"><i class="fas fa-user-circle" style="color:#6d3b9e;"></i> ${name}</span>
+                    <span class="student-status"><i class="fas fa-check-circle"></i> Selesai</span>
+                `;
+                item.addEventListener('click', () => {
+                    showJawapanModal(name, jawapan);
+                });
+                grid.appendChild(item);
+            });
+        }
+
+        // ===== SHOW JAWAPAN MODAL =====
+        window.showJawapanModal = function(name, jawapan) {
+            const modal = document.getElementById('jawapanModal');
+            document.getElementById('modalStudentName').textContent = name;
+            document.getElementById('modalStudentInfo').textContent =
+                `Kelas: ${jawapan.kelas || '-'} · Dihantar: ${jawapan.timestamp ? new Date(jawapan.timestamp).toLocaleString() : '-'}`;
+
+            const list = document.getElementById('modalJawapanList');
+            list.innerHTML = '';
+
+            const soalanList = [
+                { label: 'Soalan 1', value: jawapan.q1 || '-' },
+                { label: 'Soalan 2', value: jawapan.q2 || '-' },
+                { label: 'Soalan 3', value: jawapan.q3 || '-' },
+                { label: 'Soalan 4', value: jawapan.q4 || '-' }
+            ];
+
+            soalanList.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'jawapan-item';
+                div.innerHTML = `
+                    <div class="soalan-label">${item.label}</div>
+                    <div class="jawapan-text">${item.value}</div>
+                `;
+                list.appendChild(div);
+            });
+
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        };
+
+        // ===== CLOSE MODAL =====
+        window.closeModal = function() {
+            document.getElementById('jawapanModal').classList.remove('show');
+            document.body.style.overflow = '';
+        };
+
+        // ===== PRINT MODAL =====
+        window.printModal = function() {
+            window.print();
+        };
+
+        // ===== CLOSE MODAL ON CLICK OUTSIDE =====
+        document.getElementById('jawapanModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // ===== GENERATE NEW QR =====
         window.generateNewQR = function() {
             if (confirm('Jana QR Code baru? Code lama akan diganti.')) {
+                // Unsubscribe old listener
+                if (window._unsubscribeJawapan) {
+                    window._unsubscribeJawapan();
+                }
                 generateQR();
                 showToast('✅ QR Code baru dijana!');
             }
         };
 
+        // ===== START MODUL =====
         window.startModul = function() {
             isModulStarted = true;
             currentAktiviti = 0;
@@ -1202,6 +1580,9 @@
                 e.preventDefault();
                 skipAktiviti();
             }
+            if (e.key === 'Escape') {
+                closeModal();
+            }
         });
 
         // INIT - Generate QR on load
@@ -1210,7 +1591,7 @@
         console.log('✅ Aktiviti 1 ready!');
         console.log('📚 QR Code & Link sedia dari awal');
         console.log('📡 Connected to Firebase');
-        console.log('🔗 Link direct ke soalan1.html');
+        console.log('👥 Student list akan update secara live');
     </script>
 
 </body>
