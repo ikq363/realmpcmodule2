@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real MPC · Dashboard Guru</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- Google Font (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+    <!-- Firebase SDK -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js",
+                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js"
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f0ff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== GRAFIK LATAR BELAKANG ===== */
+        .bg-graphic {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bg-graphic .circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.12;
+            filter: blur(80px);
+            animation: floatGraphic 20s ease-in-out infinite alternate;
+        }
+
+        .bg-graphic .c1 {
+            width: 500px;
+            height: 500px;
+            background: #b45ef7;
+            top: -150px;
+            left: -100px;
+        }
+        .bg-graphic .c2 {
+            width: 400px;
+            height: 400px;
+            background: #f9a8d4;
+            bottom: -100px;
+            right: -50px;
+            animation-delay: 3s;
+        }
+        .bg-graphic .c3 {
+            width: 300px;
+            height: 300px;
+            background: #fbc85a;
+            top: 40%;
+            left: 60%;
+            animation-delay: 6s;
+            opacity: 0.08;
+        }
+        .bg-graphic .c4 {
+            width: 250px;
+            height: 250px;
+            background: #38c0c0;
+            top: 70%;
+            left: 10%;
+            animation-delay: 9s;
+            opacity: 0.1;
+        }
+
+        @keyframes floatGraphic {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(40px, -30px) scale(1.2);
+            }
+        }
+
+        /* ===== KANDUNGAN UTAMA ===== */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 2rem 1rem;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            padding: 0.8rem 2.2rem;
+            border-radius: 80px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(80, 40, 120, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #3b1f6e, #b45ef7, #f9a8d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #6d3b9e;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 60px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            color: white;
+            background: #2f1b4e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(80, 30, 150, 0.35);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #6d3b9e, #b45ef7);
+        }
+
+        .nav-btn.ghost {
+            background: rgba(45, 25, 75, 0.08);
+            color: #2f1b4e;
+            border: 1.5px solid #b78aff;
+        }
+
+        .nav-btn.danger {
+            background: linear-gradient(135deg, #d4527c, #f9a8d4);
+        }
+
+        .nav-btn.success {
+            background: linear-gradient(135deg, #38a87a, #6bc0a8);
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem 1rem 2rem 1rem;
+            padding: 2rem 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 25px rgba(80, 40, 120, 0.06);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1d0f2e;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-title i {
+            color: #6d3b9e;
+        }
+
+        /* ===== PROFILE ===== */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+
+        .profile-avatar {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .profile-avatar .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6d3b9e, #b45ef7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            margin: 0 auto 1rem;
+            box-shadow: 0 8px 30px rgba(109, 59, 158, 0.3);
+        }
+
+        .profile-avatar .status {
+            display: inline-block;
+            padding: 0.2rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: #def5ea;
+            color: #38a87a;
+        }
+
+        .profile-avatar .status i {
+            margin-right: 5px;
+        }
+
+        .profile-details .detail-item {
+            display: flex;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-details .detail-item .label {
+            font-weight: 600;
+            color: #6b5a7a;
+            min-width: 140px;
+            font-size: 0.9rem;
+        }
+
+        .profile-details .detail-item .value {
+            color: #1d0f2e;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .profile-details .detail-item .value .edit-input {
+            border: none;
+            border-bottom: 2px solid #d6c0f0;
+            background: transparent;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #1d0f2e;
+            padding: 0.2rem 0.5rem;
+            width: 100%;
+            max-width: 350px;
+            transition: all 0.3s ease;
+        }
+
+        .profile-details .detail-item .value .edit-input:focus {
+            outline: none;
+            border-bottom-color: #6d3b9e;
+        }
+
+        .profile-details .detail-item .value .edit-input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* ===== MENU GRID ===== */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .menu-card {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 1.8rem 1.5rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: #1d0f2e;
+            display: block;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(80, 40, 120, 0.12);
+            border-color: #c9b1ff;
+        }
+
+        .menu-card i {
+            font-size: 2.8rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .menu-card h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1d0f2e;
+        }
+
+        .menu-card p {
+            font-size: 0.85rem;
+            color: #6b5a7a;
+            margin-top: 0.2rem;
+        }
+
+        /* Warna menu card */
+        .menu-card:nth-child(1) i {
+            color: #6d3b9e;
+        }
+        .menu-card:nth-child(1):hover {
+            background: #f0e3f7;
+        }
+        .menu-card:nth-child(2) i {
+            color: #d4527c;
+        }
+        .menu-card:nth-child(2):hover {
+            background: #fce9ef;
+        }
+        .menu-card:nth-child(3) i {
+            color: #38a87a;
+        }
+        .menu-card:nth-child(3):hover {
+            background: #def5ea;
+        }
+        .menu-card:nth-child(4) i {
+            color: #d99b3c;
+        }
+        .menu-card:nth-child(4):hover {
+            background: #fbf0db;
+        }
+
+        /* ===== BUTTON ===== */
+        .btn {
+            padding: 0.6rem 1.5rem;
+            border-radius: 60px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6d3b9e, #b45ef7);
+            color: white;
+            box-shadow: 0 4px 15px rgba(80, 30, 150, 0.25);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 10px 30px rgba(80, 30, 150, 0.35);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #38a87a, #6bc0a8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(56, 168, 122, 0.3);
+        }
+        .btn-success:hover {
+            box-shadow: 0 10px 30px rgba(56, 168, 122, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(45, 25, 75, 0.08);
+            color: #2f1b4e;
+            border: 1.5px solid #b78aff;
+        }
+        .btn-secondary:hover {
+            background: rgba(45, 25, 75, 0.15);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #d4527c, #f9a8d4);
+            color: white;
+            box-shadow: 0 4px 15px rgba(212, 82, 124, 0.3);
+        }
+        .btn-danger:hover {
+            box-shadow: 0 10px 30px rgba(212, 82, 124, 0.4);
+        }
+
+        .btn-sm {
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* ===== MESSAGE ===== */
+        .message {
+            padding: 0.8rem 1.2rem;
+            border-radius: 1rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .message.error {
+            display: block;
+            background: #fce4ec;
+            color: #d4527c;
+            border: 1px solid #fbc4d6;
+        }
+
+        .message.success {
+            display: block;
+            background: #def5ea;
+            color: #38a87a;
+            border: 1px solid #a8e0c9;
+        }
+
+        .message.info {
+            display: block;
+            background: #e3f0fa;
+            color: #3083b0;
+            border: 1px solid #b5d6f0;
+        }
+
+        /* ===== SPINNER ===== */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e6d5ff;
+            border-top: 3px solid #6d3b9e;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== EDIT MODE TOGGLE ===== */
+        .edit-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 820px) {
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1rem 1.2rem;
+            }
+            .nav-buttons {
+                justify-content: center;
+            }
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+            .profile-avatar .avatar {
+                width: 120px;
+                height: 120px;
+                font-size: 3rem;
+            }
+            .profile-details .detail-item {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+            .profile-details .detail-item .label {
+                min-width: auto;
+            }
+            .card {
+                padding: 1.2rem 1.5rem;
+            }
+            .menu-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo h1 {
+                font-size: 1.4rem;
+            }
+            .container {
+                padding: 1rem;
+            }
+            .card {
+                padding: 1rem 1.2rem;
+            }
+            .card-title {
+                font-size: 1.1rem;
+            }
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            .profile-avatar .avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 2.5rem;
+            }
+            .profile-details .detail-item .value .edit-input {
+                max-width: 100%;
+            }
+            .edit-actions {
+                flex-direction: column;
+            }
+            .edit-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== GRAFIK LATAR BELAKANG ===== -->
+    <div class="bg-graphic">
+        <div class="circle c1"></div>
+        <div class="circle c2"></div>
+        <div class="circle c3"></div>
+        <div class="circle c4"></div>
+    </div>
+
+    <!-- ===== KANDUNGAN UTAMA ===== -->
+    <div class="container">
+
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>Real MPC</h1>
+            </div>
+            <div class="nav-buttons">
+                <span style="display:flex;align-items:center;gap:8px;background:rgba(45,25,75,0.06);padding:0.3rem 1.2rem;border-radius:60px;font-size:0.85rem;color:#1d0f2e;font-weight:500;">
+                    <i class="fas fa-user-circle" style="color:#6d3b9e;"></i>
+                    <span id="navNama">Guru</span>
+                </span>
+                <a href="index.html" class="nav-btn ghost"><i class="fas fa-home"></i> Utama</a>
+                <a href="daftar-guru.html" class="nav-btn danger" onclick="logoutGuru()"><i class="fas fa-sign-out-alt"></i> Log Keluar</a>
+            </div>
+        </nav>
+
+        <!-- ===== PROFILE SECTION ===== -->
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-user-circle"></i> Profil Guru
+                <span style="font-size:0.8rem;font-weight:400;color:#6b5a7a;margin-left:auto;" id="profileStatus">
+                    <i class="fas fa-circle" style="color:#38a87a;font-size:0.5rem;"></i> Online
+                </span>
+            </div>
+
+            <div class="profile-grid">
+                <!-- Avatar -->
+                <div class="profile-avatar">
+                    <div class="avatar" id="avatarDisplay">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="status"><i class="fas fa-check-circle"></i> Aktif</span>
+                    <p style="margin-top:0.5rem;font-size:0.8rem;color:#6b5a7a;">ID: <span id="profileId">-</span></p>
+                </div>
+
+                <!-- Details -->
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <span class="label"><i class="fas fa-user"></i> Nama Penuh</span>
+                        <span class="value">
+                            <input type="text" id="editNama" class="edit-input" disabled />
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label"><i class="fas fa-id-card"></i> No. Kad Pengenalan</span>
+                        <span class="value" id="profileIC">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label"><i class="fas fa-calendar-alt"></i> Tarikh Daftar</span>
+                        <span class="value" id="profileDate">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label"><i class="fas fa-clock"></i> Log Masuk Terakhir</span>
+                        <span class="value" id="profileLogin">-</span>
+                    </div>
+
+                    <!-- Edit Actions -->
+                    <div class="edit-actions">
+                        <button class="btn btn-primary btn-sm" onclick="toggleEdit()" id="btnEditToggle">
+                            <i class="fas fa-edit"></i> Edit Profil
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="saveProfile()" id="btnSaveProfile" style="display:none;">
+                            <i class="fas fa-save"></i> Simpan
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="cancelEdit()" id="btnCancelEdit" style="display:none;">
+                            <i class="fas fa-times"></i> Batal
+                        </button>
+                    </div>
+
+                    <!-- Message -->
+                    <div id="profileMessage" class="message"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MENU SECTION ===== -->
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-th-large"></i> Menu Utama
+            </div>
+
+            <div class="menu-grid">
+                <!-- Button Modul -->
+                <a href="modul.html" class="menu-card">
+                    <i class="fas fa-book-open"></i>
+                    <h4>📚 Modul</h4>
+                    <p>Uruskan modul pembelajaran</p>
+                </a>
+                <a href="#" class="menu-card" onclick="alert('🚧 Sedang dalam pembinaan')">
+                    <i class="fas fa-users"></i>
+                    <h4>👥 Kelas Saya</h4>
+                    <p>Uruskan kelas dan pelajar</p>
+                </a>
+                <a href="#" class="menu-card" onclick="alert('🚧 Sedang dalam pembinaan')">
+                    <i class="fas fa-chart-bar"></i>
+                    <h4>📊 Laporan</h4>
+                    <p>Lihat laporan pencapaian</p>
+                </a>
+                <a href="#" class="menu-card" onclick="alert('🚧 Sedang dalam pembinaan')">
+                    <i class="fas fa-cog"></i>
+                    <h4>⚙️ Tetapan</h4>
+                    <p>Pengaturan akaun</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer style="text-align:center;padding:1rem 0 0.3rem;border-top:1px solid rgba(190,150,230,0.2);margin-top:0.5rem;font-size:0.8rem;color:#6b5a7a;">
+            <i class="fas fa-user-graduate"></i> Shuhaimi bin Abu Seman · Universiti Putra Malaysia
+            <span style="margin:0 8px;">|</span> <i class="far fa-copyright"></i> 2026 Real MPC
+        </footer>
+
+    </div>
+
+    <!-- ===== FIREBASE + MAIN JS ===== -->
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getAnalytics } from "firebase/analytics";
+        import { getFirestore, collection, query, where, getDocs, addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzWmeMvmMwNsEEiFmnr9PRtw6nNjIUGRg",
+            authDomain: "real-mpc-module-6be02.firebaseapp.com",
+            projectId: "real-mpc-module-6be02",
+            storageBucket: "real-mpc-module-6be02.firebasestorage.app",
+            messagingSenderId: "1045888004132",
+            appId: "1:1045888004132:web:869de28a286506f15ea8b1",
+            measurementId: "G-XD3VQ7JKKB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+
+        window.db = db;
+        window.collection = collection;
+        window.query = query;
+        window.where = where;
+        window.getDocs = getDocs;
+        window.addDoc = addDoc;
+        window.doc = doc;
+        window.getDoc = getDoc;
+        window.updateDoc = updateDoc;
+
+        // ===== STATE =====
+        let guruData = null;
+        let isEditMode = false;
+        let originalNama = '';
+
+        // ===== CHECK SESSION =====
+        function checkSession() {
+            const session = localStorage.getItem('guruSession');
+            if (!session) {
+                window.location.href = 'daftar-guru.html';
+                return null;
+            }
+
+            try {
+                const data = JSON.parse(session);
+                // Check if session expired (optional - 24 hours)
+                const loginTime = new Date(data.loginTime);
+                const now = new Date();
+                const hoursDiff = (now - loginTime) / (1000 * 60 * 60);
+                if (hoursDiff > 24) {
+                    localStorage.removeItem('guruSession');
+                    window.location.href = 'daftar-guru.html';
+                    return null;
+                }
+                return data;
+            } catch (e) {
+                localStorage.removeItem('guruSession');
+                window.location.href = 'daftar-guru.html';
+                return null;
+            }
+        }
+
+        // ===== LOAD PROFILE =====
+        async function loadProfile() {
+            const session = checkSession();
+            if (!session) return;
+
+            try {
+                // Get fresh data from Firestore
+                const docRef = doc(db, 'guru', session.id);
+                const docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists()) {
+                    // User deleted from Firestore
+                    localStorage.removeItem('guruSession');
+                    window.location.href = 'daftar-guru.html';
+                    return;
+                }
+
+                guruData = { id: docSnap.id, ...docSnap.data() };
+
+                // Update UI
+                document.getElementById('navNama').textContent = guruData.nama || 'Guru';
+                document.getElementById('profileId').textContent = guruData.id || '-';
+                document.getElementById('editNama').value = guruData.nama || '-';
+                document.getElementById('profileIC').textContent = guruData.ic || '-';
+
+                // Format date
+                const date = new Date(guruData.createdAt);
+                document.getElementById('profileDate').textContent = date.toLocaleDateString('ms-MY', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                document.getElementById('profileLogin').textContent = new Date(session.loginTime).toLocaleString('ms-MY', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                // Avatar initials
+                const initials = guruData.nama ? guruData.nama.split(' ').map(w => w[0]).join('').toUpperCase() : 'G';
+                document.getElementById('avatarDisplay').innerHTML = initials;
+
+                originalNama = guruData.nama || '';
+
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                document.getElementById('profileMessage').className = 'message error';
+                document.getElementById('profileMessage').textContent = '⚠️ Ralat memuatkan profil: ' + error.message;
+            }
+        }
+
+        // ===== TOGGLE EDIT =====
+        window.toggleEdit = function() {
+            isEditMode = !isEditMode;
+
+            if (isEditMode) {
+                document.getElementById('editNama').disabled = false;
+                document.getElementById('editNama').focus();
+                document.getElementById('btnEditToggle').style.display = 'none';
+                document.getElementById('btnSaveProfile').style.display = 'inline-flex';
+                document.getElementById('btnCancelEdit').style.display = 'inline-flex';
+                document.getElementById('profileMessage').className = 'message';
+                document.getElementById('profileMessage').textContent = '';
+            }
+        };
+
+        // ===== CANCEL EDIT =====
+        window.cancelEdit = function() {
+            isEditMode = false;
+            document.getElementById('editNama').disabled = true;
+            document.getElementById('editNama').value = originalNama;
+            document.getElementById('btnEditToggle').style.display = 'inline-flex';
+            document.getElementById('btnSaveProfile').style.display = 'none';
+            document.getElementById('btnCancelEdit').style.display = 'none';
+            document.getElementById('profileMessage').className = 'message';
+            document.getElementById('profileMessage').textContent = '';
+        };
+
+        // ===== SAVE PROFILE =====
+        window.saveProfile = async function() {
+            const namaBaru = document.getElementById('editNama').value.trim();
+
+            if (!namaBaru) {
+                document.getElementById('profileMessage').className = 'message error';
+                document.getElementById('profileMessage').textContent = '⚠️ Nama tidak boleh kosong.';
+                return;
+            }
+
+            try {
+                document.getElementById('btnSaveProfile').disabled = true;
+                document.getElementById('btnSaveProfile').innerHTML = '<span class="spinner"></span> Menyimpan...';
+
+                // Update Firestore
+                const docRef = doc(db, 'guru', guruData.id);
+                await updateDoc(docRef, {
+                    nama: namaBaru,
+                    updatedAt: new Date().toISOString()
+                });
+
+                // Update session
+                const session = JSON.parse(localStorage.getItem('guruSession'));
+                session.nama = namaBaru;
+                localStorage.setItem('guruSession', JSON.stringify(session));
+
+                // Update local data
+                guruData.nama = namaBaru;
+                originalNama = namaBaru;
+
+                // Update UI
+                document.getElementById('navNama').textContent = namaBaru;
+                const initials = namaBaru.split(' ').map(w => w[0]).join('').toUpperCase();
+                document.getElementById('avatarDisplay').innerHTML = initials;
+
+                document.getElementById('profileMessage').className = 'message success';
+                document.getElementById('profileMessage').textContent = '✅ Profil berjaya dikemaskini!';
+
+                // Exit edit mode
+                cancelEdit();
+
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                document.getElementById('profileMessage').className = 'message error';
+                document.getElementById('profileMessage').textContent = '⚠️ Ralat menyimpan: ' + error.message;
+            } finally {
+                document.getElementById('btnSaveProfile').disabled = false;
+                document.getElementById('btnSaveProfile').innerHTML = '<i class="fas fa-save"></i> Simpan';
+            }
+        };
+
+        // ===== LOGOUT =====
+        window.logoutGuru = function() {
+            if (confirm('Anda pasti mahu log keluar?')) {
+                localStorage.removeItem('guruSession');
+                window.location.href = 'daftar-guru.html';
+            }
+        };
+
+        // ===== KEYBOARD SHORTCUTS =====
+        document.addEventListener('keydown', (e) => {
+            if (isEditMode) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    saveProfile();
+                }
+                if (e.key === 'Escape') {
+                    cancelEdit();
+                }
+            }
+        });
+
+        // ===== INIT =====
+        loadProfile();
+
+        console.log('✅ Dashboard Guru ready!');
+        console.log('📡 Connected to Firebase Firestore');
+    </script>
+
+</body>
+</html>
