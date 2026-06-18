@@ -414,6 +414,32 @@
             color: #6d3b9e;
         }
 
+        .error-page {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .error-page .error-icon {
+            font-size: 5rem;
+            color: #d4527c;
+            margin-bottom: 1rem;
+        }
+
+        .error-page h2 {
+            font-size: 2rem;
+            color: #1d0f2e;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-page p {
+            color: #6b5a7a;
+            margin-bottom: 1.5rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
         @media (max-width: 600px) {
             body {
                 padding: 0.8rem;
@@ -464,85 +490,103 @@
             <p>Soalan Refleksi · Aktiviti 1</p>
         </div>
 
-        <div class="card">
+        <div class="card" id="mainCard">
 
-            <!-- CODE BADGE -->
-            <div style="text-align:center;">
-                <span class="code-badge" id="codeBadge"><i class="fas fa-key"></i> Code: -</span>
+            <!-- LOADING -->
+            <div id="loadingState" style="text-align:center;padding:2rem 0;">
+                <div class="spinner"></div>
+                <p style="margin-top:1rem;color:#6b5a7a;">Mengesahkan code...</p>
             </div>
 
-            <!-- GURU INFO (HANYA NAMA GURU) -->
-            <div class="guru-info">
-                <i class="fas fa-chalkboard-teacher"></i>
-                <span>Pengajar: <span class="guru-nama" id="guruNama">Memuatkan...</span></span>
+            <!-- ERROR -->
+            <div id="errorState" class="hidden error-page">
+                <div class="error-icon"><i class="fas fa-lock"></i></div>
+                <h2>Akses Ditolak</h2>
+                <p>Halaman ini hanya boleh diakses melalui QR Code yang sah daripada guru.</p>
+                <p style="font-size:0.85rem;color:#d4527c;" id="errorMessage">Code tidak sah atau tiada code.</p>
+                <a href="index.html" class="btn btn-secondary" style="margin-top:1rem;">
+                    <i class="fas fa-home"></i> Kembali ke Utama
+                </a>
             </div>
 
-            <div class="card-title">
-                <i class="fas fa-pen-fancy"></i> Refleksi Karakter (Daya Tahan)
+            <!-- FORM -->
+            <div id="formState" class="hidden">
+
+                <div style="text-align:center;">
+                    <span class="code-badge" id="codeBadge"><i class="fas fa-key"></i> Code: -</span>
+                </div>
+
+                <div class="guru-info">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>Pengajar: <span class="guru-nama" id="guruNama">-</span></span>
+                </div>
+
+                <div class="card-title">
+                    <i class="fas fa-pen-fancy"></i> Refleksi Karakter (Daya Tahan)
+                </div>
+
+                <p class="text-muted" style="margin-bottom:1.5rem;">
+                    <i class="fas fa-info-circle"></i> Jawab soalan berikut dengan jujur. Tiada jawapan betul atau salah.
+                </p>
+
+                <form id="refleksiForm" onsubmit="return false;">
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Nama Penuh <span class="required">*</span></label>
+                            <input type="text" id="namaMurid" placeholder="Cth: Ahmad bin Abdullah" required />
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-school"></i> Kelas <span class="required">*</span></label>
+                            <input type="text" id="kelasMurid" placeholder="Cth: 5 Cerdas" required />
+                        </div>
+                    </div>
+
+                    <!-- SOALAN 1 -->
+                    <div class="soalan-item">
+                        <div class="soalan-num">Soalan 1</div>
+                        <div class="soalan-text">Apa yang anda lakukan pertama kali apabila anda tidak faham soalan persamaan kuadratik?</div>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="Berhenti dan biarkan kosong" /> Berhenti dan biarkan kosong</label>
+                            <label><input type="radio" name="q1" value="Cuba baca soalan sekali lagi" /> Cuba baca soalan sekali lagi</label>
+                            <label><input type="radio" name="q1" value="Rujuk nota / contoh" /> Rujuk nota / contoh</label>
+                            <label><input type="radio" name="q1" value="Tanya rakan / guru" /> Tanya rakan / guru</label>
+                        </div>
+                    </div>
+
+                    <!-- SOALAN 2 -->
+                    <div class="soalan-item">
+                        <div class="soalan-num">Soalan 2</div>
+                        <div class="soalan-text">Semasa "Cabaran Tekad Kuadratik", adakah anda…</div>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="Cepat rasa putus asa" /> Cepat rasa putus asa</label>
+                            <label><input type="radio" name="q2" value="Rasa susah, tetapi masih mencuba" /> Rasa susah, tetapi masih mencuba</label>
+                            <label><input type="radio" name="q2" value="Terus mencuba sehingga selesai" /> Terus mencuba sehingga selesai</label>
+                        </div>
+                    </div>
+
+                    <!-- SOALAN 3 -->
+                    <div class="soalan-item">
+                        <div class="soalan-num">Soalan 3</div>
+                        <div class="soalan-text">Tulis satu strategi yang anda akan gunakan selepas ini apabila berhadapan soalan Matematik Tambahan yang sukar:</div>
+                        <textarea id="q3" placeholder="Tulis strategi anda di sini..."></textarea>
+                    </div>
+
+                    <!-- SOALAN 4 -->
+                    <div class="soalan-item">
+                        <div class="soalan-num">Soalan 4</div>
+                        <div class="soalan-text">Satu ayat untuk menggambarkan perasaan anda selepas berjaya menyelesaikan soalan sukar hari ini:</div>
+                        <textarea id="q4" placeholder="Tulis perasaan anda di sini..."></textarea>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-lg" onclick="hantarJawapan()" id="btnHantar">
+                        <i class="fas fa-paper-plane"></i> Hantar Jawapan
+                    </button>
+
+                    <div id="responseMessage" class="message"></div>
+
+                </form>
             </div>
-
-            <p class="text-muted" style="margin-bottom:1.5rem;">
-                <i class="fas fa-info-circle"></i> Jawab soalan berikut dengan jujur. Tiada jawapan betul atau salah.
-            </p>
-
-            <form id="refleksiForm" onsubmit="return false;">
-
-                <!-- Nama & Kelas - MURID ISI -->
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                    <div class="form-group">
-                        <label><i class="fas fa-user"></i> Nama Penuh <span class="required">*</span></label>
-                        <input type="text" id="namaMurid" placeholder="Cth: Ahmad bin Abdullah" required />
-                    </div>
-                    <div class="form-group">
-                        <label><i class="fas fa-school"></i> Kelas <span class="required">*</span></label>
-                        <input type="text" id="kelasMurid" placeholder="Cth: 5 Cerdas" required />
-                    </div>
-                </div>
-
-                <!-- SOALAN 1 -->
-                <div class="soalan-item">
-                    <div class="soalan-num">Soalan 1</div>
-                    <div class="soalan-text">Apa yang anda lakukan pertama kali apabila anda tidak faham soalan persamaan kuadratik?</div>
-                    <div class="options">
-                        <label><input type="radio" name="q1" value="Berhenti dan biarkan kosong" /> Berhenti dan biarkan kosong</label>
-                        <label><input type="radio" name="q1" value="Cuba baca soalan sekali lagi" /> Cuba baca soalan sekali lagi</label>
-                        <label><input type="radio" name="q1" value="Rujuk nota / contoh" /> Rujuk nota / contoh</label>
-                        <label><input type="radio" name="q1" value="Tanya rakan / guru" /> Tanya rakan / guru</label>
-                    </div>
-                </div>
-
-                <!-- SOALAN 2 -->
-                <div class="soalan-item">
-                    <div class="soalan-num">Soalan 2</div>
-                    <div class="soalan-text">Semasa "Cabaran Tekad Kuadratik", adakah anda…</div>
-                    <div class="options">
-                        <label><input type="radio" name="q2" value="Cepat rasa putus asa" /> Cepat rasa putus asa</label>
-                        <label><input type="radio" name="q2" value="Rasa susah, tetapi masih mencuba" /> Rasa susah, tetapi masih mencuba</label>
-                        <label><input type="radio" name="q2" value="Terus mencuba sehingga selesai" /> Terus mencuba sehingga selesai</label>
-                    </div>
-                </div>
-
-                <!-- SOALAN 3 -->
-                <div class="soalan-item">
-                    <div class="soalan-num">Soalan 3</div>
-                    <div class="soalan-text">Tulis satu strategi yang anda akan gunakan selepas ini apabila berhadapan soalan Matematik Tambahan yang sukar:</div>
-                    <textarea id="q3" placeholder="Tulis strategi anda di sini..."></textarea>
-                </div>
-
-                <!-- SOALAN 4 -->
-                <div class="soalan-item">
-                    <div class="soalan-num">Soalan 4</div>
-                    <div class="soalan-text">Satu ayat untuk menggambarkan perasaan anda selepas berjaya menyelesaikan soalan sukar hari ini:</div>
-                    <textarea id="q4" placeholder="Tulis perasaan anda di sini..."></textarea>
-                </div>
-
-                <button type="button" class="btn btn-primary btn-lg" onclick="hantarJawapan()" id="btnHantar">
-                    <i class="fas fa-paper-plane"></i> Hantar Jawapan
-                </button>
-
-                <div id="responseMessage" class="message"></div>
-
-            </form>
 
         </div>
 
@@ -591,54 +635,52 @@
 
         const classCode = getCodeFromURL();
 
-        // ===== DISPLAY CODE =====
-        if (classCode) {
-            document.getElementById('codeBadge').innerHTML = `<i class="fas fa-key"></i> Code: ${classCode}`;
-        } else {
-            document.getElementById('codeBadge').innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#d4527c;"></i> Tiada Code`;
-        }
+        // ===== VALIDATE CODE & LOAD DATA =====
+        async function validateAndLoad() {
+            const loading = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const formState = document.getElementById('formState');
 
-        // ===== LOAD GURU NAME FROM FIREBASE - CEPAT =====
-        async function loadGuruName() {
-            const guruEl = document.getElementById('guruNama');
-
+            // CHECK: Must have code
             if (!classCode) {
-                guruEl.textContent = 'Guru';
+                loading.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                document.getElementById('errorMessage').textContent = '❌ Tiada code dijumpai. Sila scan QR Code daripada guru.';
                 return;
             }
 
             try {
-                // Cuba dari Realtime Database
-                const rtdbRef = ref(rtdb, `sessions/${classCode}/guru`);
+                // Check if code exists in Firebase
+                const rtdbRef = ref(rtdb, `sessions/${classCode}`);
                 const rtdbSnap = await get(rtdbRef);
 
-                if (rtdbSnap.exists()) {
-                    guruEl.textContent = rtdbSnap.val();
-                    console.log('✅ Guru dari RTDB:', rtdbSnap.val());
+                if (!rtdbSnap.exists()) {
+                    loading.classList.add('hidden');
+                    errorState.classList.remove('hidden');
+                    document.getElementById('errorMessage').textContent = `❌ Code "${classCode}" tidak sah. Sila scan QR Code yang betul.`;
                     return;
                 }
 
-                // Cuba dari Firestore
-                // Gunakan fetch secara terus (tapi kita guna getDoc)
-                // Kita skip dulu, guna localStorage fallback
-                const report = localStorage.getItem('aktiviti1Report');
-                if (report) {
-                    try {
-                        const data = JSON.parse(report);
-                        if (data.guru) {
-                            guruEl.textContent = data.guru;
-                            console.log('✅ Guru dari localStorage:', data.guru);
-                            return;
-                        }
-                    } catch (e) {}
-                }
+                const data = rtdbSnap.val();
 
-                // Default
-                guruEl.textContent = 'Guru';
+                // SUCCESS - display form
+                loading.classList.add('hidden');
+                formState.classList.remove('hidden');
+
+                // Display code
+                document.getElementById('codeBadge').innerHTML = `<i class="fas fa-key"></i> Code: ${classCode}`;
+
+                // Display guru name
+                document.getElementById('guruNama').textContent = data.guru || 'Guru';
+
+                console.log('✅ Code sah! Guru:', data.guru);
+                console.log('📚 Kelas:', data.kelas || '-');
 
             } catch (error) {
-                console.error('❌ Error loading guru:', error);
-                guruEl.textContent = 'Guru';
+                console.error('❌ Error validating code:', error);
+                loading.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                document.getElementById('errorMessage').textContent = '⚠️ Ralat mengesahkan code. Sila cuba lagi.';
             }
         }
 
@@ -654,6 +696,7 @@
             const msg = document.getElementById('responseMessage');
             const btn = document.getElementById('btnHantar');
 
+            // Validation
             if (!nama) { msg.className = 'message error';
                 msg.textContent = '⚠️ Sila masukkan nama penuh anda.';
                 return; }
@@ -691,17 +734,17 @@
                 btn.innerHTML = '<span class="spinner"></span> Menghantar...';
                 msg.className = 'message';
 
-                // SAVE TO REALTIME DATABASE
+                // SAVE TO REALTIME DATABASE (untuk guru lihat secara live)
                 if (classCode) {
                     await set(ref(rtdb, `sessions/${classCode}/jawapan/${nama}`), jawapanData);
-                    console.log('✅ Saved to RTDB');
+                    console.log('✅ Saved to RTDB: sessions/' + classCode + '/jawapan/' + nama);
                 }
 
-                // SAVE TO FIRESTORE
+                // SAVE TO FIRESTORE (collection "jawapan" - backup)
                 await addDoc(collection(db, 'jawapan'), jawapanData);
                 console.log('✅ Saved to Firestore');
 
-                // Backup localStorage
+                // Backup to localStorage
                 const allJawapan = JSON.parse(localStorage.getItem('jawapanMurid') || '[]');
                 allJawapan.push(jawapanData);
                 localStorage.setItem('jawapanMurid', JSON.stringify(allJawapan));
@@ -715,8 +758,15 @@
                 btn.innerHTML = '<i class="fas fa-check-circle"></i> Selesai';
                 btn.disabled = true;
 
+                // Show success popup
+                setTimeout(() => {
+                    if (confirm('✅ Jawapan anda telah dihantar! Anda boleh tutup halaman ini.')) {
+                        window.close();
+                    }
+                }, 1500);
+
             } catch (error) {
-                console.error('❌ Error:', error);
+                console.error('❌ Error saving:', error);
                 msg.className = 'message error';
                 msg.textContent = '⚠️ Ralat: ' + error.message;
                 btn.disabled = false;
@@ -734,12 +784,13 @@
             }
         });
 
-        // ===== INIT - LOAD GURU NAME =====
-        loadGuruName();
+        // ===== INIT =====
+        validateAndLoad();
 
         console.log('✅ Soalan 1 page ready!');
         console.log('📡 Connected to Firebase');
         console.log('🔗 Code:', classCode || 'Tiada code');
+        console.log('📝 Code WAJIB ada untuk akses halaman ini');
     </script>
 
 </body>
