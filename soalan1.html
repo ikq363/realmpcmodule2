@@ -6,16 +6,6 @@
     <title>Real MPC · Soalan Refleksi Aktiviti 1</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
-    <script type="importmap">
-        {
-            "imports": {
-                "firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
-                "firebase/database": "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js",
-                "firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js",
-                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js"
-            }
-        }
-    </script>
     <style>
         * {
             margin: 0;
@@ -358,13 +348,6 @@
             border: 1px solid #a8e0c9;
         }
 
-        .message.info {
-            display: block;
-            background: #e3f0fa;
-            color: #3083b0;
-            border: 1px solid #b5d6f0;
-        }
-
         .spinner {
             display: inline-block;
             width: 20px;
@@ -397,38 +380,6 @@
             margin-bottom: 0.5rem;
         }
 
-        .debug-box {
-            background: #1d0f2e;
-            color: #a8e0c9;
-            padding: 0.8rem 1rem;
-            border-radius: 1rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.7rem;
-            max-height: 150px;
-            overflow-y: auto;
-            margin-top: 0.5rem;
-            display: none;
-        }
-
-        .debug-box.show {
-            display: block;
-        }
-
-        .debug-box .log-line {
-            padding: 0.1rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .debug-box .log-line.error {
-            color: #d4527c;
-        }
-        .debug-box .log-line.success {
-            color: #38a87a;
-        }
-        .debug-box .log-line.info {
-            color: #fbc85a;
-        }
-
         @media (max-width: 600px) {
             body {
                 padding: 0.8rem;
@@ -456,10 +407,6 @@
                 padding: 0.8rem 1.5rem;
                 font-size: 1rem;
             }
-            .debug-box {
-                font-size: 0.6rem;
-                max-height: 100px;
-            }
         }
     </style>
 </head>
@@ -482,7 +429,6 @@
 
         <div class="card">
 
-            <!-- CODE BADGE -->
             <div style="text-align:center;">
                 <span class="code-badge" id="codeBadge"><i class="fas fa-key"></i> Code: -</span>
             </div>
@@ -551,11 +497,6 @@
 
                 <div id="responseMessage" class="message"></div>
 
-                <!-- DEBUG BOX -->
-                <div class="debug-box" id="debugBox">
-                    <div class="log-line info">🔍 Debug log:</div>
-                </div>
-
             </form>
 
         </div>
@@ -567,48 +508,7 @@
 
     </div>
 
-    <!-- ===== FIREBASE + MAIN JS ===== -->
-    <script type="module">
-        import { initializeApp } from "firebase/app";
-        import { getAnalytics } from "firebase/analytics";
-        import { getDatabase, ref, set, push } from "firebase/database";
-        import { getFirestore, collection, addDoc } from "firebase/firestore";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDzWmeMvmMwNsEEiFmnr9PRtw6nNjIUGRg",
-            authDomain: "real-mpc-module-6be02.firebaseapp.com",
-            projectId: "real-mpc-module-6be02",
-            storageBucket: "real-mpc-module-6be02.firebasestorage.app",
-            messagingSenderId: "1045888004132",
-            appId: "1:1045888004132:web:869de28a286506f15ea8b1",
-            measurementId: "G-XD3VQ7JKKB"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const db = getFirestore(app);
-        const rtdb = getDatabase(app);
-
-        window.rtdb = rtdb;
-        window.ref = ref;
-        window.set = set;
-        window.push = push;
-        window.db = db;
-        window.collection = collection;
-        window.addDoc = addDoc;
-
-        // ===== DEBUG LOG =====
-        function addDebugLog(message, type = 'info') {
-            const box = document.getElementById('debugBox');
-            box.classList.add('show');
-            const line = document.createElement('div');
-            line.className = `log-line ${type}`;
-            line.textContent = `> ${new Date().toLocaleTimeString()} - ${message}`;
-            box.appendChild(line);
-            box.scrollTop = box.scrollHeight;
-            console.log(message);
-        }
-
+    <script>
         // ===== GET CODE FROM URL =====
         function getCodeFromURL() {
             const params = new URLSearchParams(window.location.search);
@@ -620,14 +520,12 @@
         // ===== DISPLAY CODE =====
         if (classCode) {
             document.getElementById('codeBadge').innerHTML = `<i class="fas fa-key"></i> Code: ${classCode}`;
-            addDebugLog(`✅ Code dijumpai: ${classCode}`, 'success');
         } else {
             document.getElementById('codeBadge').innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#d4527c;"></i> Tiada Code`;
-            addDebugLog('⚠️ Tiada code dalam URL', 'error');
         }
 
-        // ===== HANTAR JAWAPAN =====
-        window.hantarJawapan = async function() {
+        // ===== HANTAR JAWAPAN - GUNA LOCALSTORAGE SAHAJA =====
+        window.hantarJawapan = function() {
             const nama = document.getElementById('namaMurid').value.trim();
             const kelas = document.getElementById('kelasMurid').value.trim();
             const q1 = document.querySelector('input[name="q1"]:checked');
@@ -638,48 +536,39 @@
             const msg = document.getElementById('responseMessage');
             const btn = document.getElementById('btnHantar');
 
-            addDebugLog('📤 Mula menghantar jawapan...', 'info');
-
             // Validation
             if (!nama) {
                 msg.className = 'message error';
                 msg.textContent = '⚠️ Sila masukkan nama penuh anda.';
-                addDebugLog('❌ Nama kosong', 'error');
                 return;
             }
             if (!kelas) {
                 msg.className = 'message error';
                 msg.textContent = '⚠️ Sila masukkan nama kelas anda.';
-                addDebugLog('❌ Kelas kosong', 'error');
                 return;
             }
             if (!q1) {
                 msg.className = 'message error';
                 msg.textContent = '⚠️ Sila jawab Soalan 1.';
-                addDebugLog('❌ Soalan 1 belum dijawab', 'error');
                 return;
             }
             if (!q2) {
                 msg.className = 'message error';
                 msg.textContent = '⚠️ Sila jawab Soalan 2.';
-                addDebugLog('❌ Soalan 2 belum dijawab', 'error');
                 return;
             }
             if (!q3) {
                 msg.className = 'message error';
                 msg.textContent = '⚠️ Sila jawab Soalan 3.';
-                addDebugLog('❌ Soalan 3 kosong', 'error');
                 return;
             }
             if (!q4) {
                 msg.className = 'message error';
                 msg.textContent = '⚠️ Sila jawab Soalan 4.';
-                addDebugLog('❌ Soalan 4 kosong', 'error');
                 return;
             }
 
-            addDebugLog(`✅ Nama: ${nama}, Kelas: ${kelas}`, 'success');
-
+            // Prepare data
             const jawapanData = {
                 nama: nama,
                 kelas: kelas,
@@ -699,71 +588,47 @@
                 msg.className = 'message';
                 msg.textContent = '';
 
-                addDebugLog('📡 Menyimpan ke Firebase...', 'info');
+                // Simpan ke localStorage
+                const allJawapan = JSON.parse(localStorage.getItem('jawapanMurid') || '[]');
 
-                // ===== SAVE TO REALTIME DATABASE =====
-                let rtdbSuccess = false;
-                if (classCode) {
-                    try {
-                        const jawapanRef = ref(rtdb, `sessions/${classCode}/jawapan/${nama}`);
-                        await set(jawapanRef, jawapanData);
-                        rtdbSuccess = true;
-                        addDebugLog(`✅ Saved to RTDB: sessions/${classCode}/jawapan/${nama}`, 'success');
-                    } catch (rtdbError) {
-                        addDebugLog(`❌ RTDB Error: ${rtdbError.message}`, 'error');
-                    }
-                }
-
-                // ===== SAVE TO FIRESTORE =====
-                let firestoreSuccess = false;
-                try {
-                    await addDoc(collection(db, 'jawapan'), jawapanData);
-                    firestoreSuccess = true;
-                    addDebugLog('✅ Saved to Firestore', 'success');
-                } catch (fsError) {
-                    addDebugLog(`❌ Firestore Error: ${fsError.message}`, 'error');
-                }
-
-                // ===== BACKUP TO LOCALSTORAGE =====
-                try {
-                    const allJawapan = JSON.parse(localStorage.getItem('jawapanMurid') || '[]');
-                    allJawapan.push(jawapanData);
-                    localStorage.setItem('jawapanMurid', JSON.stringify(allJawapan));
-                    addDebugLog('✅ Saved to localStorage (backup)', 'success');
-                } catch (lsError) {
-                    addDebugLog(`❌ localStorage Error: ${lsError.message}`, 'error');
-                }
-
-                // ===== CHECK IF ANY SUCCESS =====
-                if (rtdbSuccess || firestoreSuccess) {
-                    msg.className = 'message success';
-                    msg.textContent = '✅ Jawapan berjaya dihantar! Terima kasih.';
-                    addDebugLog('🎉 Jawapan berjaya dihantar!', 'success');
-
-                    // Disable form
-                    document.querySelectorAll('#refleksiForm input, #refleksiForm textarea').forEach(el => el.disabled = true);
-                    document.querySelectorAll('#refleksiForm .options input').forEach(el => el.disabled = true);
-                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Selesai';
-                    btn.disabled = true;
-
-                    // Show success popup
-                    setTimeout(() => {
-                        if (confirm('✅ Jawapan anda telah dihantar! Anda boleh tutup halaman ini.')) {
-                            window.close();
-                        }
-                    }, 1500);
-                } else {
-                    // Both failed - but we have localStorage backup
-                    msg.className = 'message info';
-                    msg.textContent = '⚠️ Jawapan disimpan secara tempatan. Sila cuba lagi nanti.';
-                    addDebugLog('⚠️ Disimpan ke localStorage sahaja', 'info');
+                // Check if already answered
+                const existing = allJawapan.find(j => j.nama === nama && j.code === classCode);
+                if (existing) {
+                    msg.className = 'message error';
+                    msg.textContent = '⚠️ Anda sudah menghantar jawapan sebelum ini.';
                     btn.disabled = false;
                     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Hantar Jawapan';
+                    return;
                 }
+
+                allJawapan.push(jawapanData);
+                localStorage.setItem('jawapanMurid', JSON.stringify(allJawapan));
+
+                // Simpan juga ke session storage untuk guru
+                const guruJawapan = JSON.parse(localStorage.getItem('guruJawapan') || '[]');
+                guruJawapan.push(jawapanData);
+                localStorage.setItem('guruJawapan', JSON.stringify(guruJawapan));
+
+                console.log('✅ Jawapan disimpan!', jawapanData);
+
+                msg.className = 'message success';
+                msg.textContent = '✅ Jawapan berjaya dihantar! Terima kasih.';
+
+                // Disable form
+                document.querySelectorAll('#refleksiForm input, #refleksiForm textarea').forEach(el => el.disabled = true);
+                document.querySelectorAll('#refleksiForm .options input').forEach(el => el.disabled = true);
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Selesai';
+                btn.disabled = true;
+
+                // Show success popup
+                setTimeout(() => {
+                    if (confirm('✅ Jawapan anda telah dihantar! Anda boleh tutup halaman ini.')) {
+                        window.close();
+                    }
+                }, 1500);
 
             } catch (error) {
                 console.error('❌ Error:', error);
-                addDebugLog(`❌ Ralat umum: ${error.message}`, 'error');
                 msg.className = 'message error';
                 msg.textContent = '⚠️ Ralat: ' + error.message;
                 btn.disabled = false;
@@ -781,17 +646,9 @@
             }
         });
 
-        // ===== TOGGLE DEBUG =====
-        document.addEventListener('dblclick', () => {
-            const box = document.getElementById('debugBox');
-            box.classList.toggle('show');
-        });
-
         console.log('✅ Soalan 1 page ready!');
-        console.log('📡 Connected to Firebase');
         console.log('🔗 Code:', classCode || 'Tiada code');
-        console.log('💡 Double-click untuk toggle debug');
-        console.log('📝 Terus buka soalan - tanpa pengesahan');
+        console.log('📝 Jawapan disimpan ke localStorage');
     </script>
 
 </body>
