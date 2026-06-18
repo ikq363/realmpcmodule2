@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real MPC · Soalan Refleksi Aktiviti 1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js",
+                "firebase/database": "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js",
+                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js"
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f0ff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            overflow-x: hidden;
+        }
+
+        .bg-graphic {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bg-graphic .circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.12;
+            filter: blur(80px);
+            animation: floatGraphic 20s ease-in-out infinite alternate;
+        }
+
+        .bg-graphic .c1 {
+            width: 500px;
+            height: 500px;
+            background: #b45ef7;
+            top: -150px;
+            left: -100px;
+        }
+        .bg-graphic .c2 {
+            width: 400px;
+            height: 400px;
+            background: #f9a8d4;
+            bottom: -100px;
+            right: -50px;
+            animation-delay: 3s;
+        }
+        .bg-graphic .c3 {
+            width: 300px;
+            height: 300px;
+            background: #fbc85a;
+            top: 40%;
+            left: 60%;
+            animation-delay: 6s;
+            opacity: 0.08;
+        }
+        .bg-graphic .c4 {
+            width: 250px;
+            height: 250px;
+            background: #38c0c0;
+            top: 70%;
+            left: 10%;
+            animation-delay: 9s;
+            opacity: 0.1;
+        }
+
+        @keyframes floatGraphic {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(40px, -30px) scale(1.2);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #3b1f6e, #b45ef7, #f9a8d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: #6d3b9e;
+            margin-bottom: 0.2rem;
+        }
+
+        .logo p {
+            color: #6b5a7a;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem 1rem 2rem 1rem;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 40px rgba(80, 40, 120, 0.1);
+            margin-bottom: 1.2rem;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1d0f2e;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-title i {
+            color: #6d3b9e;
+        }
+
+        .text-muted {
+            color: #6b5a7a;
+            font-size: 0.85rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #1d0f2e;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group label .required {
+            color: #d4527c;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 60px;
+            border: 1.5px solid #d6c0f0;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            background: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #6d3b9e;
+            box-shadow: 0 0 0 3px rgba(109, 59, 158, 0.15);
+        }
+
+        .form-group input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .soalan-item {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 1.2rem 1.5rem;
+            border-radius: 1.2rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .soalan-item:hover {
+            border-color: #d6c0f0;
+        }
+
+        .soalan-item .soalan-num {
+            font-weight: 700;
+            color: #6d3b9e;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .soalan-item .soalan-text {
+            font-weight: 600;
+            color: #1d0f2e;
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .soalan-item .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .soalan-item .options label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 400;
+            color: #1d0f2e;
+            cursor: pointer;
+            padding: 0.4rem 0.8rem;
+            border-radius: 60px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .soalan-item .options label:hover {
+            background: rgba(109, 59, 158, 0.05);
+        }
+
+        .soalan-item .options input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #6d3b9e;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .soalan-item .options input[type="radio"]:disabled {
+            accent-color: #b5a0c9;
+            cursor: not-allowed;
+        }
+
+        .soalan-item textarea {
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 1rem;
+            border: 1.5px solid #d6c0f0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .soalan-item textarea:focus {
+            outline: none;
+            border-color: #6d3b9e;
+            box-shadow: 0 0 0 3px rgba(109, 59, 158, 0.15);
+        }
+
+        .soalan-item textarea:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn {
+            padding: 0.8rem 2.5rem;
+            border-radius: 60px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6d3b9e, #b45ef7);
+            color: white;
+            box-shadow: 0 4px 15px rgba(80, 30, 150, 0.25);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 10px 30px rgba(80, 30, 150, 0.35);
+        }
+
+        .btn-lg {
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-secondary {
+            background: rgba(45, 25, 75, 0.08);
+            color: #2f1b4e;
+            border: 1.5px solid #b78aff;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(45, 25, 75, 0.15);
+        }
+
+        .message {
+            padding: 0.8rem 1.2rem;
+            border-radius: 1rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .message.error {
+            display: block;
+            background: #fce4ec;
+            color: #d4527c;
+            border: 1px solid #fbc4d6;
+        }
+
+        .message.success {
+            display: block;
+            background: #def5ea;
+            color: #38a87a;
+            border: 1px solid #a8e0c9;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e6d5ff;
+            border-top: 3px solid #6d3b9e;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .code-badge {
+            display: inline-block;
+            background: #291b40;
+            color: #f0e7ff;
+            padding: 0.2rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: 1px solid #b78aff;
+            margin-bottom: 0.5rem;
+        }
+
+        .guru-info {
+            background: #f5f0ff;
+            padding: 0.8rem 1.2rem;
+            border-radius: 1rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid #d6c0f0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: #1d0f2e;
+        }
+
+        .guru-info i {
+            color: #6d3b9e;
+            font-size: 1.2rem;
+        }
+
+        .guru-info .guru-nama {
+            font-weight: 700;
+            color: #6d3b9e;
+        }
+
+        /* ERROR PAGE */
+        .error-page {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .error-page .error-icon {
+            font-size: 5rem;
+            color: #d4527c;
+            margin-bottom: 1rem;
+        }
+
+        .error-page h2 {
+            font-size: 2rem;
+            color: #1d0f2e;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-page p {
+            color: #6b5a7a;
+            margin-bottom: 1.5rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0.8rem;
+            }
+            .card {
+                padding: 1.2rem 1.2rem;
+            }
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            .card-title {
+                font-size: 1.1rem;
+            }
+            .soalan-item {
+                padding: 1rem;
+            }
+            .soalan-item .soalan-text {
+                font-size: 0.9rem;
+            }
+            .soalan-item .options label {
+                font-size: 0.85rem;
+                padding: 0.3rem 0.6rem;
+            }
+            .btn-lg {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+            .guru-info {
+                font-size: 0.8rem;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-graphic">
+        <div class="circle c1"></div>
+        <div class="circle c2"></div>
+        <div class="circle c3"></div>
+        <div class="circle c4"></div>
+    </div>
+
+    <div class="container">
+
+        <div class="logo">
+            <i class="fas fa-brain"></i>
+            <h1>Real MPC</h1>
+            <p>Soalan Refleksi · Aktiviti 1</p>
+        </div>
+
+        <!-- ===== CARD UTAMA ===== -->
+        <div class="card" id="mainCard">
+
+            <!-- ===== LOADING ===== -->
+            <div id="loadingState" style="text-align:center;padding:2rem 0;">
+                <div class="spinner"></div>
+                <p style="margin-top:1rem;color:#6b5a7a;">Mengesahkan code...</p>
+            </div>
+
+            <!-- ===== ERROR STATE ===== -->
+            <div id="errorState" class="hidden error-page">
+                <div class="error-icon"><i class="fas fa-lock"></i></div>
+                <h2>Akses Ditolak</h2>
+                <p>Halaman ini hanya boleh diakses melalui QR Code yang sah daripada guru.</p>
+                <p style="font-size:0.85rem;color:#d4527c;" id="errorMessage">Code tidak sah atau tiada code.</p>
+                <a href="index.html" class="btn btn-secondary" style="margin-top:1rem;">
+                    <i class="fas fa-home"></i> Kembali ke Utama
+                </a>
+            </div>
+
+            <!-- ===== FORM STATE ===== -->
+            <div id="formState" class="hidden">
+
+                <!-- Code Badge -->
+                <div style="text-align:center;">
+                    <span class="code-badge" id="codeBadge"><i class="fas fa-key"></i> Code: -</span>
+                </div>
+
+                <!-- Guru Info -->
+                <div class="guru-info">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>Pengajar: <span class="guru-nama" id="guruNama">-</span></span>
+                    <span style="margin-left:auto;font-size:0.8rem;color:#6b5a7a;" id="kelasInfo">Kelas: -</span>
+                </div>
+
+                <div class="card-title">
+                    <i class="fas fa-pen-fancy"></i> Refleksi Karakter (Daya Tahan)
+                </div>
+
+                <p class="text-muted" style="margin-bottom:1.5rem;">
+                    <i class="fas fa-info-circle"></i> Jawab soalan berikut dengan jujur. Tiada jawapan betul atau salah.
+                </p>
+
+                <form id="refleksiForm" onsubmit="return false;">
+
+                    <!-- Nama & Kelas -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Nama Penuh <span class="required">*</span></label>
+                            <input type="text" id="namaMurid" placeholder="Cth: Ahmad bin Abdullah" required />
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-school"></i> Kelas <span class="required">*</span></label>
+                            <input type="text" id="kelasMurid" placeholder="Cth: 5 Cerdas" required />
+                        </div>
+                    </div>
+
+                    <!-- SOALAN 1 -->
+                    <div class="soalan-item">
+                        <div class="soalan-num">Soalan 1</div>
+                        <div class="soalan-text">Apa yang anda lakukan pertama kali apabila anda tidak faham soalan persamaan kuadratik?</div>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="Berhenti dan biarkan kosong" /> Berhenti dan biarkan kosong</label>
+                            <label><input type="radio" name="q1" value="Cuba baca soalan sekali lagi" /> Cuba baca soalan sekali lagi</label>
+                            <label><input type="radio" name="q1" value="Rujuk nota / contoh" /> Rujuk nota / contoh</label>
+                            <label><input type="radio" name="q1" value="Tanya rakan / guru" /> Tanya rakan / guru</label>
+                        </div>
+                    </div>
+
+                    <!-- SOALAN 2 -->
+                    <div class="soalan-item">
+                        <div class="soalan-num">Soalan 2</div>
+                        <div class="soalan-text">Semasa "Cabaran Tekad Kuadratik", adakah anda…</div>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="Cepat rasa putus asa" /> Cepat rasa putus asa</label>
+                            <label><input type="radio"name="q2" value="Rasa susah, tetapi masih mencuba" /> Rasa susah, tetapi masih mencuba</label>
+                            <label><input type="radio" name="q2" value="Terus mencuba sehingga selesai" /> Terus mencuba sehingga selesai</label>
+                        </div>
+                    </div>
+
+                    <!-- SOALAN 3 -->
+                    <div class="soalan-item">
+                        <div class="soalan-num">Soalan 3</div>
+                        <div class="soalan-text">Tulis satu strategi yang anda akan gunakan selepas ini apabila berhadapan soalan Matematik Tambahan yang sukar:</div>
+                        <textarea id="q3" placeholder="Tulis strategi anda di sini..."></textarea>
+                    </div>
+
+                    <!-- SOALAN 4 -->
+                    <div class="soalan-item">
+                        <div class="soalan-num">Soalan 4</div>
+                        <div class="soalan-text">Satu ayat untuk menggambarkan perasaan anda selepas berjaya menyelesaikan soalan sukar hari ini:</div>
+                        <textarea id="q4" placeholder="Tulis perasaan anda di sini..."></textarea>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-lg" onclick="hantarJawapan()" id="btnHantar">
+                        <i class="fas fa-paper-plane"></i> Hantar Jawapan
+                    </button>
+
+                    <div id="responseMessage" class="message"></div>
+
+                </form>
+            </div>
+
+        </div>
+
+        <footer style="text-align:center;padding:1rem 0 0.3rem;border-top:1px solid rgba(190,150,230,0.2);margin-top:0.5rem;font-size:0.75rem;color:#6b5a7a;">
+            <i class="fas fa-user-graduate"></i> Shuhaimi bin Abu Seman · Universiti Putra Malaysia
+            <span style="margin:0 8px;">|</span> <i class="far fa-copyright"></i> 2026 Real MPC
+        </footer>
+
+    </div>
+
+    <!-- ===== FIREBASE + MAIN JS ===== -->
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getAnalytics } from "firebase/analytics";
+        import { getFirestore, collection, addDoc, doc, getDoc, query, where, getDocs } from "firebase/firestore";
+        import { getDatabase, ref, get } from "firebase/database";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzWmeMvmMwNsEEiFmnr9PRtw6nNjIUGRg",
+            authDomain: "real-mpc-module-6be02.firebaseapp.com",
+            projectId: "real-mpc-module-6be02",
+            storageBucket: "real-mpc-module-6be02.firebasestorage.app",
+            messagingSenderId: "1045888004132",
+            appId: "1:1045888004132:web:869de28a286506f15ea8b1",
+            measurementId: "G-XD3VQ7JKKB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+
+        // ===== EXPOSE =====
+        window.db = db;
+        window.rtdb = rtdb;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.doc = doc;
+        window.getDoc = getDoc;
+        window.get = get;
+        window.ref = ref;
+        window.query = query;
+        window.where = where;
+        window.getDocs = getDocs;
+
+        // ===== GET CODE FROM URL =====
+        function getCodeFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('code');
+        }
+
+        const classCode = getCodeFromURL();
+
+        // ===== VALIDATE CODE & LOAD GURU INFO =====
+        async function validateCode() {
+            const loading = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const formState = document.getElementById('formState');
+
+            if (!classCode) {
+                loading.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                document.getElementById('errorMessage').textContent = 'Tiada code dijumpai. Sila scan QR Code daripada guru.';
+                return;
+            }
+
+            try {
+                // Check in Firestore - sessions collection
+                const sessionRef = doc(db, 'sessions', classCode);
+                const sessionSnap = await getDoc(sessionRef);
+
+                if (!sessionSnap.exists()) {
+                    // Try Realtime Database
+                    const rtdbRef = ref(rtdb, `sessions/${classCode}`);
+                    const rtdbSnap = await get(rtdbRef);
+
+                    if (!rtdbSnap.exists()) {
+                        loading.classList.add('hidden');
+                        errorState.classList.remove('hidden');
+                        document.getElementById('errorMessage').textContent = `Code "${classCode}" tidak sah. Sila scan QR Code yang betul.`;
+                        return;
+                    }
+
+                    const data = rtdbSnap.val();
+                    displayForm(data);
+                    return;
+                }
+
+                const data = sessionSnap.data();
+                displayForm(data);
+
+            } catch (error) {
+                console.error('Error validating code:', error);
+                loading.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                document.getElementById('errorMessage').textContent = 'Ralat mengesahkan code. Sila cuba lagi.';
+            }
+        }
+
+        function displayForm(data) {
+            const loading = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const formState = document.getElementById('formState');
+
+            loading.classList.add('hidden');
+            formState.classList.remove('hidden');
+
+            // Display code
+            document.getElementById('codeBadge').innerHTML = `<i class="fas fa-key"></i> Code: ${classCode}`;
+
+            // Display guru info
+            document.getElementById('guruNama').textContent = data.guru || 'Guru';
+            document.getElementById('kelasInfo').textContent = `Kelas: ${data.kelas || '-'}`;
+
+            console.log('✅ Code sah! Guru:', data.guru);
+            console.log('📚 Kelas:', data.kelas);
+        }
+
+        // ===== HANTAR JAWAPAN =====
+        window.hantarJawapan = async function() {
+            const nama = document.getElementById('namaMurid').value.trim();
+            const kelas = document.getElementById('kelasMurid').value.trim();
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.getElementById('q3').value.trim();
+            const q4 = document.getElementById('q4').value.trim();
+
+            const msg = document.getElementById('responseMessage');
+            const btn = document.getElementById('btnHantar');
+
+            if (!nama) { msg.className = 'message error';
+                msg.textContent = '⚠️ Sila masukkan nama penuh anda.';
+                return; }
+            if (!kelas) { msg.className = 'message error';
+                msg.textContent = '⚠️ Sila masukkan nama kelas anda.';
+                return; }
+            if (!q1) { msg.className = 'message error';
+                msg.textContent = '⚠️ Sila jawab Soalan 1.';
+                return; }
+            if (!q2) { msg.className = 'message error';
+                msg.textContent = '⚠️ Sila jawab Soalan 2.';
+                return; }
+            if (!q3) { msg.className = 'message error';
+                msg.textContent = '⚠️ Sila jawab Soalan 3.';
+                return; }
+            if (!q4) { msg.className = 'message error';
+                msg.textContent = '⚠️ Sila jawab Soalan 4.';
+                return; }
+
+            const jawapanData = {
+                nama: nama,
+                kelas: kelas,
+                code: classCode || 'tanpa-code',
+                q1: q1.value,
+                q2: q2.value,
+                q3: q3,
+                q4: q4,
+                timestamp: new Date().toISOString(),
+                aktiviti: 'Aktiviti 1',
+                status: 'selesai'
+            };
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span> Menghantar...';
+                msg.className = 'message';
+
+                // Save to Firestore
+                await addDoc(collection(db, 'jawapan'), jawapanData);
+
+                // Save to Realtime Database under session
+                if (classCode) {
+                    const rtdbRef = ref(rtdb, `sessions/${classCode}/jawapan/${nama}`);
+                    await set(rtdbRef, jawapanData);
+                }
+
+                // Backup to localStorage
+                const allJawapan = JSON.parse(localStorage.getItem('jawapanMurid') || '[]');
+                allJawapan.push(jawapanData);
+                localStorage.setItem('jawapanMurid', JSON.stringify(allJawapan));
+
+                msg.className = 'message success';
+                msg.textContent = '✅ Jawapan berjaya dihantar! Terima kasih.';
+
+                // Disable form
+                document.querySelectorAll('#refleksiForm input, #refleksiForm textarea').forEach(el => el.disabled = true);
+                document.querySelectorAll('#refleksiForm .options input').forEach(el => el.disabled = true);
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Selesai';
+                btn.disabled = true;
+
+            } catch (error) {
+                console.error('Error saving:', error);
+                msg.className = 'message error';
+                msg.textContent = '⚠️ Ralat: ' + error.message;
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Hantar Jawapan';
+            }
+        };
+
+        // ===== KEYBOARD SHORTCUT =====
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                const btn = document.getElementById('btnHantar');
+                if (btn && !btn.disabled) {
+                    hantarJawapan();
+                }
+            }
+        });
+
+        // ===== INIT =====
+        validateCode();
+
+        console.log('✅ Soalan 1 page ready!');
+        console.log('📡 Connected to Firebase');
+        console.log('🔗 Code:', classCode || 'Tiada code');
+    </script>
+</body>
+</html>
