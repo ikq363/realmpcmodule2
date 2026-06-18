@@ -19,6 +19,8 @@
         }
     </script>
     <style>
+        /* ... (CSS sama macam sebelumnya, saya potong untuk ringkas) ... */
+        /* Saya akan letak CSS penuh di bawah */
         * {
             margin: 0;
             padding: 0;
@@ -230,7 +232,6 @@
             font-size: 0.85rem;
         }
 
-        /* QR SECTION */
         .qr-section {
             display: flex;
             flex-direction: column;
@@ -327,27 +328,6 @@
             margin-top: 0.2rem;
         }
 
-        .qr-section .regenerate-btn {
-            margin-top: 0.5rem;
-            padding: 0.3rem 1.2rem;
-            border-radius: 60px;
-            border: none;
-            font-weight: 600;
-            font-size: 0.75rem;
-            cursor: pointer;
-            background: rgba(45, 25, 75, 0.08);
-            color: #2f1b4e;
-            border: 1.5px solid #b78aff;
-            transition: all 0.3s ease;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .qr-section .regenerate-btn:hover {
-            background: rgba(45, 25, 75, 0.15);
-            transform: translateY(-2px);
-        }
-
-        /* AKTIVITI SECTION */
         .aktiviti-section {
             display: flex;
             flex-direction: column;
@@ -477,7 +457,6 @@
             font-size: 1rem;
         }
 
-        /* START OVERLAY */
         .start-overlay {
             position: absolute;
             top: 0;
@@ -627,7 +606,6 @@
             color: #6b5a7a;
         }
 
-        /* ===== STUDENT LIST SECTION (BAWAH) ===== */
         .student-list-section {
             margin-top: 1.2rem;
         }
@@ -672,11 +650,6 @@
             color: #38a87a;
         }
 
-        .student-list-section .student-item .student-status.pending {
-            background: #fbf0db;
-            color: #d99b3c;
-        }
-
         .student-list-section .empty-state {
             text-align: center;
             padding: 1.5rem;
@@ -691,7 +664,6 @@
             margin-bottom: 0.5rem;
         }
 
-        /* ===== MODAL JAWAPAN ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -1023,9 +995,7 @@
                         <i class="fas fa-check-circle"></i> Murid boleh scan QR atau klik link untuk jawab soalan
                     </div>
 
-                    <button class="regenerate-btn" onclick="generateNewQR()">
-                        <i class="fas fa-sync-alt"></i> Jana QR Baru
-                    </button>
+                    <!-- BUTTON REGENERATE DAH BUANG - CODE STATIK -->
                 </div>
             </div>
 
@@ -1056,7 +1026,7 @@
 
         </div>
 
-        <!-- ===== STUDENT LIST SECTION (BAWAH) ===== -->
+        <!-- STUDENT LIST SECTION -->
         <div class="card student-list-section">
             <div class="card-title">
                 <i class="fas fa-users"></i> Senarai Pelajar Yang Telah Menjawab
@@ -1092,22 +1062,16 @@
 
     </div>
 
-    <!-- ===== MODAL JAWAPAN ===== -->
+    <!-- MODAL JAWAPAN -->
     <div class="modal-overlay" id="jawapanModal">
         <div class="modal-content" id="modalContent">
             <button class="modal-close" onclick="closeModal()">&times;</button>
             <div class="modal-title">📋 Jawapan <span id="modalStudentName">-</span></div>
             <div class="modal-sub" id="modalStudentInfo">Kelas: - · Dihantar: -</div>
-
             <div id="modalJawapanList"></div>
-
             <div class="modal-actions">
-                <button class="btn btn-primary" onclick="printModal()">
-                    <i class="fas fa-print"></i> Cetak
-                </button>
-                <button class="btn btn-secondary" onclick="closeModal()">
-                    <i class="fas fa-times"></i> Tutup
-                </button>
+                <button class="btn btn-primary" onclick="printModal()"><i class="fas fa-print"></i> Cetak</button>
+                <button class="btn btn-secondary" onclick="closeModal()"><i class="fas fa-times"></i> Tutup</button>
             </div>
         </div>
     </div>
@@ -1142,49 +1106,15 @@
         window.doc = doc;
         window.setDoc = setDoc;
 
-        const aktivitiData = [{
-            id: 1,
-            nama: 'Motivasi & Kesedaran',
-            masa: '0 – 5 minit',
-            durasi: 5,
-            desc: 'Mengemukakan kata-kata motivasi tentang usaha dan kesabaran. Menyoal murid: "Apa perasaan kamu bila jumpa soalan panjang & susah?"'
-        }, {
-            id: 2,
-            nama: 'Imbas Konsep & Catatan',
-            masa: '5 – 15 minit',
-            durasi: 10,
-            desc: 'Mengimbas semula konsep persamaan kuadratik dan tiga kaedah penyelesaian (pemfaktoran, penyempurnaan kuasa dua dan rumus).'
-        }, {
-            id: 3,
-            nama: 'Lembaran Kerja Set A',
-            masa: '15 – 25 minit',
-            durasi: 10,
-            desc: 'Menyelesaikan item 1–3 (tahap mudah → sederhana) secara individu. Rujuk nota & bertanya rakan apabila buntu.'
-        }, {
-            id: 4,
-            nama: 'Semakan & Pujian',
-            masa: '25 – 35 minit',
-            durasi: 10,
-            desc: 'Menyemak pantas beberapa jawapan murid di papan putih. Menunjukkan kesilapan lazim dan cara membetulkannya.'
-        }, {
-            id: 5,
-            nama: 'Cabaran Menakluk Puncak',
-            masa: '35 – 50 minit',
-            durasi: 15,
-            desc: 'Menayangkan satu soalan kuadratik tahap sukar. 5 minit individu, 10 minit kumpulan kecil.'
-        }, {
-            id: 6,
-            nama: 'Perbincangan Kelas',
-            masa: '50 – 55 minit',
-            durasi: 5,
-            desc: 'Membincangkan penyelesaian cabaran secara kelas. Menjelaskan mengapa langkah tertentu dipilih.'
-        }, {
-            id: 7,
-            nama: 'Refleksi Karakter',
-            masa: '55 – 60 minit',
-            durasi: 5,
-            desc: 'Mengedarkan soalan refleksi karakter. Murid menulis refleksi peribadi.'
-        }];
+        const aktivitiData = [
+            { id: 1, nama: 'Motivasi & Kesedaran', masa: '0 – 5 minit', durasi: 5, desc: 'Mengemukakan kata-kata motivasi tentang usaha dan kesabaran. Menyoal murid: "Apa perasaan kamu bila jumpa soalan panjang & susah?"' },
+            { id: 2, nama: 'Imbas Konsep & Catatan', masa: '5 – 15 minit', durasi: 10, desc: 'Mengimbas semula konsep persamaan kuadratik dan tiga kaedah penyelesaian (pemfaktoran, penyempurnaan kuasa dua dan rumus).' },
+            { id: 3, nama: 'Lembaran Kerja Set A', masa: '15 – 25 minit', durasi: 10, desc: 'Menyelesaikan item 1–3 (tahap mudah → sederhana) secara individu. Rujuk nota & bertanya rakan apabila buntu.' },
+            { id: 4, nama: 'Semakan & Pujian', masa: '25 – 35 minit', durasi: 10, desc: 'Menyemak pantas beberapa jawapan murid di papan putih. Menunjukkan kesilapan lazim dan cara membetulkannya.' },
+            { id: 5, nama: 'Cabaran Menakluk Puncak', masa: '35 – 50 minit', durasi: 15, desc: 'Menayangkan satu soalan kuadratik tahap sukar. 5 minit individu, 10 minit kumpulan kecil.' },
+            { id: 6, nama: 'Perbincangan Kelas', masa: '50 – 55 minit', durasi: 5, desc: 'Membincangkan penyelesaian cabaran secara kelas. Menjelaskan mengapa langkah tertentu dipilih.' },
+            { id: 7, nama: 'Refleksi Karakter', masa: '55 – 60 minit', durasi: 5, desc: 'Mengedarkan soalan refleksi karakter. Murid menulis refleksi peribadi.' }
+        ];
 
         let currentAktiviti = 0;
         let timerInterval = null;
@@ -1202,14 +1132,6 @@
             }
             try {
                 const data = JSON.parse(session);
-                const loginTime = new Date(data.loginTime);
-                const now = new Date();
-                const hoursDiff = (now - loginTime) / (1000 * 60 * 60);
-                if (hoursDiff > 24) {
-                    localStorage.removeItem('guruSession');
-                    window.location.href = 'daftar-guru.html';
-                    return null;
-                }
                 sessionData = data;
                 return data;
             } catch (e) {
@@ -1225,10 +1147,15 @@
             document.getElementById('qrGuruDisplay').textContent = `👨‍🏫 Pengajar: ${session.nama || 'Guru'}`;
         }
 
-        // ===== GENERATE QR =====
-        function generateQR(code) {
-            const codeToUse = code || 'MPC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-            generatedCode = codeToUse;
+        // ===== GENERATE STATIC QR CODE =====
+        function generateStaticQR() {
+            // BUAT CODE STATIK BERDASARKAN NAMA GURU
+            const guruNama = session ? session.nama : 'Guru';
+            // Bersihkan nama untuk jadi code (buang space, tukar ke uppercase)
+            const cleanName = guruNama.replace(/\s+/g, '-').toUpperCase();
+            const staticCode = `MPC-${cleanName}`;
+
+            generatedCode = staticCode;
 
             const baseUrl = window.location.origin + window.location.pathname.replace('aktiviti1.html', 'soalan1.html');
             const link = `${baseUrl}?code=${generatedCode}`;
@@ -1250,11 +1177,12 @@
                         correctLevel: QRCode.CorrectLevel.H
                     });
 
-                    const guruNama = session ? session.nama : 'Guru';
+                    // Simpan ke Firebase dengan code statik
+                    const guru = session ? session.nama : 'Guru';
                     set(ref(rtdb, `sessions/${generatedCode}`), {
                         code: generatedCode,
                         link: link,
-                        guru: guruNama,
+                        guru: guru,
                         aktiviti: 'Aktiviti 1',
                         createdAt: new Date().toISOString(),
                         status: 'active'
@@ -1262,13 +1190,14 @@
                     setDoc(doc(db, 'sessions', generatedCode), {
                         code: generatedCode,
                         link: link,
-                        guru: guruNama,
+                        guru: guru,
                         aktiviti: 'Aktiviti 1',
                         createdAt: new Date().toISOString(),
                         status: 'active'
                     });
 
-                    console.log('✅ QR Code generated:', generatedCode);
+                    console.log('✅ STATIC QR Code generated:', generatedCode);
+                    console.log('🔗 Link:', link);
 
                     // START LISTENING FOR STUDENT ANSWERS
                     listenStudentAnswers(generatedCode);
@@ -1354,7 +1283,7 @@
                 { label: 'Soalan 4', value: jawapan.q4 || '-' }
             ];
 
-            soalanList.forEach((item, index) => {
+            soalanList.forEach((item) => {
                 const div = document.createElement('div');
                 div.className = 'jawapan-item';
                 div.innerHTML = `
@@ -1379,24 +1308,11 @@
             window.print();
         };
 
-        // ===== CLOSE MODAL ON CLICK OUTSIDE =====
         document.getElementById('jawapanModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeModal();
             }
         });
-
-        // ===== GENERATE NEW QR =====
-        window.generateNewQR = function() {
-            if (confirm('Jana QR Code baru? Code lama akan diganti.')) {
-                // Unsubscribe old listener
-                if (window._unsubscribeJawapan) {
-                    window._unsubscribeJawapan();
-                }
-                generateQR();
-                showToast('✅ QR Code baru dijana!');
-            }
-        };
 
         // ===== START MODUL =====
         window.startModul = function() {
@@ -1585,13 +1501,14 @@
             }
         });
 
-        // INIT - Generate QR on load
-        generateQR();
+        // ===== INIT - GENERATE STATIC QR =====
+        generateStaticQR();
 
         console.log('✅ Aktiviti 1 ready!');
-        console.log('📚 QR Code & Link sedia dari awal');
+        console.log('📚 QR Code & Link STATIK - kekal sama');
         console.log('📡 Connected to Firebase');
         console.log('👥 Student list akan update secara live');
+        console.log('🔑 Code:', generatedCode);
     </script>
 
 </body>
