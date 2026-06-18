@@ -184,6 +184,15 @@
             background: rgba(45, 25, 75, 0.15);
         }
 
+        .nav-btn.teacher {
+            background: linear-gradient(135deg, #38a87a, #6bc0a8);
+            box-shadow: 0 4px 15px rgba(56, 168, 122, 0.3);
+        }
+
+        .nav-btn.teacher:hover {
+            box-shadow: 0 10px 30px rgba(56, 168, 122, 0.4);
+        }
+
         /* ===== HERO ===== */
         .hero {
             display: flex;
@@ -287,15 +296,15 @@
             }
         }
 
-        /* ===== JOIN CLASS BUTTON ===== */
-        .join-section {
+        /* ===== DAFTAR GURU BUTTON ===== */
+        .btn-section {
             display: flex;
             justify-content: center;
             margin: 1rem 0 2.5rem;
         }
 
-        .btn-join {
-            padding: 1.2rem 4rem;
+        .btn-teacher {
+            padding: 1.2rem 4.5rem;
             border-radius: 80px;
             border: none;
             font-weight: 800;
@@ -307,15 +316,15 @@
             gap: 16px;
             text-decoration: none;
             color: white;
-            background: linear-gradient(135deg, #6d3b9e, #b45ef7, #f9a8d4);
-            box-shadow: 0 8px 35px rgba(109, 59, 158, 0.4);
+            background: linear-gradient(135deg, #38a87a, #6bc0a8, #a8e0c9);
+            box-shadow: 0 8px 35px rgba(56, 168, 122, 0.4);
             letter-spacing: 0.5px;
             position: relative;
             overflow: hidden;
-            animation: glowPulse 2s ease-in-out infinite;
+            animation: glowPulseGreen 2s ease-in-out infinite;
         }
 
-        .btn-join::before {
+        .btn-teacher::before {
             content: '';
             position: absolute;
             top: -50%;
@@ -332,27 +341,21 @@
             100% { transform: translate(30%, 30%) scale(1.2); opacity: 0; }
         }
 
-        @keyframes glowPulse {
-            0%, 100% { box-shadow: 0 8px 35px rgba(109, 59, 158, 0.4); }
-            50% { box-shadow: 0 8px 60px rgba(109, 59, 158, 0.6); }
+        @keyframes glowPulseGreen {
+            0%, 100% { box-shadow: 0 8px 35px rgba(56, 168, 122, 0.4); }
+            50% { box-shadow: 0 8px 60px rgba(56, 168, 122, 0.6); }
         }
 
-        .btn-join:hover {
+        .btn-teacher:hover {
             transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 15px 50px rgba(109, 59, 158, 0.5);
+            box-shadow: 0 15px 50px rgba(56, 168, 122, 0.5);
         }
 
-        .btn-join i {
+        .btn-teacher i {
             font-size: 1.8rem;
-            animation: bounce 2s ease-in-out infinite;
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(5px); }
-        }
-
-        .btn-join .badge-join {
+        .btn-teacher .badge-btn {
             background: rgba(255, 255, 255, 0.25);
             padding: 0.2rem 1.2rem;
             border-radius: 40px;
@@ -672,11 +675,11 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .btn-join {
+            .btn-teacher {
                 padding: 1rem 2.5rem;
                 font-size: 1.1rem;
             }
-            .btn-join i {
+            .btn-teacher i {
                 font-size: 1.4rem;
             }
         }
@@ -697,13 +700,13 @@
             .navbar {
                 padding: 1rem;
             }
-            .btn-join {
+            .btn-teacher {
                 padding: 0.8rem 1.8rem;
                 font-size: 1rem;
                 width: 100%;
                 justify-content: center;
             }
-            .btn-join i {
+            .btn-teacher i {
                 font-size: 1.2rem;
             }
         }
@@ -730,7 +733,9 @@
             </div>
             <div class="nav-buttons">
                 <a href="index.html" class="nav-btn ghost"><i class="fas fa-home"></i> Utama</a>
-                <a href="modul.html" class="nav-btn primary"><i class="fas fa-book-open"></i> Modul</a>
+                <!-- BUTTON DAFTAR GURU -->
+                <a href="daftar-guru.html" class="nav-btn teacher"><i class="fas fa-chalkboard-teacher"></i> Daftar Guru</a>
+                <!-- BUTANG PENCAPAIAN & PENGIKTIRAFAN -->
                 <a href="pencapaian.html" class="nav-btn secondary"><i class="fas fa-trophy"></i> Pencapaian</a>
                 <a href="pengiktirafan.html" class="nav-btn"><i class="fas fa-certificate"></i> Pengiktirafan</a>
             </div>
@@ -759,12 +764,12 @@
             </div>
         </section>
 
-        <!-- ===== BUTTON IKUTI KELAS ===== -->
-        <div class="join-section">
-            <a href="join.html" class="btn-join">
-                <i class="fas fa-sign-in-alt"></i>
-                Ikuti Kelas
-                <span class="badge-join"><i class="fas fa-arrow-right"></i> JOIN</span>
+        <!-- ===== BUTTON DAFTAR GURU ===== -->
+        <div class="btn-section">
+            <a href="daftar-guru.html" class="btn-teacher">
+                <i class="fas fa-chalkboard-teacher"></i>
+                Daftar Guru
+                <span class="badge-btn"><i class="fas fa-arrow-right"></i> MULA</span>
             </a>
         </div>
 
@@ -810,10 +815,6 @@
             </a>
             <a href="pengiktirafan.html" class="cta-btn recognition">
                 <i class="fas fa-certificate"></i> Pengiktirafan
-                <span class="badge-icon"><i class="fas fa-arrow-right"></i></span>
-            </a>
-            <a href="terokai.html" class="cta-btn" style="background: linear-gradient(135deg, #38a87a, #6bc0a8);">
-                <i class="fas fa-play-circle"></i> Terokai Modul
                 <span class="badge-icon"><i class="fas fa-arrow-right"></i></span>
             </a>
         </div>
