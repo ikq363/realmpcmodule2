@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real MPC · Join Kelas (Murid)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
+                "firebase/database": "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js",
+                "firebase/analytics": "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js"
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f0ff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem 1rem 2rem 1rem;
+            padding: 2rem 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 40px rgba(80, 40, 120, 0.1);
+            margin-bottom: 1.2rem;
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1d0f2e;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-title i {
+            color: #6d3b9e;
+        }
+        .text-muted {
+            color: #6b5a7a;
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+        .text-center {
+            text-align: center;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .logo h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #3b1f6e, #b45ef7, #f9a8d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .logo i {
+            font-size: 3rem;
+            color: #6d3b9e;
+            margin-bottom: 0.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #1d0f2e;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 60px;
+            border: 1.5px solid #d6c0f0;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            background: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #6d3b9e;
+            box-shadow: 0 0 0 3px rgba(109, 59, 158, 0.15);
+        }
+        .form-group input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+            width: 100%;
+            justify-content: center;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #6d3b9e, #b45ef7);
+            color: white;
+            box-shadow: 0 4px 15px rgba(80, 30, 150, 0.25);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 10px 30px rgba(80, 30, 150, 0.35);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #38a87a, #6bc0a8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(56, 168, 122, 0.3);
+        }
+        .btn-success:hover {
+            box-shadow: 0 10px 30px rgba(56, 168, 122, 0.4);
+        }
+        .btn-secondary {
+            background: rgba(45, 25, 75, 0.08);
+            color: #2f1b4e;
+            border: 1.5px solid #b78aff;
+        }
+        .btn-secondary:hover {
+            background: rgba(45, 25, 75, 0.15);
+        }
+        .btn-sm {
+            padding: 0.4rem 1.2rem;
+            font-size: 0.8rem;
+            width: auto;
+        }
+
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+
+        /* WAITING ROOM */
+        .waiting-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .waiting-info .info-item {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 0.8rem 1.2rem;
+            border-radius: 1rem;
+        }
+        .waiting-info .info-item .label {
+            font-size: 0.75rem;
+            color: #6b5a7a;
+        }
+        .waiting-info .info-item .value {
+            font-weight: 600;
+            color: #1d0f2e;
+            font-size: 1.1rem;
+        }
+
+        .student-list-waiting {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .student-tag {
+            background: #e6d5ff;
+            color: #1d0f2e;
+            padding: 0.2rem 1rem;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .student-tag i {
+            color: #6d3b9e;
+            font-size: 0.7rem;
+        }
+        .student-tag.you {
+            background: #6d3b9e;
+            color: white;
+        }
+        .student-tag.you i {
+            color: white;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 1.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .status-badge.waiting {
+            background: #f0e3f7;
+            color: #6d3b9e;
+        }
+        .status-badge.active {
+            background: #def5ea;
+            color: #38a87a;
+            animation: pulse 1.5s infinite;
+        }
+        .status-badge.done {
+            background: #e3f0fa;
+            color: #3083b0;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* AKTIVITI DISPLAY */
+        .aktiviti-display {
+            text-align: center;
+            padding: 1rem 0;
+        }
+        .aktiviti-display .masa {
+            font-size: 0.9rem;
+            color: #6b5a7a;
+            font-weight: 500;
+        }
+        .aktiviti-display .nama-aktiviti {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1d0f2e;
+            margin: 0.3rem 0;
+        }
+        .aktiviti-display .countdown-big {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #d4527c;
+            font-variant-numeric: tabular-nums;
+            padding: 0.3rem 0;
+        }
+        .aktiviti-display .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e6d5ff;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0.8rem 0;
+        }
+        .aktiviti-display .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6d3b9e, #b45ef7);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* SOALAN */
+        .soalan-box {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+            border: 2px solid #d6c0f0;
+            margin: 1rem 0;
+        }
+        .soalan-box .soalan-title {
+            font-weight: 600;
+            color: #6d3b9e;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .soalan-box .soalan-content {
+            font-size: 1.1rem;
+            color: #1d0f2e;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+        .soalan-box .soalan-content .math {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #d4527c;
+        }
+
+        /* REFLEKSI */
+        .refleksi-form .refleksi-item {
+            margin-bottom: 1rem;
+        }
+        .refleksi-form .refleksi-item label {
+            display: block;
+            font-weight: 600;
+            color: #1d0f2e;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+        .refleksi-form .refleksi-item textarea,
+        .refleksi-form .refleksi-item select {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border-radius: 1rem;
+            border: 1.5px solid #d6c0f0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.6);
+        }
+        .refleksi-form .refleksi-item textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+        .refleksi-form .refleksi-item select {
+            appearance: none;
+            cursor: pointer;
+        }
+        .refleksi-form .refleksi-item textarea:focus,
+        .refleksi-form .refleksi-item select:focus {
+            outline: none;
+            border-color: #6d3b9e;
+            box-shadow: 0 0 0 3px rgba(109, 59, 158, 0.15);
+        }
+        .refleksi-form .refleksi-item textarea:disabled,
+        .refleksi-form .refleksi-item select:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* MARKAH */
+        .markah-box {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 1.2rem 1.5rem;
+            border-radius: 1.2rem;
+            border: 2px solid #d6c0f0;
+            margin: 1rem 0;
+        }
+        .markah-box .markah-label {
+            font-weight: 600;
+            color: #1d0f2e;
+            font-size: 0.9rem;
+        }
+        .markah-box input {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border-radius: 60px;
+            border: 1.5px solid #d6c0f0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+        .markah-box input:focus {
+            outline: none;
+            border-color: #6d3b9e;
+        }
+        .markah-box input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .status-bar {
+            background: #291b40;
+            color: #f0e7ff;
+            padding: 0.3rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .status-bar .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .status-bar .dot.online {
+            background: #38a87a;
+        }
+        .status-bar .dot.waiting {
+            background: #fbc85a;
+            animation: pulse 1.5s infinite;
+        }
+        .status-bar .dot.offline {
+            background: #d4527c;
+        }
+
+        .flex {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .flex-center {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+        .mt-2 {
+            margin-top: 1rem;
+        }
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+        .hidden {
+            display: none !important;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e6d5ff;
+            border-top: 3px solid #6d3b9e;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .alert {
+            padding: 0.8rem 1.2rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        .alert-error {
+            background: #fce4ec;
+            color: #d4527c;
+            border: 1px solid #fbc4d6;
+        }
+        .alert-success {
+            background: #def5ea;
+            color: #38a87a;
+            border: 1px solid #a8e0c9;
+        }
+        .alert-info {
+            background: #e3f0fa;
+            color: #3083b0;
+            border: 1px solid #b5d6f0;
+        }
+
+        /* LOADING OVERLAY */
+        .loading-overlay {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+        }
+        .loading-overlay.show {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0.8rem;
+            }
+            .card {
+                padding: 1.2rem 1.2rem;
+            }
+            .logo h1 {
+                font-size: 1.8rem;
+            }
+            .waiting-info {
+                grid-template-columns: 1fr;
+            }
+            .aktiviti-display .nama-aktiviti {
+                font-size: 1.3rem;
+            }
+            .aktiviti-display .countdown-big {
+                font-size: 2.8rem;
+            }
+            .soalan-box .soalan-content {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="app">
+
+        <!-- ===== PAGE 0: MASUKKAN CODE KELAS ===== -->
+        <div class="page active" id="pageCode">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>Real MPC</h1>
+                <p style="color:#6b5a7a;font-weight:500;">Join Kelas · Aktiviti 1</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><i class="fas fa-key"></i> Masukkan Code Kelas</div>
+                <p class="text-muted mb-1">Masukkan code yang diberikan oleh guru anda.</p>
+                <div class="form-group">
+                    <label><i class="fas fa-qrcode"></i> Code Kelas</label>
+                    <input type="text" id="classCodeInput" placeholder="Cth: MPC-A7B3F2" value="" />
+                </div>
+                <button class="btn btn-primary" onclick="semakCode()" id="btnSemakCode">
+                    <i class="fas fa-search"></i> Semak & Seterusnya
+                </button>
+                <div id="codeError" class="mt-1" style="color:#d4527c;font-size:0.85rem;text-align:center;"></div>
+                <div id="codeSuccess" class="mt-1" style="color:#38a87a;font-size:0.85rem;text-align:center;display:none;">
+                    <i class="fas fa-check-circle"></i> Kelas ditemui!
+                </div>
+                <div class="loading-overlay" id="loadingCode">
+                    <span class="spinner"></span> <span style="margin-left:0.5rem;">Menyemak...</span>
+                </div>
+            </div>
+
+            <div class="text-center text-muted" style="font-size:0.8rem;">
+                <i class="fas fa-info-circle"></i> Dapatkan code daripada guru anda.
+            </div>
+        </div>
+
+        <!-- ===== PAGE 1: DAFTAR ===== -->
+        <div class="page" id="pageDaftar">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>Real MPC</h1>
+                <p style="color:#6b5a7a;font-weight:500;">Join Kelas · Aktiviti 1</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><i class="fas fa-user-plus"></i> Daftar Masuk</div>
+                <div id="classInfo" style="background:#f5f0ff;padding:0.8rem 1.2rem;border-radius:1rem;margin-bottom:1rem;">
+                    <p style="font-size:0.9rem;color:#4f3a68;">
+                        <i class="fas fa-info-circle"></i> 
+                        Kelas: <strong id="infoKelas">-</strong> · 
+                        Pengajar: <strong id="infoGuru">-</strong>
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Nama Penuh</label>
+                    <input type="text" id="studentName" placeholder="Cth: Ahmad bin Abdullah" />
+                </div>
+                <button class="btn btn-primary" onclick="daftarMurid()" id="btnDaftar">
+                    <i class="fas fa-sign-in-alt"></i> Daftar & Masuk
+                </button>
+                <div id="daftarError" class="mt-1" style="color:#d4527c;font-size:0.85rem;text-align:center;"></div>
+                <div class="mt-1 text-center">
+                    <button class="btn btn-secondary btn-sm" onclick="kembaliKeCode()">
+                        <i class="fas fa-arrow-left"></i> Kembali
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PAGE 2: RUANG MENUNGGU ===== -->
+        <div class="page" id="pageWaiting">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>Real MPC</h1>
+                <p style="color:#6b5a7a;font-weight:500;">
+                    <span class="status-bar"><span class="dot waiting"></span> Menunggu Guru Mula...</span>
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><i class="fas fa-info-circle"></i> Maklumat Kelas</div>
+                <div class="waiting-info">
+                    <div class="info-item">
+                        <div class="label">👨‍🏫 Pengajar</div>
+                        <div class="value" id="wGuru">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">🏫 Kelas</div>
+                        <div class="value" id="wKelas">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">📋 Code Kelas</div>
+                        <div class="value" id="wCode">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">👥 Pelajar Join</div>
+                        <div class="value" id="wCount">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><i class="fas fa-users"></i> Pelajar yang Join</div>
+                <div class="student-list-waiting" id="wStudentList">
+                    <span class="text-muted">Tiada pelajar lain.</span>
+                </div>
+                <div class="mt-1 text-muted" style="font-size:0.8rem;">
+                    <i class="fas fa-info-circle"></i> Anda dalam ruang menunggu. Guru akan mula modul tidak lama lagi.
+                </div>
+            </div>
+
+            <div class="text-center mt-1">
+                <span class="status-badge waiting"><i class="fas fa-hourglass-half"></i> Menunggu...</span>
+            </div>
+        </div>
+
+        <!-- ===== PAGE 3: AKTIVITI (LIVE) ===== -->
+        <div class="page" id="pageAktiviti">
+            <div class="logo" style="margin-bottom:0.5rem;">
+                <i class="fas fa-brain"></i>
+                <h1 style="font-size:1.8rem;">Real MPC</h1>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-clock"></i> Aktiviti Semasa
+                    <span class="text-muted" id="aProgress">(1 / 7)</span>
+                </div>
+                <div class="aktiviti-display">
+                    <div class="masa" id="aMasa">-</div>
+                    <div class="nama-aktiviti" id="aNama">Menunggu aktiviti...</div>
+                    <div class="countdown-big" id="aCountdown">--:--</div>
+                    <span class="status-badge waiting" id="aStatus"><i class="fas fa-hourglass-half"></i> Menunggu</span>
+                    <div class="progress-bar">
+                        <div class="fill" id="aProgressFill"></div>
+                    </div>
+                </div>
+
+                <!-- Soalan -->
+                <div class="soalan-box" id="soalanBox">
+                    <div class="soalan-title"><i class="fas fa-question-circle"></i> Soalan</div>
+                    <div class="soalan-content" id="soalanContent">
+                        <span class="text-muted">Menunggu soalan daripada guru...</span>
+                    </div>
+                </div>
+
+                <!-- Ruang jawapan -->
+                <div id="jawapanBox" class="hidden">
+                    <div class="form-group">
+                        <label><i class="fas fa-pen"></i> Jawapan anda</label>
+                        <textarea id="jawapanMurid" rows="3" placeholder="Tulis jawapan anda di sini..."></textarea>
+                    </div>
+                    <button class="btn btn-success btn-sm" onclick="hantarJawapan()">
+                        <i class="fas fa-paper-plane"></i> Hantar Jawapan
+                    </button>
+                    <div id="jawapanStatus" class="mt-1 text-muted" style="font-size:0.85rem;"></div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <span class="status-badge active" id="aStatusBottom"><i class="fas fa-spinner fa-spin"></i> Live</span>
+            </div>
+        </div>
+
+        <!-- ===== PAGE 4: REFLEKSI ===== -->
+        <div class="page" id="pageRefleksi">
+            <div class="logo" style="margin-bottom:0.5rem;">
+                <i class="fas fa-brain"></i>
+                <h1 style="font-size:1.8rem;">Real MPC</h1>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><i class="fas fa-pen-fancy"></i> Refleksi Karakter (Daya Tahan)</div>
+                <p class="text-muted mb-1">Jawab soalan berikut dengan jujur. Tiada jawapan betul atau salah.</p>
+
+                <div class="refleksi-form">
+                    <div class="refleksi-item">
+                        <label>1. Apa yang anda lakukan pertama kali apabila anda tidak faham soalan persamaan kuadratik?</label>
+                        <select id="r1">
+                            <option value="">Pilih jawapan...</option>
+                            <option value="Berhenti dan biarkan kosong">Berhenti dan biarkan kosong</option>
+                            <option value="Cuba baca soalan sekali lagi">Cuba baca soalan sekali lagi</option>
+                            <option value="Rujuk nota / contoh">Rujuk nota / contoh</option>
+                            <option value="Tanya rakan / guru">Tanya rakan / guru</option>
+                        </select>
+                    </div>
+                    <div class="refleksi-item">
+                        <label>2. Semasa "Cabaran Tekad Kuadratik", adakah anda…</label>
+                        <select id="r2">
+                            <option value="">Pilih jawapan...</option>
+                            <option value="Cepat rasa putus asa">Cepat rasa putus asa</option>
+                            <option value="Rasa susah, tetapi masih mencuba">Rasa susah, tetapi masih mencuba</option>
+                            <option value="Terus mencuba sehingga selesai">Terus mencuba sehingga selesai</option>
+                        </select>
+                    </div>
+                    <div class="refleksi-item">
+                        <label>3. Tulis satu strategi yang anda akan gunakan selepas ini apabila berhadapan soalan Matematik Tambahan yang sukar:</label>
+                        <textarea id="r3" rows="2" placeholder="Tulis strategi anda..."></textarea>
+                    </div>
+                    <div class="refleksi-item">
+                        <label>4. Satu ayat untuk menggambarkan perasaan anda selepas berjaya menyelesaikan soalan sukar hari ini:</label>
+                        <textarea id="r4" rows="2" placeholder="Tulis perasaan anda..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="hantarRefleksi()">
+                        <i class="fas fa-paper-plane"></i> Hantar Refleksi
+                    </button>
+                    <div id="refleksiStatus" class="mt-1 text-muted" style="font-size:0.85rem;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PAGE 5: MARKAH & SELESAI ===== -->
+        <div class="page" id="pageMarkah">
+            <div class="logo" style="margin-bottom:0.5rem;">
+                <i class="fas fa-brain"></i>
+                <h1 style="font-size:1.8rem;">Real MPC</h1>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><i class="fas fa-chart-bar"></i> Penilaian</div>
+
+                <div class="markah-box">
+                    <div class="markah-label"><i class="fas fa-star"></i> Markah anda</div>
+                    <input type="number" id="markahMurid" placeholder="Masukkan markah yang anda dapat..." />
+                    <div class="mt-1">
+                        <button class="btn btn-primary btn-sm" onclick="hantarMarkah()">
+                            <i class="fas fa-paper-plane"></i> Hantar Markah
+                        </button>
+                    </div>
+                    <div id="markahStatus" class="mt-1 text-muted" style="font-size:0.85rem;"></div>
+                </div>
+
+                <div id="indicatorMurid" class="hidden" style="background:#f5f0ff;padding:1rem 1.2rem;border-radius:1.2rem;border:2px solid #d6c0f0;margin-top:1rem;">
+                    <h4 style="color:#6d3b9e;"><i class="fas fa-chart-line"></i> Indikator Resilience Anda</h4>
+                    <div id="indicatorDisplay" style="margin-top:0.5rem;">
+                        <p class="text-muted">Tunggu guru menilai...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-1">
+                <span class="status-badge done"><i class="fas fa-check-circle"></i> Selesai</span>
+            </div>
+        </div>
+
+        <footer style="text-align:center;padding:1rem 0 0.3rem;border-top:1px solid rgba(190,150,230,0.2);margin-top:1rem;font-size:0.8rem;color:#6b5a7a;">
+            <i class="fas fa-user-graduate"></i> Shuhaimi bin Abu Seman · Universiti Putra Malaysia
+            <span style="margin:0 8px;">|</span> <i class="far fa-copyright"></i> 2026 Real MPC
+        </footer>
+    </div>
+
+    <!-- ===== FIREBASE + MAIN JS ===== -->
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getDatabase, ref, set, onValue, push, update, get, remove } from "firebase/database";
+        import { getAnalytics } from "firebase/analytics";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzWmeMvmMwNsEEiFmnr9PRtw6nNjIUGRg",
+            authDomain: "real-mpc-module-6be02.firebaseapp.com",
+            projectId: "real-mpc-module-6be02",
+            storageBucket: "real-mpc-module-6be02.firebasestorage.app",
+            messagingSenderId: "1045888004132",
+            appId: "1:1045888004132:web:869de28a286506f15ea8b1",
+            measurementId: "G-XD3VQ7JKKB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+
+        window.db = db;
+        window.ref = ref;
+        window.set = set;
+        window.onValue = onValue;
+        window.push = push;
+        window.update = update;
+        window.get = get;
+        window.remove = remove;
+
+        // ===== STATE =====
+        let sessionId = null;
+        let studentName = null;
+        let guruData = {};
+        let aktivitiData = [];
+        let currentAktiviti = 0;
+        let aktivitiStarted = false;
+        let timerInterval = null;
+        let soalanData = [];
+        let unsubscribeAktiviti = null;
+        let unsubscribeSoalan = null;
+        let unsubscribeIndicator = null;
+        let unsubscribeStudents = null;
+        let unsubscribeSession = null;
+
+        // ===== SEMAK CODE =====
+        window.semakCode = function() {
+            const code = document.getElementById('classCodeInput').value.trim().toUpperCase();
+            if (!code) {
+                document.getElementById('codeError').textContent = '⚠️ Sila masukkan code kelas.';
+                document.getElementById('codeSuccess').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('codeError').textContent = '';
+            document.getElementById('codeSuccess').style.display = 'none';
+            document.getElementById('loadingCode').classList.add('show');
+            document.getElementById('btnSemakCode').disabled = true;
+
+            const sessionRef = ref(db, `sessions/${code}`);
+            get(sessionRef).then((snapshot) => {
+                document.getElementById('loadingCode').classList.remove('show');
+                document.getElementById('btnSemakCode').disabled = false;
+
+                if (!snapshot.exists()) {
+                    document.getElementById('codeError').textContent = '❌ Code kelas tidak dijumpai. Sila semak semula.';
+                    return;
+                }
+
+                const data = snapshot.val();
+                sessionId = code;
+
+                if (data.completed) {
+                    document.getElementById('codeError').textContent = '⚠️ Kelas ini sudah tamat.';
+                    return;
+                }
+
+                document.getElementById('codeSuccess').style.display = 'block';
+                document.getElementById('codeSuccess').innerHTML = 
+                    `<i class="fas fa-check-circle"></i> Kelas "${data.kelas || '-'}" ditemui!`;
+
+                // STORE ALL DATA FROM FIREBASE
+                guruData = data;
+
+                // Go to daftar page
+                document.getElementById('pageCode').classList.remove('active');
+                document.getElementById('pageDaftar').classList.add('active');
+
+                // Set class info from Firebase
+                document.getElementById('infoKelas').textContent = data.kelas || '-';
+                document.getElementById('infoGuru').textContent = data.guru || '-';
+
+                document.getElementById('studentName').focus();
+
+            }).catch((err) => {
+                document.getElementById('loadingCode').classList.remove('show');
+                document.getElementById('btnSemakCode').disabled = false;
+                document.getElementById('codeError').textContent = '⚠️ Ralat: ' + err.message;
+            });
+        };
+
+        // ===== KEMBALI KE CODE =====
+        window.kembaliKeCode = function() {
+            // Unsubscribe all listeners
+            if (unsubscribeStudents) unsubscribeStudents();
+            if (unsubscribeSession) unsubscribeSession();
+            if (unsubscribeAktiviti) unsubscribeAktiviti();
+            if (unsubscribeSoalan) unsubscribeSoalan();
+            if (unsubscribeIndicator) unsubscribeIndicator();
+
+            document.getElementById('pageDaftar').classList.remove('active');
+            document.getElementById('pageWaiting').classList.remove('active');
+            document.getElementById('pageAktiviti').classList.remove('active');
+            document.getElementById('pageRefleksi').classList.remove('active');
+            document.getElementById('pageMarkah').classList.remove('active');
+            document.getElementById('pageCode').classList.add('active');
+            document.getElementById('codeSuccess').style.display = 'none';
+            document.getElementById('codeError').textContent = '';
+            document.getElementById('classCodeInput').value = '';
+            document.getElementById('classCodeInput').focus();
+        };
+
+        // ===== DAFTAR MURID =====
+        window.daftarMurid = function() {
+            const name = document.getElementById('studentName').value.trim();
+            if (!name) {
+                document.getElementById('daftarError').textContent = '⚠️ Sila masukkan nama penuh anda.';
+                return;
+            }
+
+            if (!sessionId) {
+                document.getElementById('daftarError').textContent = '⚠️ Code kelas tidak sah. Sila kembali ke langkah sebelumnya.';
+                return;
+            }
+
+            studentName = name;
+
+            document.getElementById('btnDaftar').disabled = true;
+            document.getElementById('btnDaftar').innerHTML = '<span class="spinner"></span> Mendaftar...';
+
+            const studentRef = ref(db, `sessions/${sessionId}/students/${name}`);
+            set(studentRef, {
+                name: name,
+                joined: new Date().toISOString(),
+                status: 'waiting'
+            }).then(() => {
+                document.getElementById('btnDaftar').disabled = false;
+                document.getElementById('btnDaftar').innerHTML = '<i class="fas fa-sign-in-alt"></i> Daftar & Masuk';
+                
+                document.getElementById('pageDaftar').classList.remove('active');
+                document.getElementById('pageWaiting').classList.add('active');
+                document.getElementById('daftarError').textContent = '';
+
+                // Set waiting info from guruData
+                document.getElementById('wGuru').textContent = guruData.guru || '-';
+                document.getElementById('wKelas').textContent = guruData.kelas || '-';
+                document.getElementById('wCode').textContent = sessionId;
+
+                // Start listening to live data
+                listenStudents(sessionId);
+                listenSessionStatus(sessionId);
+                listenAktivitiUpdates(sessionId);
+                listenSoalanUpdates(sessionId);
+                listenIndicatorUpdates(sessionId);
+
+            }).catch((err) => {
+                document.getElementById('btnDaftar').disabled = false;
+                document.getElementById('btnDaftar').innerHTML = '<i class="fas fa-sign-in-alt"></i> Daftar & Masuk';
+                document.getElementById('daftarError').textContent = '⚠️ Ralat: ' + err.message;
+            });
+        };
+
+        // ===== LISTEN STUDENTS (Waiting Room) =====
+        function listenStudents(code) {
+            if (unsubscribeStudents) unsubscribeStudents();
+            const studentsRef = ref(db, `sessions/${code}/students`);
+            unsubscribeStudents = onValue(studentsRef, (snapshot) => {
+                const data = snapshot.val();
+                const container = document.getElementById('wStudentList');
+                const count = document.getElementById('wCount');
+
+                if (!data) {
+                    container.innerHTML = '<span class="text-muted">Tiada pelajar lain.</span>';
+                    count.textContent = '0';
+                    return;
+                }
+
+                const names = Object.keys(data);
+                count.textContent = names.length;
+
+                container.innerHTML = names.map(name => {
+                    const isYou = name === studentName;
+                    return `<span class="student-tag ${isYou ? 'you' : ''}">
+                        <i class="fas fa-user-circle"></i> ${name} ${isYou ? '⭐' : ''}
+                    </span>`;
+                }).join('');
+            });
+        }
+
+        // ===== LISTEN SESSION STATUS =====
+        function listenSessionStatus(code) {
+            if (unsubscribeSession) unsubscribeSession();
+            const sessionRef = ref(db, `sessions/${code}`);
+            unsubscribeSession = onValue(sessionRef, (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                guruData = data;
+
+                // Check if session started
+                if (data.status === 'started' || data.status === 'completed') {
+                    if (!aktivitiStarted) {
+                        aktivitiStarted = true;
+                        document.getElementById('pageWaiting').classList.remove('active');
+                        document.getElementById('pageAktiviti').classList.add('active');
+
+                        // Get aktiviti data from Firebase
+                        if (data.aktiviti) {
+                            aktivitiData = data.aktiviti;
+                            // Find current aktiviti
+                            let found = false;
+                            for (let i = 0; i < aktivitiData.length; i++) {
+                                if (aktivitiData[i].status === 'active') {
+                                    currentAktiviti = i;
+                                    found = true;
+                                    break;
+                                }
+                                if (aktivitiData[i].status === 'done') {
+                                    currentAktiviti = i + 1;
+                                }
+                            }
+                            if (!found && currentAktiviti < aktivitiData.length) {
+                                for (let i = 0; i < aktivitiData.length; i++) {
+                                    if (aktivitiData[i].status === 'waiting') {
+                                        currentAktiviti = i;
+                                        break;
+                                    }
+                                }
+                            }
+                            showAktivitiMurid(currentAktiviti);
+                        }
+                    }
+                }
+
+                // Check if completed
+                if (data.status === 'completed' && aktivitiStarted) {
+                    document.getElementById('pageAktiviti').classList.remove('active');
+                    document.getElementById('pageRefleksi').classList.add('active');
+                }
+            });
+        }
+
+        // ===== LISTEN AKTIVITI UPDATES =====
+        function listenAktivitiUpdates(code) {
+            if (unsubscribeAktiviti) unsubscribeAktiviti();
+            const aktivitiRef = ref(db, `sessions/${code}/aktiviti`);
+            unsubscribeAktiviti = onValue(aktivitiRef, (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                aktivitiData = data;
+
+                // Find current active
+                let found = false;
+                for (let i = 0; i < aktivitiData.length; i++) {
+                    if (aktivitiData[i].status === 'active') {
+                        currentAktiviti = i;
+                        found = true;
+                        showAktivitiMurid(i);
+                        break;
+                    }
+                    if (aktivitiData[i].status === 'done' && i < aktivitiData.length - 1) {
+                        if (aktivitiData[i + 1].status === 'waiting') {
+                            currentAktiviti = i + 1;
+                            showAktivitiMurid(i + 1);
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Check if all done
+                const allDone = aktivitiData.every(a => a.status === 'done');
+                if (allDone && aktivitiData.length > 0 && aktivitiStarted) {
+                    document.getElementById('pageAktiviti').classList.remove('active');
+                    document.getElementById('pageRefleksi').classList.add('active');
+                }
+
+                // Update progress
+                const doneCount = aktivitiData.filter(a => a.status === 'done').length;
+                document.getElementById('aProgress').textContent = `(${doneCount + 1} / ${aktivitiData.length})`;
+                document.getElementById('aProgressFill').style.width = `${(doneCount / aktivitiData.length) * 100}%`;
+            });
+        }
+
+        // ===== SHOW AKTIVITI MURID =====
+        function showAktivitiMurid(index) {
+            if (!aktivitiData || index >= aktivitiData.length) return;
+
+            const a = aktivitiData[index];
+            document.getElementById('aMasa').textContent = a.masa || '-';
+            document.getElementById('aNama').textContent = a.nama || '-';
+
+            // Countdown
+            const countdown = a.countdown || a.durasi || 0;
+            const mins = Math.floor(countdown / 60);
+            const secs = countdown % 60;
+            document.getElementById('aCountdown').textContent =
+                `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+
+            // Status
+            const statusEl = document.getElementById('aStatus');
+            if (a.status === 'active') {
+                statusEl.className = 'status-badge active';
+                statusEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sedang Berjalan';
+            } else if (a.status === 'done') {
+                statusEl.className = 'status-badge done';
+                statusEl.innerHTML = '<i class="fas fa-check"></i> Selesai';
+            } else {
+                statusEl.className = 'status-badge waiting';
+                statusEl.innerHTML = '<i class="fas fa-hourglass-half"></i> Menunggu';
+            }
+
+            // Update progress
+            const doneCount = aktivitiData.filter(a => a.status === 'done').length;
+            document.getElementById('aProgress').textContent = `(${doneCount + 1} / ${aktivitiData.length})`;
+            document.getElementById('aProgressFill').style.width = `${(doneCount / aktivitiData.length) * 100}%`;
+
+            // Show soalan based on aktiviti (Aktiviti 3 & 5 ada soalan)
+            if (a.id === 3 || a.id === 5) {
+                document.getElementById('soalanBox').classList.remove('hidden');
+                document.getElementById('jawapanBox').classList.remove('hidden');
+                loadSoalan(index);
+            } else {
+                document.getElementById('soalanBox').classList.add('hidden');
+                document.getElementById('jawapanBox').classList.add('hidden');
+            }
+        }
+
+        // ===== LISTEN SOALAN UPDATES =====
+        function listenSoalanUpdates(code) {
+            if (unsubscribeSoalan) unsubscribeSoalan();
+            const soalanRef = ref(db, `sessions/${code}/soalan`);
+            unsubscribeSoalan = onValue(soalanRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    soalanData = data;
+                    const currentA = aktivitiData[currentAktiviti];
+                    if (currentA && (currentA.id === 3 || currentA.id === 5)) {
+                        displaySoalan(currentAktiviti);
+                    }
+                }
+            });
+        }
+
+        function loadSoalan(index) {
+            if (soalanData && soalanData[index]) {
+                displaySoalan(index);
+            } else {
+                document.getElementById('soalanContent').innerHTML =
+                    '<span class="text-muted">Menunggu soalan daripada guru...</span>';
+            }
+        }
+
+        function displaySoalan(index) {
+            const soalan = soalanData[index];
+            if (!soalan) {
+                document.getElementById('soalanContent').innerHTML =
+                    '<span class="text-muted">Menunggu soalan daripada guru...</span>';
+                return;
+            }
+
+            let html = soalan.text || 'Soalan tidak tersedia';
+            if (soalan.math) {
+                html = `<span class="math">${soalan.math}</span><br>${html}`;
+            }
+            document.getElementById('soalanContent').innerHTML = html;
+        }
+
+        // ===== HANTAR JAWAPAN =====
+        window.hantarJawapan = function() {
+            const jawapan = document.getElementById('jawapanMurid').value.trim();
+            if (!jawapan) {
+                document.getElementById('jawapanStatus').textContent = '⚠️ Sila tulis jawapan anda dahulu.';
+                document.getElementById('jawapanStatus').style.color = '#d4527c';
+                return;
+            }
+
+            const answerRef = ref(db, `sessions/${sessionId}/answers/${studentName}`);
+            set(answerRef, {
+                name: studentName,
+                jawapan: jawapan,
+                aktiviti: currentAktiviti + 1,
+                timestamp: new Date().toISOString()
+            }).then(() => {
+                document.getElementById('jawapanStatus').textContent = '✅ Jawapan dihantar!';
+                document.getElementById('jawapanStatus').style.color = '#38a87a';
+                document.getElementById('jawapanMurid').value = '';
+            }).catch((err) => {
+                document.getElementById('jawapanStatus').textContent = '⚠️ Ralat: ' + err.message;
+                document.getElementById('jawapanStatus').style.color = '#d4527c';
+            });
+        };
+
+        // ===== HANTAR REFLEKSI =====
+        window.hantarRefleksi = function() {
+            const q1 = document.getElementById('r1').value;
+            const q2 = document.getElementById('r2').value;
+            const q3 = document.getElementById('r3').value.trim();
+            const q4 = document.getElementById('r4').value.trim();
+
+            if (!q1 || !q2) {
+                document.getElementById('refleksiStatus').textContent = '⚠️ Sila jawab semua soalan.';
+                document.getElementById('refleksiStatus').style.color = '#d4527c';
+                return;
+            }
+
+            const refleksiRef = ref(db, `sessions/${sessionId}/reflections/${studentName}`);
+            set(refleksiRef, {
+                name: studentName,
+                q1: q1,
+                q2: q2,
+                q3: q3 || '-',
+                q4: q4 || '-',
+                timestamp: new Date().toISOString()
+            }).then(() => {
+                document.getElementById('refleksiStatus').textContent = '✅ Refleksi dihantar! Terima kasih.';
+                document.getElementById('refleksiStatus').style.color = '#38a87a';
+                document.getElementById('r1').disabled = true;
+                document.getElementById('r2').disabled = true;
+                document.getElementById('r3').disabled = true;
+                document.getElementById('r4').disabled = true;
+
+                setTimeout(() => {
+                    document.getElementById('pageRefleksi').classList.remove('active');
+                    document.getElementById('pageMarkah').classList.add('active');
+                }, 1000);
+            }).catch((err) => {
+                document.getElementById('refleksiStatus').textContent = '⚠️ Ralat: ' + err.message;
+                document.getElementById('refleksiStatus').style.color = '#d4527c';
+            });
+        };
+
+        // ===== HANTAR MARKAH =====
+        window.hantarMarkah = function() {
+            const markah = parseInt(document.getElementById('markahMurid').value);
+            if (isNaN(markah) || markah < 0) {
+                document.getElementById('markahStatus').textContent = '⚠️ Sila masukkan markah yang sah.';
+                document.getElementById('markahStatus').style.color = '#d4527c';
+                return;
+            }
+
+            const markahRef = ref(db, `sessions/${sessionId}/studentMarks/${studentName}`);
+            set(markahRef, markah).then(() => {
+                document.getElementById('markahStatus').textContent = '✅ Markah dihantar!';
+                document.getElementById('markahStatus').style.color = '#38a87a';
+                document.getElementById('markahMurid').disabled = true;
+            }).catch((err) => {
+                document.getElementById('markahStatus').textContent = '⚠️ Ralat: ' + err.message;
+                document.getElementById('markahStatus').style.color = '#d4527c';
+            });
+        };
+
+        // ===== LISTEN INDICATOR UPDATES =====
+        function listenIndicatorUpdates(code) {
+            if (unsubscribeIndicator) unsubscribeIndicator();
+            const penilaianRef = ref(db, `sessions/${code}/penilaian`);
+            unsubscribeIndicator = onValue(penilaianRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.indicator) {
+                    document.getElementById('indicatorMurid').classList.remove('hidden');
+                    document.getElementById('indicatorDisplay').innerHTML = `
+                        <div style="background:white;padding:0.8rem 1.2rem;border-radius:0.8rem;">
+                            <div style="font-size:1.2rem;font-weight:700;color:#6d3b9e;">${data.indicator.level || '-'}</div>
+                            <div style="margin-top:0.3rem;color:#1d0f2e;">${data.indicator.desc || '-'}</div>
+                            <div style="margin-top:0.3rem;font-size:0.85rem;color:#4f3a68;">${data.indicator.detail || ''}</div>
+                            ${data.markahKeseluruhan ? `
+                            <div style="margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid #e6d5ff;display:flex;gap:1rem;flex-wrap:wrap;">
+                                <div><strong>Jumlah Markah:</strong> ${data.markahKeseluruhan}</div>
+                                <div><strong>Markah Anda:</strong> ${data.markahDapat || '-'}</div>
+                                <div><strong>Peratusan:</strong> ${data.peratus || '-'}%</div>
+                            </div>` : ''}
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        // ===== CHECK URL FOR CODE =====
+        function checkURLForCode() {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get('code');
+            if (code) {
+                document.getElementById('classCodeInput').value = code.toUpperCase();
+                setTimeout(() => {
+                    semakCode();
+                }, 500);
+            }
+        }
+
+        // ===== KEYBOARD SHORTCUTS =====
+        document.getElementById('classCodeInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') semakCode();
+        });
+        document.getElementById('studentName').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') daftarMurid();
+        });
+
+        // ===== INIT =====
+        console.log('✅ Join page ready!');
+        console.log('📡 Connected to Firebase Realtime Database');
+        console.log('💡 Gunakan link: ?code=MPC-XXXXX untuk auto isi code');
+
+        checkURLForCode();
+
+        // Expose functions
+        window.semakCode = semakCode;
+        window.kembaliKeCode = kembaliKeCode;
+        window.daftarMurid = daftarMurid;
+        window.hantarJawapan = hantarJawapan;
+        window.hantarRefleksi = hantarRefleksi;
+        window.hantarMarkah = hantarMarkah;
+    </script>
+
+</body>
+</html>
